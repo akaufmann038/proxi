@@ -1,0 +1,22 @@
+{
+  "name": "proxi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akaufmann038/proxi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akaufmann038/proxi/issues"
+  },
+  "homepage": "https://github.com/akaufmann038/proxi#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
