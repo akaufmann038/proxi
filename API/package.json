@@ -19,6 +19,7 @@
   "homepage": "https://github.com/akaufmann038/proxi#readme",
   "dependencies": {
     "express": "^4.18.2",
+    "node-fetch": "^2.6.9",
     "twilio": "^4.11.0"
   },
   "devDependencies": {
