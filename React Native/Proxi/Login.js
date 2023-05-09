@@ -1,31 +1,34 @@
 import styled from "styled-components/native";
 import { useState } from "react";
+import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 export const Login = ({ navigation }) => {
   const [phoneNumber, onChangePhoneNumber] = useState("");
 
   return (
-    <SignUpContainerRoot>
-      <SignUpBox>
-        <Icon source={require("./assets/proxilogo.png")} />
-        <SignUpOrLoginText>
-          Sign up or login with your phone #
-        </SignUpOrLoginText>
-        <PhoneNumberInput>
-          <PhoneInputWrapper>
-            <CountryCode>+1</CountryCode>
-          </PhoneInputWrapper>
-          <PhoneNumber
-            placeholder="(781)201-0366"
-            keyboardType="numeric"
-            onChangeText={onChangePhoneNumber}
-          />
-        </PhoneNumberInput>
-        <ConfirmButton>
-          <ConfirmButtonText>Confirm</ConfirmButtonText>
-        </ConfirmButton>
-      </SignUpBox>
-    </SignUpContainerRoot>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SignUpContainerRoot>
+        <SignUpBox>
+          <Icon source={require("./assets/proxilogo.png")} />
+          <SignUpOrLoginText>
+            Sign up or login with your phone #
+          </SignUpOrLoginText>
+          <PhoneNumberInput>
+            <PhoneInputWrapper>
+              <CountryCode>+1</CountryCode>
+            </PhoneInputWrapper>
+            <PhoneNumber
+              placeholder="(781)201-0366"
+              keyboardType="numeric"
+              onChangeText={onChangePhoneNumber}
+            />
+          </PhoneNumberInput>
+          <ConfirmButton>
+            <ConfirmButtonText>Confirm</ConfirmButtonText>
+          </ConfirmButton>
+        </SignUpBox>
+      </SignUpContainerRoot>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -38,7 +41,7 @@ const SignUpContainerRoot = styled.View`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 60px 0px 0px 0px;
+  padding: 20% 0px 0px 0px;
   box-sizing: border-box;
   background-color: #786cff;
   overflow: hidden;
@@ -53,7 +56,7 @@ const SignUpBox = styled.View`
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  padding: 60px 30px 60px 30px;
+  padding: 20% 30px 60px 30px;
   border-radius: 20px 20px 0px 0px;
   box-sizing: border-box;
   background-color: #ffffff;
