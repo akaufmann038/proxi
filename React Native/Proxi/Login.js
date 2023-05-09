@@ -1,9 +1,10 @@
 import styled from "styled-components/native";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 export const Login = ({ navigation }) => {
   const [phoneNumber, onChangePhoneNumber] = useState("");
+  const inputRef = useRef();
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -13,16 +14,19 @@ export const Login = ({ navigation }) => {
           <SignUpOrLoginText>
             Sign up or login with your phone #
           </SignUpOrLoginText>
-          <PhoneNumberInput>
-            <PhoneInputWrapper>
-              <CountryCode>+1</CountryCode>
-            </PhoneInputWrapper>
-            <PhoneNumber
-              placeholder="(781)201-0366"
-              keyboardType="numeric"
-              onChangeText={onChangePhoneNumber}
-            />
-          </PhoneNumberInput>
+          <TouchableWithoutFeedback onPress={() => inputRef.current.focus()}>
+            <PhoneNumberInput>
+              <PhoneInputWrapper>
+                <CountryCode>+1</CountryCode>
+              </PhoneInputWrapper>
+              <PhoneNumber
+                ref={inputRef}
+                placeholder="(781)201-0366"
+                keyboardType="numeric"
+                onChangeText={onChangePhoneNumber}
+              />
+            </PhoneNumberInput>
+          </TouchableWithoutFeedback>
           <ConfirmButton>
             <ConfirmButtonText>Confirm</ConfirmButtonText>
           </ConfirmButton>
