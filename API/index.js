@@ -3,8 +3,8 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
-// stores codes and when they were activated
-// { phoneNumber: { code: time created } }
+// stores codes and when they are activated
+// { phoneNumber: { "code": code, "createdAt": when code was created } }
 const activeCodes = {};
 
 const client = new twilio(
@@ -22,12 +22,13 @@ app.get("/", (req, res) => {
 app.post("/get-code", (req, res) => {
   const fields = Object.keys(req.body);
 
+  // ensure that object has one field, phoneNumber
   if (fields.length == 1 && fields[0] == "phoneNumber") {
     const phoneNumber = req.body.phoneNumber;
 
     // generate code and store it in server memory
     const code = Math.floor(Math.random() * 9000 + 1000);
-    activeCodes[phoneNumber] = { code: new Date() };
+    activeCodes[phoneNumber] = { code: code, createdAt: new Date() };
 
     // text code to the client's phone number
     client.messages.create({
@@ -39,9 +40,9 @@ app.post("/get-code", (req, res) => {
         ". It is valid for the next 5 minutes.",
     });
 
-    res.status(200).json({ verificationCode: code });
+    res.json({ success: true, verificationCode: String(code) });
   } else {
-    res.status(400).json({ message: "Incorrect body field!" });
+    res.json({ success: false, message: "Incorrect body structure" });
   }
 });
 
@@ -49,6 +50,7 @@ app.post("/get-code", (req, res) => {
 app.post("/verify-code", (req, res) => {
   const fields = Object.keys(req.body);
 
+  // ensure that object has two fields, phoneNumber and verificationCode
   if (
     fields.length == 2 &&
     (fields[0] == "phoneNumber" || fields[1] == "phoneNumber") &&
@@ -57,22 +59,33 @@ app.post("/verify-code", (req, res) => {
     const verificationCode = req.body.verificationCode;
     const phoneNumber = req.body.phoneNumber;
 
-    // check if phoneNumber is valid (case where someone else is entering
-    // clients code)
+    // cases to cover
+    // 1. a phone number enters another existing code (rare but gotta cover all cases)
+    // 2. a phone number that has never generated a code before sends a request with a code
+    // 3. the code does not match the number
+    // 4. code has expired
+
+    // 2
     if (!(phoneNumber in activeCodes)) {
-      res.status(400).json({ message: "Invalid client code!" });
+      // TODO: figure out how to actually do response messages correctly and
+      // fix that cannot set headers error (happens when incorrect code is sent)
+      res.json({ success: false, message: "Phone number not recognized" });
     }
 
-    // check if 5 minutes have passed
-    if (
-      Math.abs(activeCodes[phoneNumber][verificationCode] - new Date()) > 300000
-    ) {
-      res.status(400).json({ message: "Code has expired!" });
+    // 1 and 3
+    if (activeCodes[phoneNumber]["code"] != verificationCode) {
+      res.json({ success: false, message: "Invalid verification code" });
     }
 
-    res.status(200).json({ message: "Success. Code is verified!" });
+    // 4
+    if (Math.abs(activeCodes[phoneNumber]["createdAt"] - new Date()) > 300000) {
+      res.json({ success: false, message: "Code has expired" });
+    }
+
+    res.json({ success: true, message: "Code is verified" });
+    console.log("and this");
   } else {
-    res.status(400).json({ message: "Incorrect body field!" });
+    res.json({ success: false, message: "Incorrect body structure" });
   }
 });
 

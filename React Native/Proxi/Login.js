@@ -1,11 +1,31 @@
 import styled from "styled-components/native";
 import { useState } from "react";
+import { Alert } from "react-native";
+import { makePostRequest, getCodeHttp } from "./utils.js";
 
 export const Login = ({ navigation }) => {
   const [phoneNumber, onChangePhoneNumber] = useState("");
 
+  const onPressConfirmButton = async () => {
+    if (phoneNumber.length != 10) {
+      Alert.alert("Please enter a valid phone number");
+    } else {
+      try {
+        const res = await makePostRequest(getCodeHttp, {
+          phoneNumber: phoneNumber,
+        });
+
+        navigation.navigate("ConfirmNumber", {
+          phoneNumber: phoneNumber,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
   return (
-    <SignUpContainerRoot>
+    <ContainerRoot>
       <SignUpBox>
         <Group>
           <Icon source={require("./assets/p.png")} />
@@ -27,17 +47,15 @@ export const Login = ({ navigation }) => {
             onChangeText={onChangePhoneNumber}
           />
         </PhoneNumberInput>
-        <ConfirmButton>
+        <ConfirmButton onPress={onPressConfirmButton}>
           <ConfirmButtonText>Confirm</ConfirmButtonText>
         </ConfirmButton>
       </SignUpBox>
-    </SignUpContainerRoot>
+    </ContainerRoot>
   );
 };
 
-export const VerifyLogin = () => {};
-
-const SignUpContainerRoot = styled.View`
+export const ContainerRoot = styled.View`
   position: relative;
   display: flex;
   flex-direction: column;
