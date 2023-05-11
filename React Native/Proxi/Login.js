@@ -14,15 +14,22 @@ export const Login = ({ navigation }) => {
   };
 
   const handlePhoneNumberChange = (text) => {
-    let cleaned = ('' + text).replace(/\D/g, '');
-    if(cleaned === "") {
-        setPhoneNumber("");
-        setIsValidPhoneNumber(false);
-        return;
+    let cleaned = ("" + text).replace(/\D/g, "");
+    if (cleaned === "") {
+      setPhoneNumber("");
+      setIsValidPhoneNumber(false);
+      return;
     }
     let match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4}).*/);
-    let number = ['(', match[1] || '', match[2] ? ') ' : '', match[2], match[3] ? '-' : '', match[3]].join('');
-  
+    let number = [
+      "(",
+      match[1] || "",
+      match[2] ? ") " : "",
+      match[2],
+      match[3] ? "-" : "",
+      match[3],
+    ].join("");
+
     setPhoneNumber(number);
     setIsValidPhoneNumber(validatePhoneNumber(cleaned));
   };
@@ -36,6 +43,7 @@ export const Login = ({ navigation }) => {
           phoneNumber: phoneNumber,
         });
 
+        console.log(phoneNumber);
         navigation.navigate("ConfirmNumber", {
           phoneNumber: phoneNumber,
         });
@@ -67,10 +75,13 @@ export const Login = ({ navigation }) => {
               />
             </PhoneNumberInput>
           </TouchableWithoutFeedback>
-          <ConfirmButton 
+          <ConfirmButton
             active={isValidPhoneNumber}
-            onPress={onPressConfirmButton}>
-            <ConfirmButtonText active={isValidPhoneNumber}>Confirm</ConfirmButtonText>
+            onPress={onPressConfirmButton}
+          >
+            <ConfirmButtonText active={isValidPhoneNumber}>
+              Confirm
+            </ConfirmButtonText>
           </ConfirmButton>
         </SignUpBox>
       </SignUpContainerRoot>
@@ -102,7 +113,7 @@ const SignUpOrLoginText = styled.Text`
   font-size: 13px;
   line-height: 17px;
   text-align: center;
-  margin: 60px 0px 10px 0px
+  margin: 60px 0px 10px 0px;
 `;
 
 const PhoneNumberInput = styled.View`
@@ -144,11 +155,10 @@ const ConfirmButton = styled.TouchableOpacity`
   align-items: center;
   padding: 16px 61px;
   border-radius: 8px;
-  background-color: ${({ active }) => active ? '#ff5a5f' : '#e6e6e6'}; 
+  background-color: ${({ active }) => (active ? "#ff5a5f" : "#e6e6e6")};
 `;
 
-
 const ConfirmButtonText = styled.Text`
-  color: ${({ active }) => active ? '#ffffff' : 'grey'}; 
+  color: ${({ active }) => (active ? "#ffffff" : "grey")};
   font-weight: 600;
 `;

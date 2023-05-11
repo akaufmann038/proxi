@@ -1,6 +1,5 @@
 import styled from "styled-components/native";
 import { useState, useRef } from "react";
-import { ContainerRoot } from "./Login.js";
 import { verifyCodeHttp, makePostRequest, getCodeHttp } from "./utils.js";
 import { Alert } from "react-native";
 
@@ -96,6 +95,17 @@ export const ConfirmNumber = ({ route, navigation }) => {
   );
 };
 
+const ContainerRoot = styled.View`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 69px 0px 0px 0px;
+  border-radius: 20px;
+  box-sizing: border-box;
+  background-color: #786cff;
+  overflow: hidden;
+`;
 const ConfirmPhoneDiv = styled.View`
   width: 100%;
   position: relative;

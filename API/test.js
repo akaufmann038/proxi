@@ -105,4 +105,4 @@ const validatePhoneNumber = (phoneNumber) => {
 };
 
 handlePhoneNumberChange("7812010366");
-console.log(validatePhoneNumber("7812010366"));
+console.log(validatePhoneNumber("6177759674"));
