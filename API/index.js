@@ -40,9 +40,9 @@ app.post("/get-code", (req, res) => {
         ". It is valid for the next 5 minutes.",
     });
 
-    res.json({ success: true, verificationCode: String(code) });
+    return res.json({ success: true, verificationCode: String(code) });
   } else {
-    res.json({ success: false, message: "Incorrect body structure" });
+    return res.json({ success: false, message: "Incorrect body structure" });
   }
 });
 
@@ -69,23 +69,26 @@ app.post("/verify-code", (req, res) => {
     if (!(phoneNumber in activeCodes)) {
       // TODO: figure out how to actually do response messages correctly and
       // fix that cannot set headers error (happens when incorrect code is sent)
-      res.json({ success: false, message: "Phone number not recognized" });
+      console.log("not recognized");
+      return res.json({
+        success: false,
+        message: "Phone number not recognized",
+      });
     }
 
     // 1 and 3
     if (activeCodes[phoneNumber]["code"] != verificationCode) {
-      res.json({ success: false, message: "Invalid verification code" });
+      return res.json({ success: false, message: "Invalid verification code" });
     }
 
     // 4
     if (Math.abs(activeCodes[phoneNumber]["createdAt"] - new Date()) > 300000) {
-      res.json({ success: false, message: "Code has expired" });
+      return res.json({ success: false, message: "Code has expired" });
     }
 
-    res.json({ success: true, message: "Code is verified" });
-    console.log("and this");
+    return res.json({ success: true, message: "Code is verified" });
   } else {
-    res.json({ success: false, message: "Incorrect body structure" });
+    return res.json({ success: false, message: "Incorrect body structure" });
   }
 });
 

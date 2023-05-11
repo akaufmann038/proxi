@@ -16,7 +16,6 @@ export const ConfirmNumber = ({ route, navigation }) => {
   const onPressConfirm = async () => {
     if (code.length == 4) {
       // send request to verify code with phone number
-      console.log("sending: " + String(code));
       const res = await makePostRequest(verifyCodeHttp, {
         phoneNumber: phoneNumber,
         verificationCode: code,

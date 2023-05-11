@@ -18,16 +18,6 @@ fs.readFile("./test2.txt", { encoding: "utf-8" }, (err, data) => {
   }
 });
 */
-const myPromise = new Promise((resolve, reject) => {
-  const rand = Math.floor(Math.random() * 2);
-  if (rand == 0) {
-    resolve();
-  } else {
-    reject();
-  }
-})
-  .then(() => console.log("Success"))
-  .catch(() => console.error("Something went wrong"));
 
 /*
 fetch("https://pokeapi.co/api/v2/pokemon/ditto")
@@ -88,4 +78,31 @@ const verify = async () => {
     console.log(err);
   }
 };
-verify();
+
+const handlePhoneNumberChange = (text) => {
+  let cleaned = ("" + text).replace(/\D/g, "");
+  if (cleaned === "") {
+    setPhoneNumber("");
+    setIsValidPhoneNumber(false);
+    return;
+  }
+  let match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4}).*/);
+  let number = [
+    "(",
+    match[1] || "",
+    match[2] ? ") " : "",
+    match[2],
+    match[3] ? "-" : "",
+    match[3],
+  ].join("");
+
+  console.log(number);
+};
+
+const validatePhoneNumber = (phoneNumber) => {
+  let phoneRegex = /^[2-9]{2}[0-9]{8}$/; // sample phone number validation
+  return phoneRegex.test(phoneNumber);
+};
+
+handlePhoneNumberChange("7812010366");
+console.log(validatePhoneNumber("7812010366"));
