@@ -1,9 +1,11 @@
 import styled from "styled-components/native";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { verifyCodeHttp, makePostRequest, getCodeHttp } from "./utils.js";
 import { Alert } from "react-native";
 
 export const ConfirmNumber = ({ route, navigation }) => {
+
+  const [cooldown, setCooldown] = useState(30);
   const { phoneNumber } = route.params;
   const [code, setCode] = useState("");
   const inputRef = useRef();
@@ -30,205 +32,191 @@ export const ConfirmNumber = ({ route, navigation }) => {
     }
   };
 
-  // TODO: consider having to wait a certain amount of time in between sending these
+  // TODO: require client to wait 30 seconds time in between sending these
   // don't want client to be able to spam it
   const onPressResendCode = async () => {
-    await makePostRequest(getCodeHttp, {
-      phoneNumber: phoneNumber,
-    });
+    if (cooldown === 0) {
+      setCooldown(30);
+      await makePostRequest(getCodeHttp, {
+        phoneNumber: phoneNumber,
+      });
+    }
   };
+
+  useEffect(() => {
+    const timer = cooldown > 0 && setInterval(() => setCooldown(cooldown - 1), 1000);
+    return () => clearInterval(timer);
+  }, [cooldown]);
 
   return (
     <ContainerRoot>
       <ConfirmPhoneDiv>
-        <Group1>
-          <BackButton onPress={() => navigation.goBack()}>
-            <LineImage source={require("./assets/backLine.png")} />
-            <ChangeButton>Change #</ChangeButton>
-          </BackButton>
-        </Group1>
-        <Group>
-          <ConfirmTitle>Confirm</ConfirmTitle>
-          <PhoneVerificationMessage>
-            To ensure the security of your account, we need to verify your phone
-            number: + 1 {phoneNumber}
-          </PhoneVerificationMessage>
-        </Group>
-        <Group2 onPress={onPressGroup2}>
-          <SplitBoxes>
-            <SplitBoxText>{code[0] || ""}</SplitBoxText>
-          </SplitBoxes>
-          <SplitBoxes>
-            <SplitBoxText>{code[1] || ""}</SplitBoxText>
-          </SplitBoxes>
-          <SplitBoxes>
-            <SplitBoxText>{code[2] || ""}</SplitBoxText>
-          </SplitBoxes>
-          <SplitBoxes>
-            <SplitBoxText>{code[3] || ""}</SplitBoxText>
-          </SplitBoxes>
-        </Group2>
-        <Group3>
-          <FirstRectangle />
-          <FirstRectangle />
-          <FirstRectangle />
-          <FirstRectangle />
-        </Group3>
-        <TextInputHidden
-          value={code}
-          onChangeText={setCode}
-          maxLength={4}
-          ref={inputRef}
-        />
-        <Group4>
-          <ResendCodeButton
-            title="Resend Code"
-            color="#c4c4c4"
-            onPress={onPressResendCode}
+        <MaxWidth>
+            <BackButton onPress={() => navigation.goBack()}>
+              <LineImage source={require("./assets/backLine.png")} />
+              <ChangeButton>Change #</ChangeButton>
+            </BackButton>
+          <Group>
+            <ConfirmTitle>Confirm</ConfirmTitle>
+            <PhoneVerificationMessage>
+              To ensure the security of your account, we need to verify your phone
+              number: + 1 {phoneNumber}
+            </PhoneVerificationMessage>
+          </Group>
+          <Group1>
+            <Group2 onPress={onPressGroup2}>
+              <SplitBoxes>
+                <SplitBoxText>{code[0] || ""}</SplitBoxText>
+              </SplitBoxes>
+              <SplitBoxes>
+                <SplitBoxText>{code[1] || ""}</SplitBoxText>
+              </SplitBoxes>
+              <SplitBoxes>
+                <SplitBoxText>{code[2] || ""}</SplitBoxText>
+              </SplitBoxes>
+              <SplitBoxes>
+                <SplitBoxText>{code[3] || ""}</SplitBoxText>
+              </SplitBoxes>
+            </Group2>
+            <Group3>
+              <FirstRectangle hasText={code.length > 0}/>
+              <FirstRectangle hasText={code.length > 1}/>
+              <FirstRectangle hasText={code.length > 2}/>
+              <FirstRectangle hasText={code.length > 3}/>
+          </Group3>     
+          </Group1>
+          <TextInputHidden
+            value={code}
+            onChangeText={setCode}
+            maxLength={4}
+            ref={inputRef}
+            keyboardType="numeric"
           />
-          <MediumButton onPress={onPressConfirm}>
-            <ConfirmCodeButtonText>Confirm</ConfirmCodeButtonText>
-          </MediumButton>
-        </Group4>
+          <Group4>
+            <ResendButton onPress={onPressResendCode}>
+              <ResendCodeButtonText>
+              {cooldown > 0 ? `${cooldown} secs` : 'Resend Code'}
+              </ResendCodeButtonText>
+            </ResendButton>
+            <MediumButton 
+              onPress={onPressConfirm}
+              active={code.length > 3}>
+              <ConfirmCodeButtonText>Confirm</ConfirmCodeButtonText>
+            </MediumButton>
+          </Group4>
+        </MaxWidth>
       </ConfirmPhoneDiv>
     </ContainerRoot>
   );
 };
 
 const ContainerRoot = styled.View`
-  position: relative;
-  display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 69px 0px 0px 0px;
+  padding-top: 60px;
   border-radius: 20px;
-  box-sizing: border-box;
   background-color: #786cff;
   overflow: hidden;
 `;
 const ConfirmPhoneDiv = styled.View`
   width: 100%;
-  position: relative;
-  gap: 26px;
-  display: flex;
+  height: 100%;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
-  padding: 15px 18px 359px 18px;
   border-radius: 20px;
-  box-sizing: border-box;
   background-color: #ffffff;
+  overflow: hidden;
+`;
+
+const MaxWidth = styled.View`
+  width: 100%;
+  max-width: 390px;
+  height: 100%;
+  gap: 30px;
+  flex-direction: column;
+  padding: 15px 30px 0px 30px;
 `;
 
 const Group1 = styled.View`
-  width: 120px;
-  position: relative;
-  display: flex;
+  width: 100%;
   flex-direction: column;
-  justify-content: flex-start;
-  align-self: flex-start;
-  align-items: flex-start;
-  margin: 0px 0px 2px 0px;
-  padding: 0px 12px 31px 12px;
-  box-sizing: border-box;
+  align-items: center;
 `;
 const BackButton = styled.TouchableOpacity`
-  width: 100%;
+  width: 120px;
   height: 40px;
-  left: 0px;
-  top: 4px;
-  position: absolute;
-  display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: flex-end;
-  padding: 0px;
-  padding-top: 12px;
-  padding-bottom: 11px;
-  border-width: 0px;
-  box-sizing: content-box;
+  align-items: center;
   cursor: pointer;
 `;
 
 const ChangeButton = styled.Text`
-  position: relative;
   color: #bdbdbd;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 600;
-  line-height: 17px;
-  padding-bottom: 21px;
+  line-height: 12px;
 `;
+
+
 const LineImage = styled.Image`
-  width: 25px;
-  min-width: 0px;
-  min-height: 0px;
-  position: relative;
+  width: 27px;
+  height: 40px;
+  object-fit: fill;
 `;
 
 const Group = styled.View`
   width: 330px;
-  position: relative;
   gap: 20px;
-  display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  margin: 0px 0px 34px 0px;
-  box-sizing: border-box;
+  margin-bottom: 30px;
 `;
 const ConfirmTitle = styled.Text`
-  position: relative;
   color: #786cff;
   font-size: 32px;
   font-weight: 700;
-  line-height: 35.20000076293945px;
+  line-height: 35px;
 `;
 const PhoneVerificationMessage = styled.Text`
   width: 244px;
-  position: relative;
   font-size: 12px;
   line-height: 17px;
 `;
 const Group2 = styled.Pressable`
-  width: 229px;
-  position: relative;
+  width: 270px;
   gap: 46px;
-  display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  box-sizing: border-box;
 `;
 const SplitBoxes = styled.View`
   border-color: #e5e5e5;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
   border-width: 2px;
   border-radius: 5px;
-  padding: 12px;
-  min-width: 50px;
+
 `;
 const SplitBoxText = styled.Text`
-  position: relative;
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 500;
   text-align: center;
 `;
 const Group3 = styled.View`
-  width: 229px;
-  position: relative;
+  width: 270px;
   gap: 46px;
-  display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  margin: 0px 0px 14px 0px;
   box-sizing: border-box;
+  margin-top: 10px;
 `;
 const FirstRectangle = styled.View`
   width: 50px;
   height: 5px;
-  position: relative;
   border-radius: 4px;
-  background-color: #d9d9d9;
+  background-color: ${props => props.hasText ? '#786cff' : '#d9d9d9'};
 `;
 const TextInputHidden = styled.TextInput`
   position: absolute;
@@ -238,40 +226,41 @@ const TextInputHidden = styled.TextInput`
 `;
 const Group4 = styled.View`
   width: 330px;
-  position: relative;
-  gap: 53px;
-  display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  box-sizing: border-box;
 `;
 const ResendCodeButton = styled.Button`
-  position: relative;
-  font-size: 13px;
-  line-height: 17px;
+  font-size: 11px;
+  line-height: 11px;
   text-align: center;
 `;
 const MediumButton = styled.TouchableOpacity`
-  position: relative;
-  display: flex;
+  justify-content: center;
+  padding: 16px 61px;
+  border-radius: 8px;
+  background-color: #ff5a5f;
+  cursor: pointer;
+  background-color: ${({ active }) => (active ? "#ff5a5f" : "#e6e6e6")};
+`;
+
+const ResendButton = styled.TouchableOpacity`
   flex-direction: column;
   justify-content: center;
-  padding: 0px;
   padding-top: 16px;
-  padding-right: 61px;
-  padding-bottom: 16px;
-  padding-left: 61px;
-  border-width: 0px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  padding-left: 30px;
   border-radius: 8px;
-  box-sizing: content-box;
-  background-color: #ff5a5f;
-  overflow: hidden;
-  cursor: pointer;
 `;
 const ConfirmCodeButtonText = styled.Text`
-  position: relative;
   color: #ffffff;
+  font-weight: 600;
+  line-height: 20px;
+`;
+
+const ResendCodeButtonText = styled.Text`
+  color: #c4c4c4;
   font-weight: 600;
   line-height: 20px;
 `;
