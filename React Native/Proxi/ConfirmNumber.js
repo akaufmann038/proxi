@@ -14,6 +14,8 @@ export const ConfirmNumber = ({ route, navigation }) => {
 
   const onPressConfirm = async () => {
     if (code.length == 4) {
+      // REACTIVATE FOR TEXTS
+      /*
       // send request to verify code with phone number
       const res = await makePostRequest(verifyCodeHttp, {
         phoneNumber: phoneNumber,
@@ -27,6 +29,8 @@ export const ConfirmNumber = ({ route, navigation }) => {
         // TODO: make customer notifications within the app instead of ugly ass alerts
         Alert.alert("Invalid code");
       }
+      */
+      navigation.navigate("LetsGetStarted");
     }
   };
 
@@ -132,7 +136,7 @@ const Group1 = styled.View`
   padding: 0px 12px 31px 12px;
   box-sizing: border-box;
 `;
-const BackButton = styled.TouchableOpacity`
+export const BackButton = styled.TouchableOpacity`
   width: 100%;
   height: 40px;
   left: 0px;
@@ -158,7 +162,7 @@ const ChangeButton = styled.Text`
   line-height: 17px;
   padding-bottom: 21px;
 `;
-const LineImage = styled.Image`
+export const LineImage = styled.Image`
   width: 25px;
   min-width: 0px;
   min-height: 0px;

@@ -8,10 +8,12 @@ export const Login = ({ navigation }) => {
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(false);
   const inputRef = useRef();
 
+  /*
   const validatePhoneNumber = (phoneNumber) => {
     let phoneRegex = /^[2-9]{2}[0-9]{8}$/; // sample phone number validation
     return phoneRegex.test(phoneNumber);
   };
+  */
 
   const handlePhoneNumberChange = (text) => {
     let cleaned = ("" + text).replace(/\D/g, "");
@@ -31,25 +33,33 @@ export const Login = ({ navigation }) => {
     ].join("");
 
     setPhoneNumber(number);
-    setIsValidPhoneNumber(validatePhoneNumber(cleaned));
+    if (cleaned.length == 10) {
+      setIsValidPhoneNumber(true);
+    }
+    //setIsValidPhoneNumber(validatePhoneNumber(cleaned));
   };
 
   const onPressConfirmButton = async () => {
     if (phoneNumber.length != 14) {
       Alert.alert("Please enter a valid phone number");
     } else {
+      // REACTIVATE FOR TEXTS
+      /*
       try {
         const res = await makePostRequest(getCodeHttp, {
           phoneNumber: phoneNumber,
         });
 
-        console.log(phoneNumber);
         navigation.navigate("ConfirmNumber", {
           phoneNumber: phoneNumber,
         });
       } catch (err) {
         console.log(err);
       }
+      */
+      navigation.navigate("ConfirmNumber", {
+        phoneNumber: phoneNumber,
+      });
     }
   };
 

@@ -69,7 +69,6 @@ app.post("/verify-code", (req, res) => {
     if (!(phoneNumber in activeCodes)) {
       // TODO: figure out how to actually do response messages correctly and
       // fix that cannot set headers error (happens when incorrect code is sent)
-      console.log("not recognized");
       return res.json({
         success: false,
         message: "Phone number not recognized",
