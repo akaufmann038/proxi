@@ -136,7 +136,7 @@ const Group1 = styled.View`
   padding: 0px 12px 31px 12px;
   box-sizing: border-box;
 `;
-export const BackButton = styled.TouchableOpacity`
+const BackButton = styled.TouchableOpacity`
   width: 100%;
   height: 40px;
   left: 0px;
@@ -162,7 +162,7 @@ const ChangeButton = styled.Text`
   line-height: 17px;
   padding-bottom: 21px;
 `;
-export const LineImage = styled.Image`
+const LineImage = styled.Image`
   width: 25px;
   min-width: 0px;
   min-height: 0px;

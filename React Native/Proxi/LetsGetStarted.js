@@ -1,6 +1,5 @@
 import { Text } from "react-native";
 import styled from "styled-components/native";
-import { BackButton, LineImage } from "./ConfirmNumber.js";
 
 export const LetsGetStarted = ({ navigation }) => {
   const onPressConfirmBtn = () => {};
@@ -46,6 +45,29 @@ export const LetsGetStarted = ({ navigation }) => {
     </ProfileRootRoot>
   );
 };
+const LineImage = styled.Image`
+  width: 25px;
+  min-width: 0px;
+  min-height: 0px;
+  position: relative;
+`;
+const BackButton = styled.TouchableOpacity`
+  width: 100%;
+  height: 40px;
+  left: 0px;
+  top: 4px;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0px;
+  padding-top: 12px;
+  padding-bottom: 11px;
+  border-width: 0px;
+  box-sizing: content-box;
+  cursor: pointer;
+`;
 const ConfirmBtn = styled.Text`
   position: relative;
   color: #ffffff;
