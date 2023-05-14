@@ -8,6 +8,8 @@ export const Login = ({ navigation }) => {
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(false);
   const inputRef = useRef();
 
+  // commented this out for now because it says that some phone numbers aren't
+  // valid when they are
   /*
   const validatePhoneNumber = (phoneNumber) => {
     let phoneRegex = /^[2-9]{2}[0-9]{8}$/; // sample phone number validation

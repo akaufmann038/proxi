@@ -1,8 +1,40 @@
-import { Text } from "react-native";
+import { Text, TouchableWithoutFeedback, Button } from "react-native";
+import { useState, useRef } from "react";
 import styled from "styled-components/native";
 
 export const LetsGetStarted = ({ navigation }) => {
   const onPressConfirmBtn = () => {};
+  const nameInputRef = useRef();
+  const jobInputRef = useRef();
+  const [nameInFocus, setNameInFocus] = useState(false);
+  const [jobInFocus, setJobInFocus] = useState(false);
+  const [name, setName] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
+
+  // this ensures that the placeholder text reapears when the input text box
+  // is unfocused, only if the user has no entered any text into it
+  const InputConditional = ({ isInFocus, inputName, inputVariable }) => {
+    // not in focus and no input => job title
+    // in focus or is input
+    if (!isInFocus && inputVariable == "") {
+      return (
+        <>
+          {inputName}
+          <TextInput>*</TextInput>
+        </>
+      );
+    } else {
+      return <></>;
+    }
+  };
+
+  const handleNameTextChange = (text) => {
+    setName(text);
+  };
+
+  const handleJobTitleTextChange = (text) => {
+    setJobTitle(text);
+  };
 
   return (
     <ProfileRootRoot>
@@ -20,16 +52,40 @@ export const LetsGetStarted = ({ navigation }) => {
       <VisibilityInfo>
         This information will be visible to other attendees at events around you
       </VisibilityInfo>
-      <NameBox>
-        <FullNameInput>
-          Full Name<TextInput>*</TextInput>
-        </FullNameInput>
-      </NameBox>
-      <JobTitleBox>
-        <FullNameInput>
-          Job Title<TextInput>*</TextInput>
-        </FullNameInput>
-      </JobTitleBox>
+      <TouchableWithoutFeedback onPress={() => nameInputRef.current.focus()}>
+        <NameBox>
+          <FullNameInput
+            ref={nameInputRef}
+            onFocus={() => setNameInFocus(true)}
+            onBlur={() => setNameInFocus(false)}
+            value={name}
+            onChangeText={handleNameTextChange}
+          >
+            <InputConditional
+              isInFocus={nameInFocus}
+              inputName={"Full Name"}
+              inputVariable={name}
+            />
+          </FullNameInput>
+        </NameBox>
+      </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback onPress={() => jobInputRef.current.focus()}>
+        <JobTitleBox>
+          <FullNameInput
+            ref={jobInputRef}
+            onFocus={() => setJobInFocus(true)}
+            onBlur={() => setJobInFocus(false)}
+            value={jobTitle}
+            onChangeText={handleJobTitleTextChange}
+          >
+            <InputConditional
+              isInFocus={jobInFocus}
+              inputName={"Job Title"}
+              inputVariable={jobTitle}
+            />
+          </FullNameInput>
+        </JobTitleBox>
+      </TouchableWithoutFeedback>
       <Group>
         <Footer>
           <BackBtnFooter
