@@ -3,20 +3,24 @@ import { useState, useRef } from "react";
 import styled from "styled-components/native";
 import { AnimatedButton, BackButton } from "./SignupComponents";
 
-export const LetsGetStarted = ({ navigation }) => {
-  const onPressConfirmBtn = () => {};
+export const LetsGetStarted = ({ route, navigation }) => {
   const nameInputRef = useRef();
   const jobInputRef = useRef();
   const [nameInFocus, setNameInFocus] = useState(false);
   const [jobInFocus, setJobInFocus] = useState(false);
   const [name, setName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
+  const { phoneNumber } = route.params;
+
+  const onPressConfirmBtn = () => {
+    if (name.length > 0 && jobTitle.length > 0) {
+      navigation.navigate("CreateProfile", { phoneNumber: phoneNumber });
+    }
+  };
 
   // this ensures that the placeholder text reapears when the input text box
-  // is unfocused, only if the user has no entered any text into it
+  // is unfocused, only if the user has not entered any text into it
   const InputConditional = ({ isInFocus, inputName, inputVariable }) => {
-    // not in focus and no input => job title
-    // in focus or is input
     if (!isInFocus && inputVariable == "") {
       return (
         <>

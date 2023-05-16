@@ -5,7 +5,6 @@ import { Alert } from "react-native";
 import { AnimatedButton, BackButton } from "./SignupComponents";
 
 export const ConfirmNumber = ({ route, navigation }) => {
-
   const [cooldown, setCooldown] = useState(30);
   const { phoneNumber } = route.params;
   const [code, setCode] = useState("");
@@ -33,11 +32,13 @@ export const ConfirmNumber = ({ route, navigation }) => {
         Alert.alert("Invalid code");
       }
       */
-      navigation.navigate("LetsGetStarted");
+      navigation.navigate("LetsGetStarted", {
+        phoneNumber: phoneNumber,
+      });
     }
   };
 
-  // TODO: require client to wait 30 seconds time in between sending these
+  // require client to wait 30 seconds time in between sending these
   // don't want client to be able to spam it
   const onPressResendCode = async () => {
     if (cooldown === 0) {
@@ -49,7 +50,8 @@ export const ConfirmNumber = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    const timer = cooldown > 0 && setInterval(() => setCooldown(cooldown - 1), 1000);
+    const timer =
+      cooldown > 0 && setInterval(() => setCooldown(cooldown - 1), 1000);
     return () => clearInterval(timer);
   }, [cooldown]);
 
@@ -64,8 +66,8 @@ export const ConfirmNumber = ({ route, navigation }) => {
           <Group>
             <ConfirmTitle>Confirm</ConfirmTitle>
             <PhoneVerificationMessage>
-              To ensure the security of your account, we need to verify your phone
-              number: + 1 {phoneNumber}
+              To ensure the security of your account, we need to verify your
+              phone number: + 1 {phoneNumber}
             </PhoneVerificationMessage>
           </Group>
           <Group1>
@@ -84,11 +86,11 @@ export const ConfirmNumber = ({ route, navigation }) => {
               </SplitBoxes>
             </Group2>
             <Group3>
-              <FirstRectangle hasText={code.length > 0}/>
-              <FirstRectangle hasText={code.length > 1}/>
-              <FirstRectangle hasText={code.length > 2}/>
-              <FirstRectangle hasText={code.length > 3}/>
-          </Group3>     
+              <FirstRectangle hasText={code.length > 0} />
+              <FirstRectangle hasText={code.length > 1} />
+              <FirstRectangle hasText={code.length > 2} />
+              <FirstRectangle hasText={code.length > 3} />
+            </Group3>
           </Group1>
           <TextInputHidden
             value={code}
@@ -100,7 +102,7 @@ export const ConfirmNumber = ({ route, navigation }) => {
           <Group4>
             <ResendButton onPress={onPressResendCode}>
               <ResendCodeButtonText>
-              {cooldown > 0 ? `${cooldown} secs` : 'Resend Code'}
+                {cooldown > 0 ? `${cooldown} secs` : "Resend Code"}
               </ResendCodeButtonText>
             </ResendButton>
             <AnimatedButton
@@ -148,7 +150,6 @@ const Group1 = styled.View`
   align-items: center;
 `;
 
-
 const Group = styled.View`
   width: 330px;
   gap: 20px;
@@ -181,7 +182,6 @@ const SplitBoxes = styled.View`
   height: 50px;
   border-width: 2px;
   border-radius: 5px;
-
 `;
 const SplitBoxText = styled.Text`
   font-size: 32px;
@@ -201,7 +201,7 @@ const FirstRectangle = styled.View`
   width: 50px;
   height: 5px;
   border-radius: 4px;
-  background-color: ${props => props.hasText ? '#786cff' : '#d9d9d9'};
+  background-color: ${(props) => (props.hasText ? "#786cff" : "#d9d9d9")};
 `;
 const TextInputHidden = styled.TextInput`
   position: absolute;
