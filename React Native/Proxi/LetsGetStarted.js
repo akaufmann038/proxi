@@ -49,12 +49,13 @@ export const LetsGetStarted = ({ navigation }) => {
             <Completed />
           </NotCompleted>
         </HeaderNav>
+
         <GetStartedHeader>Let's get started!</GetStartedHeader>
         <VisibilityInfo>
           This information will be visible to other attendees at events around you
         </VisibilityInfo>
         <TouchableWithoutFeedback onPress={() => nameInputRef.current.focus()}>
-          <NameBox>
+          <JobTitleBox>
             <FullNameInput
               ref={nameInputRef}
               onFocus={() => setNameInFocus(true)}
@@ -68,7 +69,7 @@ export const LetsGetStarted = ({ navigation }) => {
                 inputVariable={name}
               />
             </FullNameInput>
-          </NameBox>
+          </JobTitleBox>
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={() => jobInputRef.current.focus()}>
           <JobTitleBox>
@@ -87,18 +88,16 @@ export const LetsGetStarted = ({ navigation }) => {
             </FullNameInput>
           </JobTitleBox>
         </TouchableWithoutFeedback>
-        <Group>
-          <Footer>
-            <BackBtnFooter
-              title="back"
-              color="#c4c4c4"
-              onPress={() => navigation.goBack()}
-            />
-            <FooterButton>
-              <ConfirmBtn onPress={onPressConfirmBtn}>Confirm</ConfirmBtn>
-            </FooterButton>
-          </Footer>
-        </Group>
+        <Footer>
+          <BackButtonFooter onPress={() => navigation.goBack()}>
+            <BackCodeButtonText>Back</BackCodeButtonText>
+          </BackButtonFooter>
+          <AnimatedButton
+            onPress={onPressConfirmBtn}
+            active="1"
+            label="Confirm"
+          />
+        </Footer>
       </MaxWidth>
     </ProfileRootRoot>
   );
@@ -110,7 +109,8 @@ const MaxWidth = styled.View`
   height: 100%;
   gap: 30px;
   flex-direction: column;
-  padding: 15px 30px 0px 30px;
+  padding: 30px 30px 0px 30px;
+  align-items: center;
 `;
 
 const HeaderNav = styled.View`
@@ -143,31 +143,6 @@ const Completed = styled.View`
   background-color: #786cff;
 `;
 
-const ConfirmBtn = styled.Text`
-  position: relative;
-  color: #ffffff;
-  font-weight: 600;
-  line-height: 20px;
-`;
-const FooterButton = styled.TouchableOpacity`
-  height: 60%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0px;
-  padding-top: 16px;
-  padding-right: 61px;
-  padding-bottom: 16px;
-  padding-left: 61px;
-  border-width: 0px;
-  border-radius: 8px;
-  box-sizing: content-box;
-  background-color: #ff5a5f;
-  overflow: hidden;
-  cursor: pointer;
-`;
 const BackBtnFooter = styled.Button`
   position: relative;
   color: #c4c4c4;
@@ -178,41 +153,27 @@ const BackBtnFooter = styled.Button`
   box-sizing: border-box;
 `;
 const Footer = styled.View`
-  width: 330px;
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-self: stretch;
-  align-items: center;
-  box-sizing: border-box;
-`;
-const Group = styled.View`
-  width: 330px;
+  width: 100%;
+  max-width: 300px;
   position: relative;
   gap: 20px;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  box-sizing: border-box;
+  flex-direction: row;
+  align-items: flex-center;
+  justify-content: flex-end;
+
 `;
 const JobTitleBox = styled.View`
-  width: 330px;
+  width: 300px;
   height: 50px;
-  position: relative;
-  display: flex;
-  flex-shrink: 0;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  margin: 0px 0px 1px 0px;
   padding: 14px;
   border-width: 1px;
   border-radius: 10px;
   border-style: solid;
   border-color: #000000;
-  box-sizing: border-box;
   background-color: #ffffff;
   overflow: hidden;
 `;
@@ -224,25 +185,8 @@ const FullNameInput = styled.TextInput`
   position: relative;
   justify-content: flex-start;
   color: #828282;
-  line-height: 20px;
 `;
-const NameBox = styled.View`
-  width: 330px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  margin: 0px 0px 3px 0px;
-  padding: 14px;
-  border-width: 1px;
-  border-radius: 10px;
-  border-style: solid;
-  border-color: #000000;
-  box-sizing: border-box;
-  background-color: #ffffff;
-  overflow: hidden;
-`;
+
 const VisibilityInfo = styled.Text`
   width: 260px;
   position: relative;
@@ -258,23 +202,12 @@ const ProfileRootRoot = styled.View`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 46px 14px 314px 14px;
   border-radius: 20px;
   box-sizing: border-box;
   background-color: #ffffff;
   overflow: hidden;
 `;
 
-const Group2 = styled.View`
-  width: 14.16%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-  padding: 0px 1px 39px 1px;
-  box-sizing: border-box;
-`;
 const GetStartedHeader = styled.Text`
   position: relative;
   color: #786cff;
@@ -282,4 +215,22 @@ const GetStartedHeader = styled.Text`
   font-weight: 700;
   line-height: 35.20000076293945px;
   text-align: center;
+`;
+
+
+
+const BackButtonFooter = styled.TouchableOpacity`
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 16px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  padding-left: 30px;
+  border-radius: 8px;
+`;
+
+const BackCodeButtonText = styled.Text`
+  color: #c4c4c4;
+  font-weight: 600;
+  line-height: 20px;
 `;
