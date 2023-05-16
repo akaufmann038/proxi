@@ -1,6 +1,7 @@
 import { Text, TouchableWithoutFeedback, Button } from "react-native";
 import { useState, useRef } from "react";
 import styled from "styled-components/native";
+import { AnimatedButton, BackButton } from "./SignupComponents";
 
 export const LetsGetStarted = ({ route, navigation }) => {
   const nameInputRef = useRef();
@@ -42,117 +43,110 @@ export const LetsGetStarted = ({ route, navigation }) => {
 
   return (
     <ProfileRootRoot>
-      <Group1>
-        <Group2>
-          <BackButton onPress={() => navigation.goBack()}>
-            <LineImage source={require("./assets/backLine.png")} />
-          </BackButton>
-        </Group2>
-        <NotCompleted>
-          <Completed />
-        </NotCompleted>
-      </Group1>
-      <GetStartedHeader>Let's get started!</GetStartedHeader>
-      <VisibilityInfo>
-        This information will be visible to other attendees at events around you
-      </VisibilityInfo>
-      <TouchableWithoutFeedback onPress={() => nameInputRef.current.focus()}>
-        <NameBox>
-          <FullNameInput
-            ref={nameInputRef}
-            onFocus={() => setNameInFocus(true)}
-            onBlur={() => setNameInFocus(false)}
-            value={name}
-            onChangeText={handleNameTextChange}
-          >
-            <InputConditional
-              isInFocus={nameInFocus}
-              inputName={"Full Name"}
-              inputVariable={name}
-            />
-          </FullNameInput>
-        </NameBox>
-      </TouchableWithoutFeedback>
-      <TouchableWithoutFeedback onPress={() => jobInputRef.current.focus()}>
-        <JobTitleBox>
-          <FullNameInput
-            ref={jobInputRef}
-            onFocus={() => setJobInFocus(true)}
-            onBlur={() => setJobInFocus(false)}
-            value={jobTitle}
-            onChangeText={handleJobTitleTextChange}
-          >
-            <InputConditional
-              isInFocus={jobInFocus}
-              inputName={"Job Title"}
-              inputVariable={jobTitle}
-            />
-          </FullNameInput>
-        </JobTitleBox>
-      </TouchableWithoutFeedback>
-      <Group>
-        <Footer>
-          <BackBtnFooter
-            title="back"
-            color="#c4c4c4"
-            onPress={() => navigation.goBack()}
+      <MaxWidth>
+        <HeaderNav>
+          <BackButton 
+              label="Change #"
+              onPress={() => navigation.goBack()}
           />
-          <FooterButton onPress={onPressConfirmBtn}>
-            <ConfirmBtn>Confirm</ConfirmBtn>
-          </FooterButton>
+          <NotCompleted>
+            <Completed />
+          </NotCompleted>
+        </HeaderNav>
+
+        <GetStartedHeader>Let's get started!</GetStartedHeader>
+        <VisibilityInfo>
+          This information will be visible to other attendees at events around you
+        </VisibilityInfo>
+        <TouchableWithoutFeedback onPress={() => nameInputRef.current.focus()}>
+          <JobTitleBox>
+            <FullNameInput
+              ref={nameInputRef}
+              onFocus={() => setNameInFocus(true)}
+              onBlur={() => setNameInFocus(false)}
+              value={name}
+              onChangeText={handleNameTextChange}
+            >
+              <InputConditional
+                isInFocus={nameInFocus}
+                inputName={"Full Name"}
+                inputVariable={name}
+              />
+            </FullNameInput>
+          </JobTitleBox>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={() => jobInputRef.current.focus()}>
+          <JobTitleBox>
+            <FullNameInput
+              ref={jobInputRef}
+              onFocus={() => setJobInFocus(true)}
+              onBlur={() => setJobInFocus(false)}
+              value={jobTitle}
+              onChangeText={handleJobTitleTextChange}
+            >
+              <InputConditional
+                isInFocus={jobInFocus}
+                inputName={"Job Title"}
+                inputVariable={jobTitle}
+              />
+            </FullNameInput>
+          </JobTitleBox>
+        </TouchableWithoutFeedback>
+        <Footer>
+          <BackButtonFooter onPress={() => navigation.goBack()}>
+            <BackCodeButtonText>Back</BackCodeButtonText>
+          </BackButtonFooter>
+          <AnimatedButton
+            onPress={onPressConfirmBtn}
+            active="1"
+            label="Confirm"
+          />
         </Footer>
-      </Group>
+      </MaxWidth>
     </ProfileRootRoot>
   );
 };
-export const LineImage = styled.Image`
-  width: 25px;
-  height: 40px;
-  margin-left: 40px;
-  position: relative;
-`;
-export const BackButton = styled.TouchableOpacity`
+
+const MaxWidth = styled.View`
   width: 100%;
-  height: 40px;
-  left: 0px;
-  top: 4px;
-  position: absolute;
+  max-width: 390px;
+  height: 100%;
+  gap: 30px;
+  flex-direction: column;
+  padding: 30px 30px 0px 30px;
+  align-items: center;
+`;
+
+const HeaderNav = styled.View`
+  width: 100%;
+  height: 100px;
+  position: relative;
+  gap: 18px;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
+  align-self: flex-start;
   align-items: center;
-  padding: 0px;
-  padding-top: 12px;
-  padding-bottom: 11px;
-  border-width: 0px;
-  box-sizing: content-box;
-  cursor: pointer;
+  box-sizing: border-box;
 `;
-const ConfirmBtn = styled.Text`
+
+const NotCompleted = styled.View`
+  flex: 1;
   position: relative;
-  color: #ffffff;
-  font-weight: 600;
-  line-height: 20px;
-`;
-const FooterButton = styled.TouchableOpacity`
-  height: 60%;
-  position: relative;
-  display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0px;
-  padding-top: 16px;
-  padding-right: 61px;
-  padding-bottom: 16px;
-  padding-left: 61px;
-  border-width: 0px;
-  border-radius: 8px;
-  box-sizing: content-box;
-  background-color: #ff5a5f;
-  overflow: hidden;
-  cursor: pointer;
+  align-items: flex-start;
+  border-radius: 10px;
+  background-color: #d9d9d9;
 `;
+
+const Completed = styled.View`
+  width: 33%;
+  height: 6px;
+  position: relative;
+  border-radius: 10px;
+  background-color: #786cff;
+`;
+
 const BackBtnFooter = styled.Button`
   position: relative;
   color: #c4c4c4;
@@ -163,41 +157,27 @@ const BackBtnFooter = styled.Button`
   box-sizing: border-box;
 `;
 const Footer = styled.View`
-  width: 330px;
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-self: stretch;
-  align-items: center;
-  box-sizing: border-box;
-`;
-const Group = styled.View`
-  width: 330px;
+  width: 100%;
+  max-width: 300px;
   position: relative;
   gap: 20px;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  box-sizing: border-box;
+  flex-direction: row;
+  align-items: flex-center;
+  justify-content: flex-end;
+
 `;
 const JobTitleBox = styled.View`
-  width: 330px;
+  width: 300px;
   height: 50px;
-  position: relative;
-  display: flex;
-  flex-shrink: 0;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  margin: 0px 0px 1px 0px;
   padding: 14px;
   border-width: 1px;
   border-radius: 10px;
   border-style: solid;
   border-color: #000000;
-  box-sizing: border-box;
   background-color: #ffffff;
   overflow: hidden;
 `;
@@ -209,25 +189,8 @@ const FullNameInput = styled.TextInput`
   position: relative;
   justify-content: flex-start;
   color: #828282;
-  line-height: 20px;
 `;
-const NameBox = styled.View`
-  width: 330px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  margin: 0px 0px 3px 0px;
-  padding: 14px;
-  border-width: 1px;
-  border-radius: 10px;
-  border-style: solid;
-  border-color: #000000;
-  box-sizing: border-box;
-  background-color: #ffffff;
-  overflow: hidden;
-`;
+
 const VisibilityInfo = styled.Text`
   width: 260px;
   position: relative;
@@ -243,56 +206,12 @@ const ProfileRootRoot = styled.View`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 46px 14px 314px 14px;
   border-radius: 20px;
   box-sizing: border-box;
   background-color: #ffffff;
   overflow: hidden;
 `;
-export const Group1 = styled.View`
-  width: 93.65%;
-  position: relative;
-  gap: 18px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-self: flex-start;
-  align-items: center;
-  margin: 0px 0px 29px 0px;
-  box-sizing: border-box;
-`;
-export const Group2 = styled.View`
-  width: 14.16%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-  padding: 0px 1px 39px 1px;
-  box-sizing: border-box;
-`;
-export const NotCompleted = styled.View`
-  width: 80.53%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  margin: 0px 0px 22px 0px;
-  margin-top: 30px;
-  border-radius: 10px;
-  box-sizing: border-box;
-  background-color: #d9d9d9;
-`;
-const Completed = styled.View`
-  width: 66px;
-  height: 6px;
-  position: relative;
-  flex-shrink: 0;
-  border-radius: 10px;
-  box-sizing: border-box;
-  background-color: #786cff;
-`;
+
 const GetStartedHeader = styled.Text`
   position: relative;
   color: #786cff;
@@ -300,4 +219,22 @@ const GetStartedHeader = styled.Text`
   font-weight: 700;
   line-height: 35.20000076293945px;
   text-align: center;
+`;
+
+
+
+const BackButtonFooter = styled.TouchableOpacity`
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 16px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  padding-left: 30px;
+  border-radius: 8px;
+`;
+
+const BackCodeButtonText = styled.Text`
+  color: #c4c4c4;
+  font-weight: 600;
+  line-height: 20px;
 `;

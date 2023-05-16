@@ -2,6 +2,7 @@ import styled from "styled-components/native";
 import { useState, useRef } from "react";
 import { Alert, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { makePostRequest, getCodeHttp } from "./utils.js";
+import { AnimatedButton } from "./SignupComponents";
 
 export const Login = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -37,6 +38,10 @@ export const Login = ({ navigation }) => {
     setPhoneNumber(number);
     if (cleaned.length == 10) {
       setIsValidPhoneNumber(true);
+    }
+
+    if (cleaned.length != 10) {
+      setIsValidPhoneNumber(false);
     }
     //setIsValidPhoneNumber(validatePhoneNumber(cleaned));
   };
@@ -87,14 +92,11 @@ export const Login = ({ navigation }) => {
               />
             </PhoneNumberInput>
           </TouchableWithoutFeedback>
-          <ConfirmButton
-            active={isValidPhoneNumber}
+          <AnimatedButton
             onPress={onPressConfirmButton}
-          >
-            <ConfirmButtonText active={isValidPhoneNumber}>
-              Confirm
-            </ConfirmButtonText>
-          </ConfirmButton>
+            active={isValidPhoneNumber}
+            label="Confirm"
+          />
         </SignUpBox>
       </SignUpContainerRoot>
     </TouchableWithoutFeedback>
@@ -161,16 +163,3 @@ const PhoneNumber = styled.TextInput`
   line-height: 20px;
 `;
 
-const ConfirmButton = styled.TouchableOpacity`
-  width: 190px;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 61px;
-  border-radius: 8px;
-  background-color: ${({ active }) => (active ? "#ff5a5f" : "#e6e6e6")};
-`;
-
-const ConfirmButtonText = styled.Text`
-  color: ${({ active }) => (active ? "#ffffff" : "grey")};
-  font-weight: 600;
-`;
