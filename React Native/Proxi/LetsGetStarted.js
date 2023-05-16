@@ -2,20 +2,24 @@ import { Text, TouchableWithoutFeedback, Button } from "react-native";
 import { useState, useRef } from "react";
 import styled from "styled-components/native";
 
-export const LetsGetStarted = ({ navigation }) => {
-  const onPressConfirmBtn = () => {};
+export const LetsGetStarted = ({ route, navigation }) => {
   const nameInputRef = useRef();
   const jobInputRef = useRef();
   const [nameInFocus, setNameInFocus] = useState(false);
   const [jobInFocus, setJobInFocus] = useState(false);
   const [name, setName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
+  const { phoneNumber } = route.params;
+
+  const onPressConfirmBtn = () => {
+    if (name.length > 0 && jobTitle.length > 0) {
+      navigation.navigate("CreateProfile", { phoneNumber: phoneNumber });
+    }
+  };
 
   // this ensures that the placeholder text reapears when the input text box
-  // is unfocused, only if the user has no entered any text into it
+  // is unfocused, only if the user has not entered any text into it
   const InputConditional = ({ isInFocus, inputName, inputVariable }) => {
-    // not in focus and no input => job title
-    // in focus or is input
     if (!isInFocus && inputVariable == "") {
       return (
         <>
@@ -93,21 +97,21 @@ export const LetsGetStarted = ({ navigation }) => {
             color="#c4c4c4"
             onPress={() => navigation.goBack()}
           />
-          <FooterButton>
-            <ConfirmBtn onPress={onPressConfirmBtn}>Confirm</ConfirmBtn>
+          <FooterButton onPress={onPressConfirmBtn}>
+            <ConfirmBtn>Confirm</ConfirmBtn>
           </FooterButton>
         </Footer>
       </Group>
     </ProfileRootRoot>
   );
 };
-const LineImage = styled.Image`
+export const LineImage = styled.Image`
   width: 25px;
-  min-width: 0px;
-  min-height: 0px;
+  height: 40px;
+  margin-left: 40px;
   position: relative;
 `;
-const BackButton = styled.TouchableOpacity`
+export const BackButton = styled.TouchableOpacity`
   width: 100%;
   height: 40px;
   left: 0px;
@@ -116,7 +120,7 @@ const BackButton = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   padding: 0px;
   padding-top: 12px;
   padding-bottom: 11px;
@@ -245,7 +249,7 @@ const ProfileRootRoot = styled.View`
   background-color: #ffffff;
   overflow: hidden;
 `;
-const Group1 = styled.View`
+export const Group1 = styled.View`
   width: 93.65%;
   position: relative;
   gap: 18px;
@@ -257,7 +261,7 @@ const Group1 = styled.View`
   margin: 0px 0px 29px 0px;
   box-sizing: border-box;
 `;
-const Group2 = styled.View`
+export const Group2 = styled.View`
   width: 14.16%;
   position: relative;
   display: flex;
@@ -267,15 +271,15 @@ const Group2 = styled.View`
   padding: 0px 1px 39px 1px;
   box-sizing: border-box;
 `;
-const NotCompleted = styled.View`
+export const NotCompleted = styled.View`
   width: 80.53%;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-self: flex-end;
   align-items: flex-start;
   margin: 0px 0px 22px 0px;
+  margin-top: 30px;
   border-radius: 10px;
   box-sizing: border-box;
   background-color: #d9d9d9;
