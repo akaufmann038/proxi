@@ -1,36 +1,32 @@
 import styled from "styled-components/native";
 import {
-  Group1,
-  Group2,
-  BackButton,
-  LineImage,
+  MaxWidth,
+  HeaderNav,
   NotCompleted,
+  ProfileRootRoot,
 } from "./LetsGetStarted.js";
 import { TouchableWithoutFeedback } from "react-native";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
+import { AnimatedButton, BackButton } from "./SignupComponents";
 
 export const CreateProfile = ({ route, navigation }) => {
   const { phoneNumber } = route.params;
 
   return (
-    <CreateProfileRootRoot>
-      <FixedProfileDiv>
-        <Group1>
-          <Group2>
-            <BackButton onPress={() => navigation.goBack()}>
-              <LineImage source={require("./assets/backLine.png")} />
-            </BackButton>
-          </Group2>
+    <ProfileRootRoot>
+      <MaxWidth>
+        <HeaderNav>
+          <BackButton label="Change #" onPress={() => navigation.goBack()} />
           <NotCompleted>
             <Completed />
           </NotCompleted>
-        </Group1>
+        </HeaderNav>
         <TouchableWithoutFeedback>
           <CreateProfileLabel>Create Profile</CreateProfileLabel>
         </TouchableWithoutFeedback>
         <ProfileImage />
-      </FixedProfileDiv>
-    </CreateProfileRootRoot>
+      </MaxWidth>
+    </ProfileRootRoot>
   );
 };
 const ProfileImage = styled.Image`
@@ -58,29 +54,4 @@ const Completed = styled.View`
   border-radius: 10px;
   box-sizing: border-box;
   background-color: #786cff;
-`;
-const FixedProfileDiv = styled.View`
-  width: 100%;
-  position: relative;
-  gap: 7px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-self: center;
-  margin: 0px 0px 9px 0px;
-  padding: 46px 14px 12px 14px;
-  box-sizing: border-box;
-  background-color: #ffffff;
-  overflow: hidden;
-`;
-const CreateProfileRootRoot = styled.View`
-  position: relative;
-  gap: 9px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  border-radius: 20px;
-  box-sizing: border-box;
-  background-color: #ffffff;
-  overflow: hidden;
 `;

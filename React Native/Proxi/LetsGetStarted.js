@@ -45,10 +45,7 @@ export const LetsGetStarted = ({ route, navigation }) => {
     <ProfileRootRoot>
       <MaxWidth>
         <HeaderNav>
-          <BackButton 
-              label="Change #"
-              onPress={() => navigation.goBack()}
-          />
+          <BackButton label="Change #" onPress={() => navigation.goBack()} />
           <NotCompleted>
             <Completed />
           </NotCompleted>
@@ -56,7 +53,8 @@ export const LetsGetStarted = ({ route, navigation }) => {
 
         <GetStartedHeader>Let's get started!</GetStartedHeader>
         <VisibilityInfo>
-          This information will be visible to other attendees at events around you
+          This information will be visible to other attendees at events around
+          you
         </VisibilityInfo>
         <TouchableWithoutFeedback onPress={() => nameInputRef.current.focus()}>
           <JobTitleBox>
@@ -107,7 +105,7 @@ export const LetsGetStarted = ({ route, navigation }) => {
   );
 };
 
-const MaxWidth = styled.View`
+export const MaxWidth = styled.View`
   width: 100%;
   max-width: 390px;
   height: 100%;
@@ -117,7 +115,7 @@ const MaxWidth = styled.View`
   align-items: center;
 `;
 
-const HeaderNav = styled.View`
+export const HeaderNav = styled.View`
   width: 100%;
   height: 100px;
   position: relative;
@@ -130,7 +128,7 @@ const HeaderNav = styled.View`
   box-sizing: border-box;
 `;
 
-const NotCompleted = styled.View`
+export const NotCompleted = styled.View`
   flex: 1;
   position: relative;
   flex-direction: column;
@@ -146,16 +144,6 @@ const Completed = styled.View`
   border-radius: 10px;
   background-color: #786cff;
 `;
-
-const BackBtnFooter = styled.Button`
-  position: relative;
-  color: #c4c4c4;
-  font-size: 13px;
-  font-family: Poppins;
-  line-height: 17px;
-  text-align: center;
-  box-sizing: border-box;
-`;
 const Footer = styled.View`
   width: 100%;
   max-width: 300px;
@@ -165,7 +153,6 @@ const Footer = styled.View`
   flex-direction: row;
   align-items: flex-center;
   justify-content: flex-end;
-
 `;
 const JobTitleBox = styled.View`
   width: 300px;
@@ -199,7 +186,7 @@ const VisibilityInfo = styled.Text`
   line-height: 17px;
   text-align: center;
 `;
-const ProfileRootRoot = styled.View`
+export const ProfileRootRoot = styled.View`
   position: relative;
   gap: 20px;
   display: flex;
@@ -220,8 +207,6 @@ const GetStartedHeader = styled.Text`
   line-height: 35.20000076293945px;
   text-align: center;
 `;
-
-
 
 const BackButtonFooter = styled.TouchableOpacity`
   flex-direction: column;
