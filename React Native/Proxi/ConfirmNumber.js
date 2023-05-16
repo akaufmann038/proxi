@@ -2,6 +2,7 @@ import styled from "styled-components/native";
 import { useState, useRef, useEffect } from "react";
 import { verifyCodeHttp, makePostRequest, getCodeHttp } from "./utils.js";
 import { Alert } from "react-native";
+import { AnimatedButton, BackButton } from "./SignupComponents";
 
 export const ConfirmNumber = ({ route, navigation }) => {
 
@@ -56,10 +57,10 @@ export const ConfirmNumber = ({ route, navigation }) => {
     <ContainerRoot>
       <ConfirmPhoneDiv>
         <MaxWidth>
-            <BackButton onPress={() => navigation.goBack()}>
-              <LineImage source={require("./assets/backLine.png")} />
-              <ChangeButton>Change #</ChangeButton>
-            </BackButton>
+            <BackButton 
+              label="Change #"
+              onPress={() => navigation.goBack()}
+            />
           <Group>
             <ConfirmTitle>Confirm</ConfirmTitle>
             <PhoneVerificationMessage>
@@ -102,11 +103,11 @@ export const ConfirmNumber = ({ route, navigation }) => {
               {cooldown > 0 ? `${cooldown} secs` : 'Resend Code'}
               </ResendCodeButtonText>
             </ResendButton>
-            <MediumButton 
-              onPress={onPressConfirm}
-              active={code.length > 3}>
-              <ConfirmCodeButtonText>Confirm</ConfirmCodeButtonText>
-            </MediumButton>
+            <AnimatedButton
+            onPress={onPressConfirm}
+            active={code.length > 3}
+            label="Confirm"
+            />
           </Group4>
         </MaxWidth>
       </ConfirmPhoneDiv>
@@ -146,27 +147,7 @@ const Group1 = styled.View`
   flex-direction: column;
   align-items: center;
 `;
-const BackButton = styled.TouchableOpacity`
-  width: 120px;
-  height: 40px;
-  flex-direction: row;
-  align-items: center;
-  cursor: pointer;
-`;
 
-const ChangeButton = styled.Text`
-  color: #bdbdbd;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 12px;
-`;
-
-
-const LineImage = styled.Image`
-  width: 27px;
-  height: 40px;
-  object-fit: fill;
-`;
 
 const Group = styled.View`
   width: 330px;
