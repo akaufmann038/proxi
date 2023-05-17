@@ -1,17 +1,16 @@
-import styled from "styled-components/native";
+import styled from 'styled-components/native';
 import {
   MaxWidth,
   HeaderNav,
   NotCompleted,
   ProfileRootRoot,
-} from "./LetsGetStarted.js";
-import { TouchableWithoutFeedback, Text } from "react-native";
-import { AnimatedButton, BackButton } from "./SignupComponents";
-import { useState } from "react";
-import { AntDesign } from "@expo/vector-icons";
+} from './LetsGetStarted.js';
+import {TouchableWithoutFeedback, Text} from 'react-native';
+import {AnimatedButton, BackButton} from './SignupComponents';
+import {useState} from 'react';
 
-export const CreateProfile = ({ route, navigation }) => {
-  const { phoneNumber } = route.params;
+export const CreateProfile = ({route, navigation}) => {
+  const {phoneNumber} = route.params;
 
   return (
     <ProfileRootRoot>
@@ -35,7 +34,7 @@ const UploadImage = () => {
   const [image, setImage] = useState(null);
   const addImage = async () => {
     const result = await ImagePicker.launchImageLibrary({
-      mediaType: "photo",
+      mediaType: 'photo',
       quality: 1,
     });
 
@@ -46,8 +45,7 @@ const UploadImage = () => {
     <ImageContainer>
       <UploadBtnContainer>
         <UploadBtn onPress={addImage}>
-          <Text>{image ? "Edit" : "Upload"} Image</Text>
-          <AntDesign name="camera" size={20} color="black" />
+          <Text>{image ? 'Edit' : 'Upload'} Image</Text>
         </UploadBtn>
       </UploadBtnContainer>
     </ImageContainer>
