@@ -149,7 +149,7 @@ const Footer = styled.View`
   gap: 20px;
   display: flex;
   flex-direction: row;
-  align-items: flex-center;
+  align-items: center;
   justify-content: flex-end;
 `;
 const JobTitleBox = styled.View`

@@ -8,6 +8,7 @@ import {
 import {TouchableWithoutFeedback, Text} from 'react-native';
 import {AnimatedButton, BackButton} from './SignupComponents';
 import {useState} from 'react';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 export const CreateProfile = ({route, navigation}) => {
   const {phoneNumber} = route.params;
@@ -33,7 +34,7 @@ export const CreateProfile = ({route, navigation}) => {
 const UploadImage = () => {
   const [image, setImage] = useState(null);
   const addImage = async () => {
-    const result = await ImagePicker.launchImageLibrary({
+    const result = await launchImageLibrary({
       mediaType: 'photo',
       quality: 1,
     });
