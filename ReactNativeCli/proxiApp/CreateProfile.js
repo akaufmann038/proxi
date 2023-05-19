@@ -5,13 +5,13 @@ import {
   NotCompleted,
   ProfileRootRoot,
 } from './LetsGetStarted.js';
-import {TouchableWithoutFeedback, Text} from 'react-native';
-import {AnimatedButton, BackButton} from './SignupComponents';
+import {TouchableWithoutFeedback, Text, Image} from 'react-native';
+import {AnimatedButton, BackButton, Skill} from './SignupComponents';
 import {useState} from 'react';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 export const CreateProfile = ({route, navigation}) => {
-  const {phoneNumber} = route.params;
+  const {phoneNumber, fullName, jobTitle} = route.params;
 
   return (
     <ProfileRootRoot>
@@ -26,6 +26,17 @@ export const CreateProfile = ({route, navigation}) => {
           <CreateProfileLabel>Create Profile</CreateProfileLabel>
         </TouchableWithoutFeedback>
         <UploadImage />
+        <UserFullName>{fullName}</UserFullName>
+        <UserMajor>{jobTitle}</UserMajor>
+        <CompanyLabel>Company</CompanyLabel>
+        <InputBoxes>
+          <UniversityInput placeholder="Northeastern University" />
+        </InputBoxes>
+        <LocationLabel>Location</LocationLabel>
+        <InputBoxes>
+          <JobInput placeholder="Boston, MA" />
+        </InputBoxes>
+        <Skill skillName="Valuation" />
       </MaxWidth>
     </ProfileRootRoot>
   );
@@ -33,17 +44,29 @@ export const CreateProfile = ({route, navigation}) => {
 
 const UploadImage = () => {
   const [image, setImage] = useState(null);
+
   const addImage = async () => {
     const result = await launchImageLibrary({
       mediaType: 'photo',
       quality: 1,
     });
 
-    console.log(result);
+    if (!result.didCancel) {
+      // TODO: this needs to access actual picture from library instead of just
+      // the placeholder picture
+      console.log(result.assets[0].uri);
+      setImage(result.assets[0].uri);
+    }
   };
 
   return (
     <ImageContainer>
+      {image && (
+        <Image
+          source={require('./assets/test.png')}
+          style={{width: 200, height: 200}}
+        />
+      )}
       <UploadBtnContainer>
         <UploadBtn onPress={addImage}>
           <Text>{image ? 'Edit' : 'Upload'} Image</Text>
@@ -52,6 +75,48 @@ const UploadImage = () => {
     </ImageContainer>
   );
 };
+const UniversityInput = styled.TextInput``;
+const JobInput = styled.TextInput``;
+const InputBoxes = styled.View`
+  width: 300px;
+  height: 50px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 14px;
+  border-width: 1px;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: #000000;
+  background-color: #ffffff;
+`;
+const LocationLabel = styled.Text`
+  align-self: flex-start;
+  margin-left: 18px;
+  margin-bottom: -20px;
+  color: #786cff;
+  font-weight: 600;
+  font-size: 20px;
+`;
+const CompanyLabel = styled.Text`
+  align-self: flex-start;
+  margin-left: 18px;
+  margin-bottom: -20px;
+  color: #786cff;
+  font-weight: 600;
+  font-size: 20px;
+`;
+const UserMajor = styled.Text`
+  align-self: center;
+  color: #828282;
+  font-size: 13px;
+  margin-bottom: 5px;
+`;
+const UserFullName = styled.Text`
+  align-self: center;
+  margin-bottom: -15px;
+  color: #828282;
+  font-size: 20px;
+`;
 const UploadBtn = styled.TouchableOpacity`
   display: flex;
   align-items: center;

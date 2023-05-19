@@ -14,7 +14,11 @@ export const LetsGetStarted = ({route, navigation}) => {
 
   const onPressConfirmBtn = () => {
     if (name.length > 0 && jobTitle.length > 0) {
-      navigation.navigate('CreateProfile', {phoneNumber: phoneNumber});
+      navigation.navigate('CreateProfile', {
+        phoneNumber: phoneNumber,
+        fullName: name,
+        jobTitle: jobTitle,
+      });
     }
   };
 
