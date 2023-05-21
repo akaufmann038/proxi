@@ -14,7 +14,7 @@ export const Skill = ({skillName}) => {
   const AnimatedTouchable = Animated.createAnimatedComponent(
     styled.TouchableOpacity`
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       border-width: 1px;
       border-radius: 15px;
       border-style: solid;

@@ -46,78 +46,75 @@ export const LetsGetStarted = ({route, navigation}) => {
   };
 
   return (
-    <ProfileRootRoot>
-      <MaxWidth>
-        <HeaderNav>
-          <BackButton label="Change #" onPress={() => navigation.goBack()} />
-          <NotCompleted>
-            <Completed />
-          </NotCompleted>
-        </HeaderNav>
+    <MaxWidth>
+      <HeaderNav>
+        <BackButton label="Change" onPress={() => navigation.goBack()} />
+        <NotCompleted>
+          <Completed />
+        </NotCompleted>
+      </HeaderNav>
 
-        <GetStartedHeader>Let's get started!</GetStartedHeader>
-        <VisibilityInfo>
-          This information will be visible to other attendees at events around
-          you
-        </VisibilityInfo>
-        <TouchableWithoutFeedback onPress={() => nameInputRef.current.focus()}>
-          <JobTitleBox>
-            <FullNameInput
-              ref={nameInputRef}
-              onFocus={() => setNameInFocus(true)}
-              onBlur={() => setNameInFocus(false)}
-              value={name}
-              onChangeText={handleNameTextChange}>
-              <InputConditional
-                isInFocus={nameInFocus}
-                inputName={'Full Name'}
-                inputVariable={name}
-              />
-            </FullNameInput>
-          </JobTitleBox>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => jobInputRef.current.focus()}>
-          <JobTitleBox>
-            <FullNameInput
-              ref={jobInputRef}
-              onFocus={() => setJobInFocus(true)}
-              onBlur={() => setJobInFocus(false)}
-              value={jobTitle}
-              onChangeText={handleJobTitleTextChange}>
-              <InputConditional
-                isInFocus={jobInFocus}
-                inputName={'Job Title'}
-                inputVariable={jobTitle}
-              />
-            </FullNameInput>
-          </JobTitleBox>
-        </TouchableWithoutFeedback>
-        <Footer>
-          <BackButtonFooter onPress={() => navigation.goBack()}>
-            <BackCodeButtonText>Back</BackCodeButtonText>
-          </BackButtonFooter>
-          <AnimatedButton
-            onPress={onPressConfirmBtn}
-            active="1"
-            label="Confirm"
-          />
-        </Footer>
-      </MaxWidth>
-    </ProfileRootRoot>
+      <GetStartedHeader>Let's get started!</GetStartedHeader>
+      <VisibilityInfo>
+        This information will be visible to other attendees at events around you
+      </VisibilityInfo>
+      <TouchableWithoutFeedback onPress={() => nameInputRef.current.focus()}>
+        <JobTitleBox>
+          <FullNameInput
+            ref={nameInputRef}
+            onFocus={() => setNameInFocus(true)}
+            onBlur={() => setNameInFocus(false)}
+            value={name}
+            onChangeText={handleNameTextChange}>
+            <InputConditional
+              isInFocus={nameInFocus}
+              inputName={'Full Name'}
+              inputVariable={name}
+            />
+          </FullNameInput>
+        </JobTitleBox>
+      </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback onPress={() => jobInputRef.current.focus()}>
+        <JobTitleBox>
+          <FullNameInput
+            ref={jobInputRef}
+            onFocus={() => setJobInFocus(true)}
+            onBlur={() => setJobInFocus(false)}
+            value={jobTitle}
+            onChangeText={handleJobTitleTextChange}>
+            <InputConditional
+              isInFocus={jobInFocus}
+              inputName={'Job Title'}
+              inputVariable={jobTitle}
+            />
+          </FullNameInput>
+        </JobTitleBox>
+      </TouchableWithoutFeedback>
+      <Footer>
+        <BackButtonFooter onPress={() => navigation.goBack()}>
+          <BackCodeButtonText>Back</BackCodeButtonText>
+        </BackButtonFooter>
+        <AnimatedButton
+          onPress={onPressConfirmBtn}
+          active="1"
+          label="Confirm"
+        />
+      </Footer>
+    </MaxWidth>
   );
 };
 
-export const MaxWidth = styled.View`
+const MaxWidth = styled.View`
   width: 100%;
-  max-width: 390px;
   height: 100%;
   gap: 30px;
   flex-direction: column;
   padding: 30px 30px 0px 30px;
   align-items: center;
+  background-color: #ffffff;
 `;
 
-export const HeaderNav = styled.View`
+const HeaderNav = styled.View`
   width: 100%;
   height: 100px;
   position: relative;
@@ -188,7 +185,7 @@ const VisibilityInfo = styled.Text`
   line-height: 17px;
   text-align: center;
 `;
-export const ProfileRootRoot = styled.View`
+const ProfileRootRoot = styled.View`
   position: relative;
   gap: 20px;
   display: flex;
