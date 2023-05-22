@@ -1,15 +1,92 @@
 import React, {useEffect, useState} from 'react';
-import {Animated, Text} from 'react-native';
+import {Animated, Text, Modal, View} from 'react-native';
 import styled from 'styled-components/native';
+
+// SIModal: pop up modal for choosing skills and interests.
+export const SIModal = ({
+  data,
+  setData,
+  header,
+  subheader,
+  isVisible,
+  setIsVisible,
+}) => {
+  const SkillsContainer = styled.View`
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+  `;
+  const ModalView = styled.View`
+    width: 80%;
+    height: 70%;
+    margin-top: 30%;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: center;
+    background-color: white;
+  `;
+
+  const XOutContainer = styled.TouchableOpacity`
+    align-self: flex-end;
+  `;
+  const XOut = styled.Image`
+    width: 27px;
+    height: 27px;
+  `;
+  const SkillsLabel = styled.Text`
+    color: #786cff;
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 10px;
+  `;
+  const SkillsSubheader = styled.Text`
+    font-size: 12px;
+    width: 50%;
+    color: #828282;
+    margin-bottom: 30px;
+  `;
+  return (
+    <Modal visible={isVisible} transparent={true} animationType={'fade'}>
+      <ModalView>
+        <XOutContainer onPress={() => setIsVisible(false)}>
+          <XOut source={require('./assets/x_out.png')} />
+        </XOutContainer>
+        <SkillsLabel>{header}</SkillsLabel>
+        <SkillsSubheader>{subheader}</SkillsSubheader>
+        <SkillsContainer>
+          {data ? (
+            Object.keys(data).map(element => (
+              <Skill
+                skillName={element}
+                skillData={data}
+                setSkillData={setData}
+                key={data[element].id}
+              />
+            ))
+          ) : (
+            <></>
+          )}
+        </SkillsContainer>
+        <View
+          style={{
+            alignSelf: 'center',
+            marginTop: '30%',
+          }}>
+          <RedButton label="Confirm" onPress={() => setIsVisible(false)} />
+        </View>
+      </ModalView>
+    </Modal>
+  );
+};
 
 // Skills: component that is used for showing skills and intersts. It animates its
 // color based on whether it's selected or not
 // TODO: these button are kinda messed up, need to get a check mark that can change color
 // and need to animate the opacities of the '+' and check mark
 
-export const Skill = ({skillName}) => {
+export const Skill = ({skillName, skillData, setSkillData}) => {
   const [animation, setAnimation] = useState(new Animated.Value(0));
-  const [selected, setSelected] = useState(false);
+  const [active, setActive] = useState(skillData[skillName].active);
 
   const AnimatedTouchable = Animated.createAnimatedComponent(
     styled.TouchableOpacity`
@@ -44,7 +121,7 @@ export const Skill = ({skillName}) => {
   });
 
   const handleAnimation = () => {
-    if (selected) {
+    if (skillData[skillName].active) {
       Animated.timing(animation, {
         toValue: 0,
         duration: 500,
@@ -57,8 +134,11 @@ export const Skill = ({skillName}) => {
         useNativeDriver: false,
       }).start();
     }
+    let skills = skillData;
+    skills[skillName].active = !skillData[skillName].active;
 
-    setSelected(!selected);
+    setActive(skills[skillName].active);
+    setSkillData(skills);
   };
 
   return (
@@ -66,7 +146,7 @@ export const Skill = ({skillName}) => {
       onPress={handleAnimation}
       style={{backgroundColor: buttonColorInterpolation}}>
       <AnimatedText style={{color: textColorInterpolation}}>
-        {selected ? '✔' : '+'} {skillName}
+        {active ? '✔' : '+'} {skillName}
       </AnimatedText>
     </AnimatedTouchable>
   );

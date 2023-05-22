@@ -1,38 +1,42 @@
 export const getCodeHttp = 'http://localhost:3000/get-code';
 export const verifyCodeHttp = 'http://localhost:3000/verify-code';
 
+// id's of recommended skills and interests
+export const recommendedSkills = [1, 2, 3, 4, 5];
+export const recommendedInterests = [1, 2, 3, 4, 5];
+
 // TODO: this is acting like a fake database for the skills and interests
 // in the future, keep source of truth of skills and interests in database
 export const skills = [
-  'Excel',
-  'Valuation',
-  'Investments',
-  'User Experience',
-  'Project Management',
-  'Figma',
-  'Photoshop',
-  'Illustrator',
-  'UI/UX',
-  'Typography',
-  'Website Dev',
-  'HTML/CSS',
-  'React',
-  'Javascript',
-  'Adobe CC',
+  {name: 'Excel', id: 1},
+  {name: 'Valuation', id: 2},
+  {name: 'Investments', id: 3},
+  {name: 'User Experience', id: 4},
+  {name: 'Project Management', id: 5},
+  {name: 'Figma', id: 6},
+  {name: 'Photoshop', id: 7},
+  {name: 'Illustrator', id: 8},
+  {name: 'UI/UX', id: 9},
+  {name: 'Typography', id: 10},
+  {name: 'Website Dev', id: 11},
+  {name: 'HTML/CSS', id: 12},
+  {name: 'React', id: 13},
+  {name: 'Javascript', id: 14},
+  {name: 'Adobe CC', id: 15},
 ];
 export const interests = [
-  'Lacrosse',
-  'Entrepreneurship',
-  'Cooking',
-  'Film Making',
-  'Design',
-  'Space Travel',
-  'Typography',
-  'Sustainability',
-  'Tennis',
-  'Writing',
-  'Aviation',
-  'Traveling',
+  {name: 'Lacrosse', id: 1},
+  {name: 'Entrepreneurship', id: 2},
+  {name: 'Cooking', id: 3},
+  {name: 'Film Making', id: 4},
+  {name: 'Design', id: 5},
+  {name: 'Space Travel', id: 6},
+  {name: 'Typography', id: 7},
+  {name: 'Sustainability', id: 8},
+  {name: 'Tennis', id: 9},
+  {name: 'Writing', id: 10},
+  {name: 'Aviation', id: 11},
+  {name: 'Traveling', id: 12},
 ];
 
 // A method for making requests to the api

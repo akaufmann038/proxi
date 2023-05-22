@@ -10,14 +10,41 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
-import {AnimatedButton, BackButton, Skill} from './SignupComponents';
-import {useState} from 'react';
+import {RedButton, BackButton, Skill, SIModal} from './SignupComponents';
+import {useState, useEffect} from 'react';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {
+  skills,
+  interests,
+  recommendedInterests,
+  recommendedSkills,
+} from './utils.js';
 
 export const CreateProfile = ({route, navigation}) => {
   const {phoneNumber, fullName, jobTitle} = route.params;
   const [skillsVisible, setSkillsVisible] = useState(false);
   const [interestsVisible, setInterestsVisible] = useState(false);
+  const [allSkills, setSkills] = useState(null);
+  const [allInterests, setInterests] = useState(null);
+
+  // TODO: this will become api request for skills and interests
+  // stored in database
+  // TODO: make sure data from database has some kind of id and
+  // use it in the .map()
+  useEffect(() => {
+    let reformatSkills = {};
+    let reformatInterests = {};
+
+    skills.forEach(element => {
+      reformatSkills[element.name] = {active: false, id: element.id};
+    });
+    interests.forEach(element => {
+      reformatInterests[element.name] = {active: false, id: element.id};
+    });
+
+    setSkills(reformatSkills);
+    setInterests(reformatInterests);
+  }, []);
 
   return (
     <MaxWidth>
@@ -27,18 +54,23 @@ export const CreateProfile = ({route, navigation}) => {
           <Completed />
         </NotCompleted>
       </HeaderNav>
-      <ModalContainer
-        visible={skillsVisible}
-        transparent={true}
-        animationType={'fade'}>
-        <ModalView>
-          <Text>Hello World</Text>
-          <Button title="close" onPress={() => setSkillsVisible(false)} />
-        </ModalView>
-      </ModalContainer>
-      <TouchableWithoutFeedback>
-        <CreateProfileLabel>Create Profile</CreateProfileLabel>
-      </TouchableWithoutFeedback>
+      <SIModal
+        data={allSkills}
+        setData={setSkills}
+        header="Skills"
+        subheader="Adding more skills will help you connect with more people!"
+        isVisible={skillsVisible}
+        setIsVisible={setSkillsVisible}
+      />
+      <SIModal
+        data={allInterests}
+        setData={setInterests}
+        header="Interests"
+        subheader="Adding more interests will help you connect with more people!"
+        isVisible={interestsVisible}
+        setIsVisible={setInterestsVisible}
+      />
+      <CreateProfileLabel>Create Profile</CreateProfileLabel>
       <UploadImage />
       <UserFullName>{fullName}</UserFullName>
       <UserMajor>{jobTitle}</UserMajor>
@@ -63,11 +95,20 @@ export const CreateProfile = ({route, navigation}) => {
         </InputBoxes>
         <LocationLabel>Recommended Skills</LocationLabel>
         <SkillsContainer>
-          <Skill skillName="Valuation" />
-          <Skill skillName="Valuation" />
-          <Skill skillName="Valuation" />
-          <Skill skillName="Valuation" />
-          <Skill skillName="Valuation" />
+          {allSkills ? (
+            Object.keys(allSkills)
+              .slice(0, 5)
+              .map(skill => (
+                <Skill
+                  skillName={skill}
+                  skillData={allSkills}
+                  setSkillData={setSkills}
+                  key={allSkills[skill].id}
+                />
+              ))
+          ) : (
+            <></>
+          )}
         </SkillsContainer>
         <ViewMoreContainer onPress={() => setSkillsVisible(true)}>
           <ViewMore>View More</ViewMore>
@@ -75,13 +116,31 @@ export const CreateProfile = ({route, navigation}) => {
         </ViewMoreContainer>
         <LocationLabel>Recommended Interests</LocationLabel>
         <SkillsContainer>
-          <Skill skillName="Valuation" />
-          <Skill skillName="Valuation" />
-          <Skill skillName="Valuation" />
-          <Skill skillName="Valuation" />
-          <Skill skillName="Valuation" />
+          {allInterests ? (
+            Object.keys(allInterests)
+              .slice(0, 5)
+              .map(interest => (
+                <Skill
+                  skillName={interest}
+                  skillData={allInterests}
+                  setSkillData={setInterests}
+                  key={allInterests[interest].id}
+                />
+              ))
+          ) : (
+            <></>
+          )}
         </SkillsContainer>
+        <ViewMoreContainer
+          style={{marginBottom: 30}}
+          onPress={() => setInterestsVisible(true)}>
+          <ViewMore>View More</ViewMore>
+          <ViewMoreLine source={require('./assets/ViewMore.png')} />
+        </ViewMoreContainer>
       </ScrollView>
+      <View style={{marginBottom: 30, marginTop: 20}}>
+        <RedButton label="Confirm" />
+      </View>
     </MaxWidth>
   );
 };
@@ -108,7 +167,7 @@ const UploadImage = () => {
       {image && (
         <Image
           source={require('./assets/test.png')}
-          style={{width: 200, height: 200}}
+          style={{width: 150, height: 150}}
         />
       )}
       <UploadBtnContainer>
@@ -119,19 +178,6 @@ const UploadImage = () => {
     </ImageContainer>
   );
 };
-const ModalView = styled.View`
-  width: 80%;
-  height: 80%;
-  margin-top: 30%;
-  flex-direction: column;
-  align-items: flex-start;
-  align-self: center;
-  background-color: grey;
-`;
-const ModalContainer = styled.Modal`
-  margin-left: 50px;
-  margin-right: 50px;
-`;
 const ViewMoreContainer = styled.TouchableOpacity`
   margin-top: -10px;
 `;
@@ -174,13 +220,13 @@ const UserMajor = styled.Text`
   align-self: center;
   color: #828282;
   font-size: 13px;
-  margin-bottom: 5px;
 `;
 const UserFullName = styled.Text`
   align-self: center;
-  margin-bottom: -15px;
   color: #828282;
   font-size: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 const UploadBtn = styled.TouchableOpacity`
   display: flex;
@@ -198,21 +244,19 @@ const UploadBtnContainer = styled.View`
 `;
 const ImageContainer = styled.View`
   elevation: 2;
-  height: 200px;
-  width: 200px;
+  height: 150px;
+  width: 150px;
   background-color: #efefef;
   position: relative;
   border-radius: 999px;
   overflow: hidden;
+  margin-top: 12px;
 `;
 const CreateProfileLabel = styled.Text`
-  position: relative;
   align-self: center;
-  margin: 0px 0px 6px 0px;
   color: #786cff;
   font-size: 32px;
   font-weight: 700;
-  line-height: 35.20000076293945px;
   text-align: center;
 `;
 const Completed = styled.View`
@@ -227,7 +271,6 @@ const Completed = styled.View`
 const MaxWidth = styled.View`
   width: 100%;
   height: 100%;
-  gap: 30px;
   flex-direction: column;
   align-items: center;
   padding-top: 30px;
@@ -236,26 +279,12 @@ const MaxWidth = styled.View`
 const HeaderNav = styled.View`
   width: 100%;
   height: 100px;
-  position: relative;
   gap: 18px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-self: flex-start;
   align-items: center;
-  box-sizing: border-box;
   padding-left: 30px;
   padding-right: 30px;
-`;
-const ProfileRootRoot = styled.View`
-  position: relative;
-  gap: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  border-radius: 20px;
-  box-sizing: border-box;
-  background-color: #ffffff;
-  overflow: hidden;
 `;
