@@ -61,6 +61,7 @@ export const CreateProfile = ({route, navigation}) => {
         subheader="Adding more skills will help you connect with more people!"
         isVisible={skillsVisible}
         setIsVisible={setSkillsVisible}
+        recommendedElements={recommendedSkills}
       />
       <SIModal
         data={allInterests}
@@ -69,6 +70,7 @@ export const CreateProfile = ({route, navigation}) => {
         subheader="Adding more interests will help you connect with more people!"
         isVisible={interestsVisible}
         setIsVisible={setInterestsVisible}
+        recommendedElements={recommendedInterests}
       />
       <CreateProfileLabel>Create Profile</CreateProfileLabel>
       <UploadImage />
@@ -97,7 +99,9 @@ export const CreateProfile = ({route, navigation}) => {
         <SkillsContainer>
           {allSkills ? (
             Object.keys(allSkills)
-              .slice(0, 5)
+              .filter(element =>
+                recommendedSkills.includes(allSkills[element].id),
+              )
               .map(skill => (
                 <Skill
                   skillName={skill}
@@ -118,7 +122,9 @@ export const CreateProfile = ({route, navigation}) => {
         <SkillsContainer>
           {allInterests ? (
             Object.keys(allInterests)
-              .slice(0, 5)
+              .filter(element =>
+                recommendedInterests.includes(allInterests[element].id),
+              )
               .map(interest => (
                 <Skill
                   skillName={interest}

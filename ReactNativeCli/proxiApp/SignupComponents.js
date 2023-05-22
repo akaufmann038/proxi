@@ -10,6 +10,7 @@ export const SIModal = ({
   subheader,
   isVisible,
   setIsVisible,
+  recommendedElements,
 }) => {
   const SkillsContainer = styled.View`
     flex-direction: row;
@@ -55,14 +56,18 @@ export const SIModal = ({
         <SkillsSubheader>{subheader}</SkillsSubheader>
         <SkillsContainer>
           {data ? (
-            Object.keys(data).map(element => (
-              <Skill
-                skillName={element}
-                skillData={data}
-                setSkillData={setData}
-                key={data[element].id}
-              />
-            ))
+            Object.keys(data)
+              .filter(
+                element => !recommendedElements.includes(data[element].id),
+              )
+              .map(element => (
+                <Skill
+                  skillName={element}
+                  skillData={data}
+                  setSkillData={setData}
+                  key={data[element].id}
+                />
+              ))
           ) : (
             <></>
           )}
@@ -119,6 +124,17 @@ export const Skill = ({skillName, skillData, setSkillData}) => {
     inputRange: [0, 1],
     outputRange: ['#786cff', '#ffffff'],
   });
+
+  // on mount, if active, do animation
+  useEffect(() => {
+    if (skillData[skillName].active) {
+      Animated.timing(animation, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, []);
 
   const handleAnimation = () => {
     if (skillData[skillName].active) {
