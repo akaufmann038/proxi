@@ -32,7 +32,7 @@ export const CreateProfile = ({route, navigation}) => {
   // TODO: this will become api request for skills and interests
   // stored in database
   // TODO: make sure data from database has some kind of id and
-  // use it in the .map()
+  // use it in the .map() key
   useEffect(() => {
     let reformatSkills = {};
     let reformatInterests = {};

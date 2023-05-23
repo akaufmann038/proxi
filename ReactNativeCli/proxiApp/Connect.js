@@ -7,6 +7,16 @@ import {View, TouchableOpacity, Touchable} from 'react-native';
 export const Connect = ({route, navigation}) => {
   const [email, setEmail] = useState('');
   const [sharePhone, setSharePhone] = useState(false);
+  const [links, setLinks] = useState({
+    Resume: '',
+    Linkedin: '',
+    GitHub: '',
+    DropBox: '',
+    Medium: '',
+    Facebook: '',
+    Instagram: '',
+    Tiktok: '',
+  });
 
   return (
     <MaxWidth>
@@ -57,30 +67,40 @@ export const Connect = ({route, navigation}) => {
             title="Resume"
             iconSource={require('./assets/resume.png')}
             textColor="white"
+            links={links}
+            setLinks={setLinks}
           />
           <AddAccount
             color="#0072B1"
             title="Linkedin"
             iconSource={require('./assets/linkedin.png')}
             textColor="white"
+            links={links}
+            setLinks={setLinks}
           />
           <AddAccount
             color="black"
             title="GitHub"
             iconSource={require('./assets/github.png')}
             textColor="white"
+            links={links}
+            setLinks={setLinks}
           />
           <AddAccount
             color="#0060FF"
             title="DropBox"
             iconSource={require('./assets/dropbox.png')}
             textColor="white"
+            links={links}
+            setLinks={setLinks}
           />
           <AddAccount
             color="black"
             title="Medium"
             iconSource={require('./assets/medium.png')}
             textColor="white"
+            links={links}
+            setLinks={setLinks}
           />
         </View>
         <Socials>Socials</Socials>
@@ -90,30 +110,32 @@ export const Connect = ({route, navigation}) => {
             title="Facebook"
             iconSource={require('./assets/facebook.png')}
             textColor="white"
+            links={links}
+            setLinks={setLinks}
           />
           <AddAccount
             color="rgba(186,120,237,1)"
             title="Instagram"
             iconSource={require('./assets/instagram.png')}
             textColor="white"
+            links={links}
+            setLinks={setLinks}
           />
           <AddAccount
             color="grey"
             title="Tiktok"
             iconSource={require('./assets/tiktok.png')}
             textColor="white"
-          />
-          <AddAccount
-            color="#0060FF"
-            title="DropBox"
-            iconSource={require('./assets/dropbox.png')}
-            textColor="white"
+            links={links}
+            setLinks={setLinks}
           />
           <AddAccount
             color="black"
             title="Medium"
             iconSource={require('./assets/medium.png')}
             textColor="white"
+            links={links}
+            setLinks={setLinks}
           />
         </View>
       </MarginContainer>

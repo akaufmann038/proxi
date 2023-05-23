@@ -1,10 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {Animated, Text, Modal, View} from 'react-native';
+import {Animated, Text, Modal, View, TextInput} from 'react-native';
 import styled from 'styled-components/native';
 
 // AddAccount: button that allows you to add the link of an external
 // acount using pop up modal
-export const AddAccount = ({color, title, iconSource, textColor}) => {
+export const AddAccount = ({
+  color,
+  title,
+  iconSource,
+  textColor,
+  links,
+  setLinks,
+}) => {
+  const [isVisible, setIsVisible] = useState(false);
+  let currentLink = '';
+
   const Container = styled.TouchableOpacity`
     width: 110px;
     height: 50px;
@@ -13,11 +23,84 @@ export const AddAccount = ({color, title, iconSource, textColor}) => {
     justify-content: center;
     align-items: center;
   `;
+  const ModalView = styled.View`
+    width: 80%;
+    height: 22%;
+    margin-top: 70%;
+    background-color: white;
+    align-self: center;
+    border-radius: 10px;
+    elevation: 5;
+    shadow-radius: 10px;
+    shadow-opacity: 0.5;
+  `;
   const AccountText = styled.Text``;
   const Icon = styled.Image``;
+  const XOutContainer = styled.TouchableOpacity`
+    align-self: flex-end;
+  `;
+  const XOut = styled.Image`
+    width: 27px;
+    height: 27px;
+  `;
+  const InstructionText = styled.Text`
+    align-self: center;
+    margin-bottom: 20px;
+  `;
+  const InputBoxes = styled.View`
+    width: 80%;
+    height: 50px;
+    flex-direction: column;
+    justify-content: center;
+    padding: 14px;
+    border-width: 1px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #000000;
+    background-color: #ffffff;
+    margin-bottom: 20px;
+    align-self: center;
+  `;
+
+  const pressConfirm = () => {
+    let newLinks = links;
+    newLinks[title] = currentLink;
+    setLinks(newLinks);
+    setIsVisible(false);
+  };
+
+  const handleChangeText = text => {
+    currentLink = text;
+  };
 
   return (
-    <Container style={{backgroundColor: color}}>
+    <Container
+      style={{backgroundColor: color}}
+      onPress={() => setIsVisible(true)}>
+      <Modal visible={isVisible} transparent={true} animationType={'fade'}>
+        <ModalView>
+          <XOutContainer onPress={() => setIsVisible(false)}>
+            <XOut source={require('./assets/x_out.png')} />
+          </XOutContainer>
+          {links[title].length == 0 ? (
+            <InstructionText>
+              You have not set this link yet. Enter it below and press confirm
+              to set it.
+            </InstructionText>
+          ) : (
+            <InstructionText>Current link: {links[title]}</InstructionText>
+          )}
+          <InputBoxes>
+            <TextInput
+              placeholder="https://mylink.com"
+              onChangeText={handleChangeText}
+            />
+          </InputBoxes>
+          <View style={{alignSelf: 'center'}}>
+            <RedButton label="Confirm" onPress={pressConfirm} />
+          </View>
+        </ModalView>
+      </Modal>
       <View
         style={{
           flexDirection: 'row',
