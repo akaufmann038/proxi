@@ -22,6 +22,8 @@ import {
 
 export const CreateProfile = ({route, navigation}) => {
   const {phoneNumber, fullName, jobTitle} = route.params;
+  const [company, setCompany] = useState('');
+  const [location, setLocation] = useState('');
   const [skillsVisible, setSkillsVisible] = useState(false);
   const [interestsVisible, setInterestsVisible] = useState(false);
   const [allSkills, setSkills] = useState(null);
@@ -89,11 +91,19 @@ export const CreateProfile = ({route, navigation}) => {
         }}>
         <CompanyLabel>Company</CompanyLabel>
         <InputBoxes>
-          <UniversityInput placeholder="Northeastern University" />
+          <UniversityInput
+            placeholder="Northeastern University"
+            value={company}
+            onChangeText={text => setCompany(text)}
+          />
         </InputBoxes>
         <LocationLabel>Location</LocationLabel>
         <InputBoxes>
-          <JobInput placeholder="Boston, MA" />
+          <JobInput
+            placeholder="Boston, MA"
+            value={location}
+            onChangeText={text => setLocation(text)}
+          />
         </InputBoxes>
         <LocationLabel>Recommended Skills</LocationLabel>
         <SkillsContainer>
@@ -145,7 +155,18 @@ export const CreateProfile = ({route, navigation}) => {
         </ViewMoreContainer>
       </ScrollView>
       <View style={{marginBottom: 30, marginTop: 20}}>
-        <RedButton label="Confirm" />
+        <RedButton
+          label="Confirm"
+          onPress={() =>
+            navigation.navigate('Connect', {
+              phoneNumber: phoneNumber,
+              fullName: fullName,
+              jobTitle: jobTitle,
+              company: company,
+              location: location,
+            })
+          }
+        />
       </View>
     </MaxWidth>
   );

@@ -2,6 +2,36 @@ import React, {useEffect, useState} from 'react';
 import {Animated, Text, Modal, View} from 'react-native';
 import styled from 'styled-components/native';
 
+// AddAccount: button that allows you to add the link of an external
+// acount using pop up modal
+export const AddAccount = ({color, title, iconSource, textColor}) => {
+  const Container = styled.TouchableOpacity`
+    width: 110px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: grey;
+    justify-content: center;
+    align-items: center;
+  `;
+  const AccountText = styled.Text``;
+  const Icon = styled.Image``;
+
+  return (
+    <Container style={{backgroundColor: color}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          width: '100%',
+          justifyContent: 'center',
+          gap: 10,
+        }}>
+        <Icon source={iconSource} />
+        <AccountText style={{color: textColor}}>{title}</AccountText>
+      </View>
+    </Container>
+  );
+};
+
 // SIModal: pop up modal for choosing skills and interests.
 export const SIModal = ({
   data,

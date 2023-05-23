@@ -4,6 +4,7 @@ import {Login} from './Login.js';
 import {ConfirmNumber} from './ConfirmNumber.js';
 import {LetsGetStarted} from './LetsGetStarted.js';
 import {CreateProfile} from './CreateProfile.js';
+import {Connect} from './Connect.js';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -17,6 +18,7 @@ export default function App() {
         <Stack.Screen name="ConfirmNumber" component={ConfirmNumber} />
         <Stack.Screen name="LetsGetStarted" component={LetsGetStarted} />
         <Stack.Screen name="CreateProfile" component={CreateProfile} />
+        <Stack.Screen name="Connect" component={Connect} />
       </Stack.Navigator>
     </NavigationContainer>
   );
