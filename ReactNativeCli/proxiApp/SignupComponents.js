@@ -63,10 +63,14 @@ export const AddAccount = ({
   `;
 
   const pressConfirm = () => {
-    let newLinks = links;
-    newLinks[title] = currentLink;
-    setLinks(newLinks);
-    setIsVisible(false);
+    if (currentLink.length > 0) {
+      let newLinks = links;
+      newLinks[title] = currentLink;
+      setLinks(newLinks);
+      setIsVisible(false);
+    } else {
+      setIsVisible(false);
+    }
   };
 
   const handleChangeText = text => {
