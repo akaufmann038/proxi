@@ -1,7 +1,13 @@
 const twilio = require("twilio");
 const express = require("express");
+const redis = require("redis");
 const app = express();
 const port = 3000;
+
+// connecting to redis client
+const redisClient = redis.createClient();
+redisClient.on("error", (err) => console.log("Redis Client Error", err));
+redisClient.connect();
 
 // stores codes and when they are activated
 // { phoneNumber: { "code": code, "createdAt": when code was created } }
@@ -16,6 +22,74 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   res.json({ message: "sup bruv" });
+});
+
+app.post("/register-full-user", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (
+    !("phoneNumber" in req.body) ||
+    !("fullName" in req.body) ||
+    !("jobTitle" in req.body) ||
+    !("company" in req.body) ||
+    !("location" in req.body) ||
+    !("email" in req.body) ||
+    !("sharePhone" in req.body) ||
+    !("links" in req.body)
+  ) {
+    return res.json({
+      success: false,
+      message: "Invalid fields!",
+    });
+  }
+
+  // ensure that phone number can't register twice
+  const exists = await redisClient.EXISTS(req.body["phoneNumber"]);
+  if (exists > 0) {
+    return res.json({
+      success: false,
+      message: "Phone number already registered",
+    });
+  }
+
+  // get last id added to head of the list
+  const lastId = await redisClient.lRange("users", 0, 0);
+  let newId;
+
+  // create id for user
+  if (lastId.length == 0) {
+    newId = 1;
+  } else {
+    newId = parseInt(lastId[0]) + 1;
+  }
+
+  await redisClient
+    .MULTI()
+    .lPush("users", String(newId))
+    .hSet("user:" + newId, {
+      id: String(newId),
+      phoneNumber: req.body["phoneNumber"],
+      fullName: req.body["fullName"],
+      jobTitle: req.body["jobTitle"],
+      company: req.body["company"],
+      location: req.body["location"],
+      email: req.body["email"],
+      sharePhone: String(req.body["sharePhone"]),
+      linkInstagram: req.body["links"]["Instagram"],
+      linkLinkedin: req.body["links"]["Linkedin"],
+      linkGithub: req.body["links"]["GitHub"],
+      linkDropbox: req.body["links"]["DropBox"],
+      linkMedium: req.body["links"]["Medium"],
+      linkFacebook: req.body["links"]["Facebook"],
+      linkInstagram: req.body["links"]["Instagram"],
+      linkTiktok: req.body["links"]["Tiktok"],
+    })
+    .set(req.body["phoneNumber"], newId)
+    .exec();
+
+  return res.json({
+    success: true,
+    message: "successfully loaded data into database",
+  });
 });
 
 // body must be object with one field, which must be phoneNumber

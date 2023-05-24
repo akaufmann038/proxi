@@ -1,10 +1,12 @@
 import styled from 'styled-components/native';
-import {BackButton, AddAccount} from './SignupComponents.js';
+import {BackButton, AddAccount, RedButton} from './SignupComponents.js';
 import {NotCompleted} from './LetsGetStarted.js';
 import {useState} from 'react';
 import {View, TouchableOpacity, Touchable} from 'react-native';
+import {makePostRequest, registerFullUserHttp} from './utils.js';
 
 export const Connect = ({route, navigation}) => {
+  const {phoneNumber, fullName, jobTitle, company, location} = route.params;
   const [email, setEmail] = useState('');
   const [sharePhone, setSharePhone] = useState(false);
   const [links, setLinks] = useState({
@@ -18,6 +20,40 @@ export const Connect = ({route, navigation}) => {
     Tiktok: '',
   });
 
+  const handleOnConfirm = async () => {
+    // send api request to register user
+    try {
+      const res = await makePostRequest(registerFullUserHttp, {
+        phoneNumber: phoneNumber,
+        fullName: fullName,
+        jobTitle: jobTitle,
+        company: company,
+        location: location,
+        email: email,
+        sharePhone: sharePhone,
+        links: links,
+      });
+
+      const message = await res.json();
+
+      navigation.navigate('Events', {
+        phoneNumber: phoneNumber,
+      });
+
+      // TODO: uncomment this for production
+      /*
+      if (message.success) {
+        // navigate to events page just passing phone number
+        navigation.navigate('Events', {
+          phoneNumber: phoneNumber,
+        });
+      }
+      */
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <MaxWidth>
       <HeaderNav>
@@ -26,7 +62,7 @@ export const Connect = ({route, navigation}) => {
           <Completed />
         </NotCompleted>
       </HeaderNav>
-      <ConnectText>Connect📲 </ConnectText>
+      <ConnectText>Connect📲</ConnectText>
       <InfoText>
         Add any profiles you want to share with your new connections!
       </InfoText>
@@ -139,6 +175,17 @@ export const Connect = ({route, navigation}) => {
           />
         </View>
       </MarginContainer>
+      <View
+        style={{
+          bottom: 0,
+          position: 'absolute',
+          width: '100%',
+          alignItems: 'center',
+          marginBottom: 30,
+          marginTop: 20,
+        }}>
+        <RedButton label="Confirm" onPress={handleOnConfirm} />
+      </View>
     </MaxWidth>
   );
 };
@@ -154,6 +201,7 @@ const Productivity = styled.Text`
   font-weight: 600;
   font-size: 20px;
   margin-bottom: 15px;
+  margin-top: 30px;
 `;
 const YesNoSelectedRight = styled.View`
   width: 50%;
@@ -193,7 +241,6 @@ const NoText = styled.Text`
 `;
 const MarginContainer = styled.View`
   width: 85%;
-  height: 100%;
 `;
 const SharePhone = styled.Text`
   color: #786cff;
@@ -212,6 +259,7 @@ const InputBoxes = styled.View`
   border-style: solid;
   border-color: #000000;
   background-color: #ffffff;
+  margin-top: 10px;
 `;
 const SubHeader = styled.Text`
   align-self: flex-start;

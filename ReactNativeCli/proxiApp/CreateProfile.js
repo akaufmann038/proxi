@@ -79,7 +79,7 @@ export const CreateProfile = ({route, navigation}) => {
       <UserFullName>{fullName}</UserFullName>
       <UserMajor>{jobTitle}</UserMajor>
       <ScrollView
-        style={{height: '20%', width: '100%'}}
+        style={{height: '100%', width: '100%'}}
         contentContainerStyle={{
           justifyContent: 'center',
           alignItems: 'flex-start',
@@ -154,7 +154,14 @@ export const CreateProfile = ({route, navigation}) => {
           <ViewMoreLine source={require('./assets/ViewMore.png')} />
         </ViewMoreContainer>
       </ScrollView>
-      <View style={{marginBottom: 30, marginTop: 20}}>
+      <View
+        style={{
+          alignSelf: 'center',
+          width: '100%',
+          alignItems: 'center',
+          marginBottom: 30,
+          marginTop: 20,
+        }}>
         <RedButton
           label="Confirm"
           onPress={() =>
