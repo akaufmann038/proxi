@@ -155,10 +155,9 @@ const PhoneInputWrapper = styled.View`
 `;
 
 const CountryCode = styled.Text`
-  line-height: 20px;
+  
 `;
 
 const PhoneNumber = styled.TextInput`
   color: #828282;
-  line-height: 20px;
 `;

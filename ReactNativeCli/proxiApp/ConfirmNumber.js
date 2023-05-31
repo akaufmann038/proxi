@@ -118,7 +118,6 @@ const ContainerRoot = styled.View`
   flex-direction: column;
   justify-content: flex-end;
   padding-top: 60px;
-  border-radius: 20px;
   background-color: #786cff;
   overflow: hidden;
 `;

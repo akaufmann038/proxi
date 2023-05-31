@@ -56,28 +56,6 @@ export const CreateProfile = ({route, navigation}) => {
           <Completed />
         </NotCompleted>
       </HeaderNav>
-      <SIModal
-        data={allSkills}
-        setData={setSkills}
-        header="Skills"
-        subheader="Adding more skills will help you connect with more people!"
-        isVisible={skillsVisible}
-        setIsVisible={setSkillsVisible}
-        recommendedElements={recommendedSkills}
-      />
-      <SIModal
-        data={allInterests}
-        setData={setInterests}
-        header="Interests"
-        subheader="Adding more interests will help you connect with more people!"
-        isVisible={interestsVisible}
-        setIsVisible={setInterestsVisible}
-        recommendedElements={recommendedInterests}
-      />
-      <CreateProfileLabel>Create Profile</CreateProfileLabel>
-      <UploadImage />
-      <UserFullName>{fullName}</UserFullName>
-      <UserMajor>{jobTitle}</UserMajor>
       <ScrollView
         style={{height: '20%', width: '100%'}}
         contentContainerStyle={{
@@ -89,6 +67,28 @@ export const CreateProfile = ({route, navigation}) => {
           paddingBottom: 0,
           paddingLeft: 30,
         }}>
+        <SIModal
+        data={allSkills}
+        setData={setSkills}
+        header="Skills"
+        subheader="Adding more skills will help you connect with more people!"
+        isVisible={skillsVisible}
+        setIsVisible={setSkillsVisible}
+        recommendedElements={recommendedSkills}
+        />
+        <SIModal
+        data={allInterests}
+        setData={setInterests}
+        header="Interests"
+        subheader="Adding more interests will help you connect with more people!"
+        isVisible={interestsVisible}
+        setIsVisible={setInterestsVisible}
+        recommendedElements={recommendedInterests}
+        />
+        <CreateProfileLabel>Create Profile</CreateProfileLabel>
+        <UploadImage />
+        <UserFullName>{fullName}</UserFullName>
+        <UserMajor>{jobTitle}</UserMajor>  
         <CompanyLabel>Company</CompanyLabel>
         <InputBoxes>
           <UniversityInput
@@ -194,7 +194,7 @@ const UploadImage = () => {
       {image && (
         <Image
           source={require('./assets/test.png')}
-          style={{width: 150, height: 150}}
+          style={{width: 120, height: 120}}
         />
       )}
       <UploadBtnContainer>
@@ -271,8 +271,8 @@ const UploadBtnContainer = styled.View`
 `;
 const ImageContainer = styled.View`
   elevation: 2;
-  height: 150px;
-  width: 150px;
+  height: 120px;
+  width: 120px;
   background-color: #efefef;
   position: relative;
   border-radius: 999px;
