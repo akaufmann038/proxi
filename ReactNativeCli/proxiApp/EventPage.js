@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useContext} from 'react';
 import {
   View,
   Image,
@@ -7,24 +7,110 @@ import {
   Button,
   TouchableOpacity,
   ScrollView,
+  Modal,
+  TextInput,
 } from 'react-native';
 import styled from 'styled-components/native';
 import {BackButton} from './SignupComponents.js';
 import {LocationComponent, DateComponent} from './Events.js';
-import {dates} from './utils.js';
+import {dates, makePostRequest, registerUserHttp} from './utils.js';
 import {RedButton} from './SignupComponents.js';
+import {EventContext, RegisteredContext} from './App.tsx';
 
 export const EventPage = ({route, navigation}) => {
-  const {eventData, registered} = route.params;
+  const {eventId, phoneNumber} = route.params;
+  const {events, setEvents} = useContext(EventContext);
+  const {registered, setRegistered} = useContext(RegisteredContext);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [eCode, setECode] = useState('');
+
+  // gets the event data for this page
+  const eventData = events.filter(event => event.id == eventId).find(x => x);
+
   const date = new Date(eventData.date);
   const tags = eventData.tags.split(',');
 
   const handleEnterEvent = () => {};
 
-  const handleRegister = () => {};
+  const handleRegister = async () => {
+    if (eventData['public'] == 'true') {
+      const result = await makePostRequest(registerUserHttp, {
+        phoneNumber: phoneNumber,
+        eventId: parseInt(eventData.id),
+      });
+      const data = await result.json();
+
+      if (data['success']) {
+        setRegistered(data['registeredEvents']);
+      }
+    } else if (eventData['public'] == 'false') {
+      setModalVisible(true);
+    }
+  };
+
+  const handleConfirmEventCode = async () => {
+    const result = await makePostRequest(registerUserHttp, {
+      phoneNumber: phoneNumber,
+      eventId: parseInt(eventData.id),
+      eventCode: eCode,
+    });
+    const data = await result.json();
+
+    if (data['success']) {
+      setRegistered(data['registeredEvents']);
+      setModalVisible(false);
+    } else {
+      console.log(data['message']);
+    }
+  };
 
   return (
     <MaxWidth>
+      <Modal visible={modalVisible} transparent={true} animationType={'fade'}>
+        <ModalView>
+          <View style={{width: '85%', alignSelf: 'center', marginTop: 20}}>
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+              <EventCode>Event Code</EventCode>
+              <XOutContainer onPress={() => setModalVisible(false)}>
+                <XOut source={require('./assets/x_out.png')} />
+              </XOutContainer>
+            </View>
+            <Text>
+              Look for a 6-digit event code in your confimation or scan QR code
+            </Text>
+            <InputBoxes>
+              <TextInput
+                placeholder="XXXX"
+                keyboardType="numeric"
+                onChangeText={text => {
+                  if (text.length <= 4) {
+                    setECode(text);
+                  }
+                }}
+                value={eCode}
+              />
+            </InputBoxes>
+            <Text
+              style={{alignSelf: 'center', marginTop: 20, marginBottom: 10}}>
+              OR
+            </Text>
+            <TouchableOpacity
+              onPress={() => console.log('scan qr code!')}
+              style={{alignSelf: 'center'}}>
+              <Image source={require('./assets/camera.png')} />
+            </TouchableOpacity>
+            <View style={{alignSelf: 'center', marginTop: 20}}>
+              <RedButton onPress={handleConfirmEventCode} label="Confirm" />
+            </View>
+          </View>
+        </ModalView>
+      </Modal>
       <BackgroundImageContainer
         source={{uri: `data:image/png;base64,${eventData.photo}`}}>
         <View
@@ -109,6 +195,40 @@ const TagComponent = ({tagText}) => {
   );
 };
 
+const InputBoxes = styled.View`
+  width: 90%;
+  height: 50px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 14px;
+  border-width: 1px;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: #000000;
+  align-self: center;
+  margin-top: 30px;
+`;
+const EventCode = styled.Text`
+  color: #786cff;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 20px;
+`;
+const XOut = styled.Image`
+  width: 27px;
+  height: 27px;
+`;
+const XOutContainer = styled.TouchableOpacity``;
+const ModalView = styled.View`
+  width: 80%;
+  height: 40%;
+  margin-top: 50%;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: center;
+  background-color: white;
+  border-radius: 15px;
+`;
 const TagText = styled.Text`
   padding-left: 10px;
   padding-right: 10px;

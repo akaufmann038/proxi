@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useContext} from 'react';
 import styled from 'styled-components/native';
 import {
   View,
@@ -10,6 +10,7 @@ import {
   ScrollView,
 } from 'react-native';
 import {getFeedHttp, makePostRequest, dates} from './utils.js';
+import {EventContext, RegisteredContext} from './App.tsx';
 
 export const Events = ({route, navigation}) => {
   const phoneNumber = '(111) 111-1111';
@@ -24,28 +25,11 @@ export const Events = ({route, navigation}) => {
     Private: val => setPrivateFilter(val),
   };
   const [pressedLast, setPressedLast] = useState('Registered');
-  const [events, setEvents] = useState(null);
-  const [registered, setRegistered] = useState(null);
+  //const [events, setEvents] = useState(null);
+  //const [registered, setRegistered] = useState(null);
 
-  const getShownEvents = () => {
-    if (registeredFilter) {
-      // get only the events that have been registered for
-      return [
-        events.filter(event => registered.includes(event.id)),
-        'Registered',
-      ];
-    } else if (publicFilter) {
-      // get only the events that are public
-      return [events.filter(event => event['public']), 'Public'];
-    } else if (privateFilter) {
-      // get only the events that are private
-      return [events.filter(event => !event['public']), 'Private'];
-    } else {
-      throw error('Front end filter code is broken!');
-    }
-  };
-
-  const toShow = getShownEvents();
+  const {events, setEvents} = useContext(EventContext);
+  const {registered, setRegistered} = useContext(RegisteredContext);
 
   useEffect(() => {
     const getFeed = async () => {
@@ -135,16 +119,61 @@ export const Events = ({route, navigation}) => {
         <ScrollView
           style={{height: '100%', width: '100%'}}
           contentContainerStyle={{gap: 20}}>
-          <SportsEvents>{toShow[1]}</SportsEvents>
-          {events ? (
-            toShow[0].map(event => (
-              <Event
-                eventData={event}
-                registered={registered}
-                key={event.id}
-                navigation={navigation}
-              />
-            ))
+          {registeredFilter && events && registered ? (
+            <>
+              <SportsEvents>Registered</SportsEvents>
+              {events
+                .filter(event => registered.includes(event.id))
+                .map(event => (
+                  <Event
+                    eventData={event}
+                    key={event.id}
+                    navigation={navigation}
+                    phoneNumber={phoneNumber}
+                  />
+                ))}
+            </>
+          ) : (
+            <></>
+          )}
+          {publicFilter && events && registered ? (
+            <>
+              <SportsEvents>Public</SportsEvents>
+              {events
+                .filter(
+                  event =>
+                    event['public'] == 'true' && !registered.includes(event.id),
+                )
+                .map(event => (
+                  <Event
+                    eventData={event}
+                    key={event.id}
+                    navigation={navigation}
+                    phoneNumber={phoneNumber}
+                  />
+                ))}
+            </>
+          ) : (
+            <></>
+          )}
+          {privateFilter && events && registered ? (
+            <>
+              <SportsEvents>Private</SportsEvents>
+              {events
+                .filter(
+                  event =>
+                    event['public'] == 'false' &&
+                    !registered.includes(event.id),
+                )
+                .map(event => (
+                  <Event
+                    eventData={event}
+                    key={event.id}
+                    navigation={navigation}
+                    phoneNumber={phoneNumber}
+                  />
+                ))}
+            </>
           ) : (
             <></>
           )}
@@ -154,7 +183,7 @@ export const Events = ({route, navigation}) => {
   );
 };
 
-const Event = ({eventData, navigation, registered}) => {
+const Event = ({eventData, navigation, phoneNumber}) => {
   const date = new Date(eventData.date);
 
   // left off doing dates
@@ -169,8 +198,8 @@ const Event = ({eventData, navigation, registered}) => {
       }}
       onPress={() =>
         navigation.navigate('EventPage', {
-          eventData: eventData,
-          registered: registered,
+          eventId: eventData.id,
+          phoneNumber: phoneNumber,
         })
       }>
       <EventImage source={{uri: `data:image/png;base64,${eventData.photo}`}} />

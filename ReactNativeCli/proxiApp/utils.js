@@ -2,6 +2,7 @@ export const getCodeHttp = 'http://localhost:3000/get-code';
 export const verifyCodeHttp = 'http://localhost:3000/verify-code';
 export const registerFullUserHttp = 'http://localhost:3000/register-full-user';
 export const getFeedHttp = 'http://localhost:3000/get-feed';
+export const registerUserHttp = 'http://localhost:3000/register-event';
 
 // id's of recommended skills and interests
 export const recommendedSkills = [1, 2, 3, 4, 5];

@@ -60,6 +60,26 @@ app.post("/register-event", async (req, res) => {
     // get user id given phone number
     const userId = await redisClient.get(req.body["phoneNumber"]);
 
+    // get public and eventCode fields for event to register for
+    const currentEvent = await redisClient.hmGet(
+      redisKeys.event(req.body["eventId"]),
+      ["public", "eventCode"]
+    );
+
+    if (currentEvent[0] == "false") {
+      if (!("eventCode" in req.body)) {
+        return res.json({
+          success: false,
+          message: "Trying to register for private event without event code.",
+        });
+      }
+
+      // check to see that given event code matches database
+      if (String(req.body["eventCode"]) != currentEvent[1]) {
+        return res.json({ success: false, message: "Event code is invalid." });
+      }
+    }
+
     // add event id to user's registered events in db
     await redisClient.rPush(
       redisKeys.registeredEvents(userId),
