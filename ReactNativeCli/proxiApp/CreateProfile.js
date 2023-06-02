@@ -65,7 +65,18 @@ export const CreateProfile = ({route, navigation}) => {
           <Completed />
         </NotCompleted>
       </HeaderNav>
-      <SIModal
+      <ScrollView
+        style={{height: '20%', width: '100%'}}
+        contentContainerStyle={{
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          gap: 20,
+          paddingTop: 20,
+          paddingRight: 30,
+          paddingBottom: 0,
+          paddingLeft: 30,
+        }}>
+        <SIModal
         data={allSkills}
         setData={setSkills}
         header="Skills"
@@ -73,8 +84,8 @@ export const CreateProfile = ({route, navigation}) => {
         isVisible={skillsVisible}
         setIsVisible={setSkillsVisible}
         recommendedElements={recommendedSkills}
-      />
-      <SIModal
+        />
+        <SIModal
         data={allInterests}
         setData={setInterests}
         header="Interests"
@@ -82,22 +93,11 @@ export const CreateProfile = ({route, navigation}) => {
         isVisible={interestsVisible}
         setIsVisible={setInterestsVisible}
         recommendedElements={recommendedInterests}
-      />
-      <CreateProfileLabel>Create Profile</CreateProfileLabel>
-      <UploadImage setParentImage={setImage64} />
-      <UserFullName>{fullName}</UserFullName>
-      <UserMajor>{jobTitle}</UserMajor>
-      <ScrollView
-        style={{height: '100%', width: '100%'}}
-        contentContainerStyle={{
-          justifyContent: 'center',
-          alignItems: 'flex-start',
-          gap: 30,
-          paddingTop: 30,
-          paddingRight: 30,
-          paddingBottom: 0,
-          paddingLeft: 30,
-        }}>
+        />
+        <CreateProfileLabel>Create Profile</CreateProfileLabel>
+        <UploadImage />
+        <UserFullName>{fullName}</UserFullName>
+        <UserMajor>{jobTitle}</UserMajor>  
         <CompanyLabel>Company</CompanyLabel>
         <InputBoxes>
           <UniversityInput
@@ -222,7 +222,7 @@ const UploadImage = setImage64 => {
       {image && (
         <Image
           source={require('./assets/test.png')}
-          style={{width: 150, height: 150}}
+          style={{width: 120, height: 120}}
         />
       )}
       <UploadBtnContainer>
@@ -259,14 +259,14 @@ const InputBoxes = styled.View`
 `;
 const LocationLabel = styled.Text`
   align-self: flex-start;
-  margin-bottom: -20px;
+  margin-bottom: -10px;
   color: #786cff;
   font-weight: 600;
   font-size: 20px;
 `;
 const CompanyLabel = styled.Text`
   align-self: flex-start;
-  margin-bottom: -20px;
+  margin-bottom: -10px;
   color: #786cff;
   font-weight: 600;
   font-size: 20px;
@@ -275,13 +275,13 @@ const UserMajor = styled.Text`
   align-self: center;
   color: #828282;
   font-size: 13px;
+  margin-top: -10px;
 `;
 const UserFullName = styled.Text`
   align-self: center;
   color: #828282;
   font-size: 20px;
   margin-top: 10px;
-  margin-bottom: 10px;
 `;
 const UploadBtn = styled.TouchableOpacity`
   display: flex;
@@ -298,9 +298,10 @@ const UploadBtnContainer = styled.View`
   height: 25%;
 `;
 const ImageContainer = styled.View`
+  align-self: center;
   elevation: 2;
-  height: 150px;
-  width: 150px;
+  height: 120px;
+  width: 120px;
   background-color: #efefef;
   position: relative;
   border-radius: 999px;
@@ -318,7 +319,6 @@ const Completed = styled.View`
   width: 75%%;
   height: 6px;
   position: relative;
-  flex-shrink: 0;
   border-radius: 10px;
   box-sizing: border-box;
   background-color: #786cff;
@@ -335,7 +335,6 @@ const HeaderNav = styled.View`
   width: 100%;
   height: 100px;
   gap: 18px;
-  display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-self: flex-start;
@@ -343,3 +342,5 @@ const HeaderNav = styled.View`
   padding-left: 30px;
   padding-right: 30px;
 `;
+
+

@@ -107,9 +107,9 @@ export const LetsGetStarted = ({route, navigation}) => {
 const MaxWidth = styled.View`
   width: 100%;
   height: 100%;
-  gap: 30px;
+  gap: 20px;
   flex-direction: column;
-  padding: 30px 30px 0px 30px;
+  padding: 0px 30px 0px 30px;
   align-items: center;
   background-color: #ffffff;
 `;
@@ -119,7 +119,6 @@ const HeaderNav = styled.View`
   height: 100px;
   position: relative;
   gap: 18px;
-  display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-self: flex-start;
