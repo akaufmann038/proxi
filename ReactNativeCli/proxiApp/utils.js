@@ -1,5 +1,8 @@
 export const getCodeHttp = 'http://localhost:3000/get-code';
 export const verifyCodeHttp = 'http://localhost:3000/verify-code';
+export const registerFullUserHttp = 'http://localhost:3000/register-full-user';
+export const getFeedHttp = 'http://localhost:3000/get-feed';
+export const registerUserHttp = 'http://localhost:3000/register-event';
 
 // id's of recommended skills and interests
 export const recommendedSkills = [1, 2, 3, 4, 5];
@@ -50,4 +53,19 @@ export const makePostRequest = async (endpoint, body) => {
   });
 
   return res;
+};
+
+export const dates = {
+  0: 'Jan',
+  1: 'Feb',
+  2: 'Mar',
+  3: 'Apr',
+  4: 'May',
+  5: 'Jun',
+  6: 'Jul',
+  7: 'Aug',
+  8: 'Sep',
+  9: 'Oct',
+  10: 'Nov',
+  11: 'Dec',
 };

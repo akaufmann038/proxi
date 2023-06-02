@@ -12,13 +12,17 @@ import {
 } from 'react-native';
 import {RedButton, BackButton, Skill, SIModal} from './SignupComponents';
 import {useState, useEffect} from 'react';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {
   skills,
   interests,
   recommendedInterests,
   recommendedSkills,
 } from './utils.js';
+import ImgToBase64 from 'react-native-image-base64';
+import {NativeModules} from 'react-native';
+import RNFS from 'react-native-fs';
+const {DocumentDirectoryPath} = NativeModules;
 
 export const CreateProfile = ({route, navigation}) => {
   const {phoneNumber, fullName, jobTitle} = route.params;
@@ -28,6 +32,11 @@ export const CreateProfile = ({route, navigation}) => {
   const [interestsVisible, setInterestsVisible] = useState(false);
   const [allSkills, setSkills] = useState(null);
   const [allInterests, setInterests] = useState(null);
+  const image64 = '';
+
+  const setImage64 = toSet => {
+    image64 = toSet;
+  };
 
   // TODO: this will become api request for skills and interests
   // stored in database
@@ -154,7 +163,14 @@ export const CreateProfile = ({route, navigation}) => {
           <ViewMoreLine source={require('./assets/ViewMore.png')} />
         </ViewMoreContainer>
       </ScrollView>
-      <View style={{marginBottom: 30, marginTop: 20}}>
+      <View
+        style={{
+          alignSelf: 'center',
+          width: '100%',
+          alignItems: 'center',
+          marginBottom: 30,
+          marginTop: 20,
+        }}>
         <RedButton
           label="Confirm"
           onPress={() =>
@@ -172,21 +188,33 @@ export const CreateProfile = ({route, navigation}) => {
   );
 };
 
-const UploadImage = () => {
+const UploadImage = setImage64 => {
   const [image, setImage] = useState(null);
 
   const addImage = async () => {
+    setImage('hi');
+
+    /*
     const result = await launchImageLibrary({
       mediaType: 'photo',
       quality: 1,
     });
+    */
+    // TODO: having issue with reading images from file system to
+    // base64. launchCamera result has base64 option, so this could work.
+    // It seems like it would only work on the phone though, so will have to
+    // wait to test this out
+    /*
+    const result = await launchCamera();
 
     if (!result.didCancel) {
       // TODO: this needs to access actual picture from library instead of just
       // the placeholder picture
-      console.log(result.assets[0].uri);
       setImage(result.assets[0].uri);
+
+      console.log(result.assets);
     }
+    */
   };
 
   return (
