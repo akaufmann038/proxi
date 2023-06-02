@@ -109,7 +109,7 @@ const MaxWidth = styled.View`
   height: 100%;
   gap: 20px;
   flex-direction: column;
-  padding: 0px 30px 0px 30px;
+  padding-top: 30px;
   align-items: center;
   background-color: #ffffff;
 `;
@@ -124,6 +124,8 @@ const HeaderNav = styled.View`
   align-self: flex-start;
   align-items: center;
   box-sizing: border-box;
+  padding-left: 30px;
+  padding-right: 30px;
 `;
 
 export const NotCompleted = styled.View`

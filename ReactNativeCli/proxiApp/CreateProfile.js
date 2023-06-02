@@ -77,27 +77,27 @@ export const CreateProfile = ({route, navigation}) => {
           paddingLeft: 30,
         }}>
         <SIModal
-        data={allSkills}
-        setData={setSkills}
-        header="Skills"
-        subheader="Adding more skills will help you connect with more people!"
-        isVisible={skillsVisible}
-        setIsVisible={setSkillsVisible}
-        recommendedElements={recommendedSkills}
+          data={allSkills}
+          setData={setSkills}
+          header="Skills"
+          subheader="Adding more skills will help you connect with more people!"
+          isVisible={skillsVisible}
+          setIsVisible={setSkillsVisible}
+          recommendedElements={recommendedSkills}
         />
         <SIModal
-        data={allInterests}
-        setData={setInterests}
-        header="Interests"
-        subheader="Adding more interests will help you connect with more people!"
-        isVisible={interestsVisible}
-        setIsVisible={setInterestsVisible}
-        recommendedElements={recommendedInterests}
+          data={allInterests}
+          setData={setInterests}
+          header="Interests"
+          subheader="Adding more interests will help you connect with more people!"
+          isVisible={interestsVisible}
+          setIsVisible={setInterestsVisible}
+          recommendedElements={recommendedInterests}
         />
         <CreateProfileLabel>Create Profile</CreateProfileLabel>
         <UploadImage />
         <UserFullName>{fullName}</UserFullName>
-        <UserMajor>{jobTitle}</UserMajor>  
+        <UserMajor>{jobTitle}</UserMajor>
         <CompanyLabel>Company</CompanyLabel>
         <InputBoxes>
           <UniversityInput
@@ -339,8 +339,7 @@ const HeaderNav = styled.View`
   justify-content: flex-start;
   align-self: flex-start;
   align-items: center;
+  position: relative;
   padding-left: 30px;
   padding-right: 30px;
 `;
-
-
