@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import {BackButton} from './SignupComponents.js';
-import {LocationComponent, DateComponent} from './Events.js';
+import {LocationComponent, DateComponent} from './Home.js';
 import {dates, makePostRequest, registerUserHttp} from './utils.js';
 import {RedButton} from './SignupComponents.js';
 import {EventContext, RegisteredContext} from './App.tsx';

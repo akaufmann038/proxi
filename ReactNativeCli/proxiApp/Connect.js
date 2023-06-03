@@ -23,6 +23,8 @@ export const Connect = ({route, navigation}) => {
   const handleOnConfirm = async () => {
     // send api request to register user
     try {
+      // TODO: uncomment this for production
+      /*
       const res = await makePostRequest(registerFullUserHttp, {
         phoneNumber: phoneNumber,
         fullName: fullName,
@@ -36,12 +38,6 @@ export const Connect = ({route, navigation}) => {
 
       const message = await res.json();
 
-      navigation.navigate('Events', {
-        phoneNumber: phoneNumber,
-      });
-
-      // TODO: uncomment this for production
-      /*
       if (message.success) {
         // navigate to events page just passing phone number
         navigation.navigate('Events', {
@@ -49,6 +45,10 @@ export const Connect = ({route, navigation}) => {
         });
       }
       */
+
+      navigation.navigate('BottomNavigator', {
+        phoneNumber: phoneNumber,
+      });
     } catch (err) {
       console.log(err);
     }

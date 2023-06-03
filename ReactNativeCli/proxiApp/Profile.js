@@ -12,7 +12,7 @@ import {
 import {getFeedHttp, makePostRequest, dates} from './utils.js';
 import {EventContext, RegisteredContext} from './App.tsx';
 
-export const Events = ({route, navigation}) => {
+export const Profile = ({route, navigation}) => {
   return <MaxWidth></MaxWidth>;
 };
 const MaxWidth = styled.View`

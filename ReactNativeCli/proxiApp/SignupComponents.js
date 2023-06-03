@@ -1,6 +1,181 @@
 import React, {useEffect, useState} from 'react';
-import {Animated, Text, Modal, View, TextInput} from 'react-native';
+import {
+  Animated,
+  Text,
+  Modal,
+  View,
+  TextInput,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import styled from 'styled-components/native';
+
+export const TabBar = ({state, descriptors, navigation}) => {
+  const onPressProfile = () => {
+    navigation.navigate('Profile');
+  };
+
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        paddingBottom: 30,
+        backgroundColor: 'white',
+      }}>
+      {state.routes.map((route, index) => {
+        const {options} = descriptors[route.key];
+        const label =
+          options.tabBarLabel !== undefined
+            ? options.tabBarLabel
+            : options.title !== undefined
+            ? options.title
+            : route.name;
+
+        const isFocused = state.index === index;
+
+        const onPress = () => {
+          const event = navigation.emit({
+            type: 'tabPress',
+            target: route.key,
+            canPreventDefault: true,
+          });
+
+          if (!isFocused && !event.defaultPrevented) {
+            // The `merge: true` option makes sure that the params inside the tab screen are preserved
+            navigation.navigate({name: route.name, merge: true});
+          }
+        };
+
+        const onLongPress = () => {
+          navigation.emit({
+            type: 'tabLongPress',
+            target: route.key,
+          });
+        };
+
+        return (
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityState={isFocused ? {selected: true} : {}}
+            accessibilityLabel={options.tabBarAccessibilityLabel}
+            testID={options.tabBarTestID}
+            onPress={onPress}
+            onLongPress={onLongPress}
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              marginTop: 20,
+            }}
+            key={index}>
+            {label == 'Home' ? (
+              <View style={{alignItems: 'center', gap: 5}}>
+                <View
+                  style={{
+                    backgroundColor: isFocused ? '#786cff' : 'white',
+                    width: 30,
+                    height: 30,
+                    borderRadius: 4,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={
+                      isFocused
+                        ? require('./assets/light_home.png')
+                        : require('./assets/dark_home.png')
+                    }
+                  />
+                </View>
+                <Text style={{color: isFocused ? 'white' : '#786cff'}}>
+                  {label}
+                </Text>
+              </View>
+            ) : (
+              <></>
+            )}
+            {label == 'Connections' ? (
+              <View style={{alignItems: 'center', gap: 5}}>
+                <View
+                  style={{
+                    backgroundColor: isFocused ? '#786cff' : 'white',
+                    width: 30,
+                    height: 30,
+                    borderRadius: 4,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={
+                      isFocused
+                        ? require('./assets/light_connections.png')
+                        : require('./assets/dark_connections.png')
+                    }
+                  />
+                </View>
+                <Text style={{color: isFocused ? 'white' : '#786cff'}}>
+                  {label}
+                </Text>
+              </View>
+            ) : (
+              <></>
+            )}
+            {label == 'Events' ? (
+              <View style={{alignItems: 'center', gap: 5}}>
+                <View
+                  style={{
+                    backgroundColor: isFocused ? '#786cff' : 'white',
+                    width: 30,
+                    height: 30,
+                    borderRadius: 4,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={
+                      isFocused
+                        ? require('./assets/light_events.png')
+                        : require('./assets/dark_events.png')
+                    }
+                  />
+                </View>
+                <Text style={{color: isFocused ? 'white' : '#786cff'}}>
+                  {label}
+                </Text>
+              </View>
+            ) : (
+              <></>
+            )}
+          </TouchableOpacity>
+        );
+      })}
+      <TouchableOpacity
+        accessibilityRole="button"
+        onPress={onPressProfile}
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          marginTop: 20,
+        }}>
+        <View style={{alignItems: 'center', gap: 5}}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: 30,
+              height: 30,
+              borderRadius: 4,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image source={require('./assets/light_profile.png')} />
+          </View>
+          <Text style={{color: '#786cff'}}>Profile</Text>
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 // AddAccount: button that allows you to add the link of an external
 // acount using pop up modal
