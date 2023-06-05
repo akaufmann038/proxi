@@ -67,17 +67,51 @@ app.post("/accept-request", async (req, res) => {
     // get user id of given phone number
     const userId = await redisClient.get(req.body["phoneNumber"]);
 
+    // 1. ensures that client can't accept request that doesn't exist
+    // 2. ensures that client can't accept request if a connection already exists
+    const testCase = await redisClient
+      .MULTI()
+      .hExists(
+        redisKeys.connectionRequests(userId),
+        String(req.body["otherUserId"])
+      )
+      .hExists(redisKeys.connections(userId), String(req.body["otherUserId"]))
+      .hExists(redisKeys.connections(req.body["otherUserId"]), userId)
+      .exec();
+
+    if (testCase[0] == "0") {
+      return res.json({
+        success: false,
+        message: "Trying to accept connection request that does not exist",
+      });
+    }
+
+    if (testCase[1] == "1" || testCase[2] == "1") {
+      return res.json({
+        success: false,
+        message:
+          "Trying to accept connection request when a connection already exists between the two users",
+      });
+    }
+
     const release = await mutex.acquire();
 
     // 1. delete corresponding object in connection requests for current user
     // 2. create connection object in connections for current user and other user
-    await redisClient.MULTI.hDel(
-      redisKeys.connectionRequests(userId),
-      String(req.body["otherUserId"])
-    )
+    await redisClient
+      .MULTI()
+      .hDel(
+        redisKeys.connectionRequests(userId),
+        String(req.body["otherUserId"])
+      )
       .hSet(
         redisKeys.connections(userId),
         String(req.body["otherUserId"]),
+        String(req.body["eventId"])
+      )
+      .hSet(
+        redisKeys.connections(req.body["otherUserId"]),
+        userId,
         String(req.body["eventId"])
       )
       .exec();
@@ -142,8 +176,8 @@ app.post("/connection-request", async (req, res) => {
     // ensure that client can't request to connect with someone
     // who they already sent a request to
     const requestExists = await redisClient.hExists(
-      redisKeys.connectionRequests(userId),
-      String(req.body["otherUserId"])
+      redisKeys.connectionRequests(req.body["otherUserId"]),
+      userId
     );
 
     if (requestExists == "1") {
