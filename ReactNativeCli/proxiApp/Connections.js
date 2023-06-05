@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {getFeedHttp, makePostRequest, dates} from './utils.js';
 import {EventContext, RegisteredContext} from './App.tsx';
+import {Profile} from './Profile.js';
 
 export const Connections = ({route, navigation}) => {
   return (
@@ -63,11 +64,65 @@ export const Connections = ({route, navigation}) => {
           />
         </PendingConnectionsBox>
         <YourConnections>Your Connections</YourConnections>
+        <ScrollView
+          style={{height: '20%', width: '100%'}}
+          contentContainerStyle={{
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+          }}>
+          <Connection />
+        </ScrollView>
       </MarginContainer>
     </MaxWidth>
   );
 };
 
+const Connection = () => {
+  return (
+    <ConnectionContainer>
+      <ProfileImageContainer>
+        <Image
+          source={require('./assets/test.png')}
+          style={{height: 45, width: 45}}
+        />
+      </ProfileImageContainer>
+      <View style={{flexDirection: 'column', gap: 2, marginLeft: 10}}>
+        <ConnectionName>Alexander Kaufmann</ConnectionName>
+        <ConnectionEvent>Introduction to UX</ConnectionEvent>
+      </View>
+      <Image
+        style={{marginLeft: '35%'}}
+        source={require('./assets/right_line.png')}
+      />
+    </ConnectionContainer>
+  );
+};
+
+const DividerImage = styled.Image`
+  margin-top: 10px;
+  width: 400px;
+`;
+const ConnectionEvent = styled.Text`
+  color: #786cff;
+  font-size: 12px;
+`;
+const ConnectionName = styled.Text`
+  color: #786cff;
+  font-size: 15px;
+  font-weight: 600;
+`;
+const ProfileImageContainer = styled.View`
+  border-radius: 999px;
+  overflow: hidden;
+`;
+const ConnectionContainer = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 70px;
+  border-bottom-width: 0.5px;
+  border-color: #000000;
+`;
 const YourConnections = styled.Text`
   color: #786cff;
   font-weight: 600;

@@ -47,7 +47,175 @@ const redisKeys = {
   event: (eventId) => "event:" + eventId,
   users: () => "users",
   registeredEvents: (userId) => "user:" + userId + ":events",
+  connections: (userId) => "user:" + userId + ":connections",
+  connectionRequests: (userId) => "user:" + userId + ":requests",
 };
+
+// left off here. test this
+// accepts requesting connection from another user
+app.post("/accept-request", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (
+    !("phoneNumber" in req.body) ||
+    !("otherUserId" in req.body) ||
+    !("eventId" in req.body)
+  ) {
+    return res.json({ success: false, message: "Invalid fields!" });
+  }
+
+  try {
+    // get user id of given phone number
+    const userId = await redisClient.get(req.body["phoneNumber"]);
+
+    const release = await mutex.acquire();
+
+    // 1. delete corresponding object in connection requests for current user
+    // 2. create connection object in connections for current user and other user
+    await redisClient.MULTI.hDel(
+      redisKeys.connectionRequests(userId),
+      String(req.body["otherUserId"])
+    )
+      .hSet(
+        redisKeys.connections(userId),
+        String(req.body["otherUserId"]),
+        String(req.body["eventId"])
+      )
+      .exec();
+
+    release();
+
+    return res.json({
+      success: true,
+      message: "Successfully accepted connection in database",
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.json({
+      success: false,
+      message:
+        "there was an error while accepting connection request in the database",
+    });
+  }
+});
+
+// a user requests to connect with another user
+app.post("/connection-request", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (
+    !("phoneNumber" in req.body) ||
+    !("otherUserId" in req.body) ||
+    !("eventId" in req.body)
+  ) {
+    return res.json({ success: false, message: "Invalid fields!" });
+  }
+
+  try {
+    // get user id of given phone number
+    const userId = await redisClient.get(req.body["phoneNumber"]);
+
+    // ensure that client can't request to connect with themselves
+    if (userId == String(req.body["otherUserId"])) {
+      return res.json({
+        success: false,
+        message: "Cannot request to connect with the same user",
+      });
+    }
+
+    const release = await mutex.acquire();
+
+    // ensure that client can't request to connect with someone
+    // who they're already connected with
+    const connectionExists = await redisClient.hExists(
+      redisKeys.connections(userId),
+      String(req.body["otherUserId"])
+    );
+
+    if (connectionExists == "1") {
+      return res.json({
+        success: false,
+        message:
+          "Cannot request to connect with a user who is already a connection",
+      });
+    }
+
+    // ensure that client can't request to connect with someone
+    // who they already sent a request to
+    const requestExists = await redisClient.hExists(
+      redisKeys.connectionRequests(userId),
+      String(req.body["otherUserId"])
+    );
+
+    if (requestExists == "1") {
+      return res.json({
+        success: false,
+        message:
+          "Cannot request to connect with a user who is already requested",
+      });
+    }
+
+    // add object to connection requests for other user
+    await redisClient.hSet(
+      redisKeys.connectionRequests(req.body["otherUserId"]),
+      userId,
+      req.body["eventId"]
+    );
+
+    release();
+
+    return res.json({
+      success: true,
+      message: "Successfully added connection request to database",
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.json({
+      success: false,
+      message:
+        "there was an error while requesting to connect with user in database",
+    });
+  }
+});
+
+// returns all connections and connection requests for a given user
+app.post("/get-connections-all", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (!("phoneNumber" in req.body)) {
+    return res.json({ success: false, message: "Invalid fields!" });
+  }
+
+  try {
+    // get user id of given phone number
+    const userId = await redisClient.get(req.body["phoneNumber"]);
+
+    // get connection requests for that user
+    const connectionRequests = await redisClient.hGetAll(
+      redisKeys.connectionRequests(userId)
+    );
+
+    // get connections for that user
+    const connections = await redisClient.hGetAll(
+      redisKeys.connections(userId)
+    );
+
+    return res.json({
+      success: true,
+      message:
+        "Successfully retrieved connections and connection requests from database",
+      connectionRequests: connectionRequests,
+      connections: connections,
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.json({
+      success: false,
+      message:
+        "there was an error while getting connections and connection requests from database",
+    });
+  }
+});
 
 // registers a user for an event and sends back the list of registered events for that user
 app.post("/register-event", async (req, res) => {
