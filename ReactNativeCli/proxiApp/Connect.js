@@ -23,7 +23,7 @@ export const Connect = ({route, navigation}) => {
   const handleOnConfirm = async () => {
     // send api request to register user
     try {
-      // TODO: uncomment this for production
+      // TODO: uncomment this for production and add photo
       /*
       const res = await makePostRequest(registerFullUserHttp, {
         phoneNumber: phoneNumber,

@@ -51,7 +51,81 @@ const redisKeys = {
   connectionRequests: (userId) => "user:" + userId + ":requests",
 };
 
-// left off here. test this
+// given object of hash keys and key-properties, returns all of the properties
+// { hashKey,id or phoneNumber: [property1, property2...], hashKey2,id: [...] }
+// returns values in same object format with values in same order as queried:
+// { hashKey,id: [value1, value2...], hashKey2,id: [...] }
+app.post("/query-hash-data", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (!("hashData" in req.body)) {
+    return res.json({ success: false, message: "Invalid fields!" });
+  }
+
+  try {
+    let hashData = {};
+
+    // iterate through every key
+    for (const key of Object.keys(req.body["hashData"])) {
+      const keyData = key.split(","); // key first, id second
+
+      if (!(keyData[0] in redisKeys)) {
+        return res.json({ success: false, message: "Invalid redis key" });
+      }
+
+      if (keyData[1].length > 5 && keyData[0] != "user") {
+        return res.json({
+          success: false,
+          message: "Given phone number but not querying user",
+        });
+      }
+
+      hashData[key] = [];
+
+      // iterate through every property
+      for (const property of req.body["hashData"][key]) {
+        let resData;
+
+        // if phone number
+        if (keyData[1].length > 5) {
+          const userId = await redisClient.get(keyData[1]);
+
+          resData = await redisClient.hGet(
+            redisKeys[keyData[0]](userId),
+            property
+          );
+        } else {
+          resData = await redisClient.hGet(
+            redisKeys[keyData[0]](keyData[1]),
+            property
+          );
+        }
+
+        if (resData == null) {
+          return res.json({
+            success: false,
+            message: "Invalid redis property " + property,
+          });
+        }
+
+        hashData[key].push(resData);
+      }
+    }
+
+    return res.json({
+      success: true,
+      message: "Successfully queried hash data from database",
+      hashData: hashData,
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.json({
+      success: false,
+      message: "there was an error while querying hash data from database",
+    });
+  }
+});
+
 // accepts requesting connection from another user
 app.post("/accept-request", async (req, res) => {
   // ensure that all fields are present and spelled correctly
@@ -223,6 +297,7 @@ app.post("/get-connections-all", async (req, res) => {
     // get user id of given phone number
     const userId = await redisClient.get(req.body["phoneNumber"]);
 
+    // TODO: COMBINE THESE
     // get connection requests for that user
     const connectionRequests = await redisClient.hGetAll(
       redisKeys.connectionRequests(userId)
@@ -433,7 +508,8 @@ app.post("/register-full-user", async (req, res) => {
     !("location" in req.body) ||
     !("email" in req.body) ||
     !("sharePhone" in req.body) ||
-    !("links" in req.body)
+    !("links" in req.body) ||
+    !("photo" in req.body)
   ) {
     return res.json({
       success: false,
@@ -482,6 +558,7 @@ app.post("/register-full-user", async (req, res) => {
         linkFacebook: req.body["links"]["Facebook"],
         linkInstagram: req.body["links"]["Instagram"],
         linkTiktok: req.body["links"]["Tiktok"],
+        photo: req.body["photo"],
       })
       .set(req.body["phoneNumber"], newId)
       .exec();

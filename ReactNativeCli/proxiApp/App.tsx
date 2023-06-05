@@ -16,29 +16,44 @@ import {Profile} from './Profile.js';
 
 export const EventContext = createContext({});
 export const RegisteredContext = createContext({});
+export const ConnectionsContext = createContext({});
+export const PendingConnectionsContext = createContext({});
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   const [events, setEvents] = useState(null);
   const [registered, setRegistered] = useState(null);
+  const [connections, setConnections] = useState(null);
+  const [pendingConnections, setPendingConnections] = useState(null);
 
   return (
     <NavigationContainer>
       <EventContext.Provider value={{events, setEvents}}>
         <RegisteredContext.Provider value={{registered, setRegistered}}>
-          <Stack.Navigator
-            screenOptions={{headerShown: false}}
-            initialRouteName="BottomNavigator">
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="ConfirmNumber" component={ConfirmNumber} />
-            <Stack.Screen name="LetsGetStarted" component={LetsGetStarted} />
-            <Stack.Screen name="CreateProfile" component={CreateProfile} />
-            <Stack.Screen name="Connect" component={Connect} />
-            <Stack.Screen name="EventPage" component={EventPage} />
-            <Stack.Screen name="BottomNavigator" component={BottomNavigator} />
-            <Stack.Screen name="Profile" component={Profile} />
-          </Stack.Navigator>
+          <ConnectionsContext.Provider value={{connections, setConnections}}>
+            <PendingConnectionsContext.Provider
+              value={{pendingConnections, setPendingConnections}}>
+              <Stack.Navigator
+                screenOptions={{headerShown: false}}
+                initialRouteName="BottomNavigator">
+                <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="ConfirmNumber" component={ConfirmNumber} />
+                <Stack.Screen
+                  name="LetsGetStarted"
+                  component={LetsGetStarted}
+                />
+                <Stack.Screen name="CreateProfile" component={CreateProfile} />
+                <Stack.Screen name="Connect" component={Connect} />
+                <Stack.Screen name="EventPage" component={EventPage} />
+                <Stack.Screen
+                  name="BottomNavigator"
+                  component={BottomNavigator}
+                />
+                <Stack.Screen name="Profile" component={Profile} />
+              </Stack.Navigator>
+            </PendingConnectionsContext.Provider>
+          </ConnectionsContext.Provider>
         </RegisteredContext.Provider>
       </EventContext.Provider>
     </NavigationContainer>

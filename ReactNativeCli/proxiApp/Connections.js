@@ -9,11 +9,72 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {getFeedHttp, makePostRequest, dates} from './utils.js';
-import {EventContext, RegisteredContext} from './App.tsx';
+import {
+  getFeedHttp,
+  makePostRequest,
+  dates,
+  getConnectionsAllHttp,
+  queryHashDataHttp,
+} from './utils.js';
+import {
+  EventContext,
+  RegisteredContext,
+  ConnectionsContext,
+  PendingConnectionsContext,
+} from './App.tsx';
 import {Profile} from './Profile.js';
 
 export const Connections = ({route, navigation}) => {
+  const phoneNumber = '(111) 111-1111';
+  const {connections, setConnections} = useContext(ConnectionsContext);
+  const {pendingConnections, setPendingConnections} = useContext(
+    PendingConnectionsContext,
+  );
+  const [connectionData, setConnectionData] = useState(null); // { user,{id}: [value, value...] }
+
+  useEffect(() => {
+    const getConnections = async () => {
+      // get all connections and connection requests for this user
+      try {
+        const res = await makePostRequest(getConnectionsAllHttp, {
+          phoneNumber: phoneNumber,
+        });
+
+        const resData = await res.json();
+
+        let hashData = {};
+        for (const key of Object.keys(resData.connectionRequests)) {
+          hashData['user,' + key] = ['photo', 'fullName'];
+          hashData['event,' + resData.connectionRequests[key]] = ['name'];
+        }
+
+        for (const key of Object.keys(resData.connections)) {
+          hashData['user,' + key] = ['photo', 'fullName'];
+          hashData['event,' + resData.connections[key]] = ['name'];
+        }
+
+        const res2 = await makePostRequest(queryHashDataHttp, {
+          // TODO: get profile picture, name
+          hashData: hashData,
+        });
+
+        const userData = await res2.json();
+
+        return [resData, userData];
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getConnections().then(res => {
+      setConnections(res[0].connections);
+      setPendingConnections(res[0].connectionRequests);
+      setConnectionData(res[1].hashData);
+    });
+
+    console.log('welcome to connections page');
+  }, []);
+
   return (
     <MaxWidth>
       <MarginContainer>
@@ -54,10 +115,12 @@ export const Connections = ({route, navigation}) => {
                 color: 'white',
                 fontWeight: '500',
               }}>
-              +4
+              +{Object.keys(pendingConnections).length}
             </Text>
           </View>
-          <ViewRequestsText>View all 4 requests</ViewRequestsText>
+          <ViewRequestsText>
+            View all {Object.keys(pendingConnections).length} requests
+          </ViewRequestsText>
           <Image
             style={{marginLeft: 20}}
             source={require('./assets/right_line.png')}
@@ -70,38 +133,52 @@ export const Connections = ({route, navigation}) => {
             justifyContent: 'center',
             alignItems: 'flex-start',
           }}>
-          <Connection />
+          {connectionData ? (
+            Object.keys(connections).map(connectionUserId => (
+              <Connection
+                name={connectionData['user,' + connectionUserId][1]}
+                event={
+                  connectionData['event,' + connections[connectionUserId]][0]
+                }
+                photo={connectionData['user,' + connectionUserId][0]}
+              />
+            ))
+          ) : (
+            <></>
+          )}
         </ScrollView>
       </MarginContainer>
     </MaxWidth>
   );
 };
 
-const Connection = () => {
+const Connection = ({name, event, photo}) => {
   return (
     <ConnectionContainer>
-      <ProfileImageContainer>
-        <Image
-          source={require('./assets/test.png')}
-          style={{height: 45, width: 45}}
-        />
-      </ProfileImageContainer>
-      <View style={{flexDirection: 'column', gap: 2, marginLeft: 10}}>
-        <ConnectionName>Alexander Kaufmann</ConnectionName>
-        <ConnectionEvent>Introduction to UX</ConnectionEvent>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <ProfileImageContainer>
+          <Image
+            source={{uri: `data:image/png;base64,${photo}`}}
+            style={{height: 45, width: 45}}
+          />
+        </ProfileImageContainer>
+        <View style={{flexDirection: 'column', gap: 2, marginLeft: 10}}>
+          <ConnectionName>{name}</ConnectionName>
+          <ConnectionEvent>{event}</ConnectionEvent>
+        </View>
       </View>
       <Image
-        style={{marginLeft: '35%'}}
+        style={{marginRight: 20}}
         source={require('./assets/right_line.png')}
       />
     </ConnectionContainer>
   );
 };
 
-const DividerImage = styled.Image`
-  margin-top: 10px;
-  width: 400px;
-`;
 const ConnectionEvent = styled.Text`
   color: #786cff;
   font-size: 12px;
@@ -118,6 +195,7 @@ const ProfileImageContainer = styled.View`
 const ConnectionContainer = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   height: 70px;
   border-bottom-width: 0.5px;
@@ -143,6 +221,7 @@ const PendingConnectionsBox = styled.TouchableOpacity`
   height: 65px;
   flex-direction: row;
   align-items: center;
+  margin-top: 5px;
 `;
 const PendingConnectionsHeader = styled.Text`
   color: #786cff;
