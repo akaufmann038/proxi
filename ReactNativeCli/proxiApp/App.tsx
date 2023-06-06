@@ -13,6 +13,7 @@ import {Connections} from './Connections.js';
 import {TabBar} from './SignupComponents.js';
 import {Events} from './Events.js';
 import {Profile} from './Profile.js';
+import {ShowProfile} from './ShowProfile.js';
 
 export const EventContext = createContext({});
 export const RegisteredContext = createContext({});
@@ -51,6 +52,7 @@ export default function App() {
                   component={BottomNavigator}
                 />
                 <Stack.Screen name="Profile" component={Profile} />
+                <Stack.Screen name="ShowProfile" component={ShowProfile} />
               </Stack.Navigator>
             </PendingConnectionsContext.Provider>
           </ConnectionsContext.Provider>

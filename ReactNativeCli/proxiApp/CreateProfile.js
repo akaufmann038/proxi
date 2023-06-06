@@ -180,6 +180,8 @@ export const CreateProfile = ({route, navigation}) => {
               jobTitle: jobTitle,
               company: company,
               location: location,
+              skills: allSkills,
+              interests: allInterests,
             })
           }
         />

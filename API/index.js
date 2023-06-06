@@ -430,6 +430,7 @@ app.post("/get-feed", async (req, res) => {
   }
 });
 
+// creates a new event in the database
 app.post("/create-event", async (req, res) => {
   // ensure that all fields are present and spelled correctly
   if (
@@ -498,6 +499,7 @@ app.post("/create-event", async (req, res) => {
   }
 });
 
+// registers a new user in the database
 app.post("/register-full-user", async (req, res) => {
   // ensure that all fields are present and spelled correctly
   if (
@@ -509,7 +511,10 @@ app.post("/register-full-user", async (req, res) => {
     !("email" in req.body) ||
     !("sharePhone" in req.body) ||
     !("links" in req.body) ||
-    !("photo" in req.body)
+    !("photo" in req.body) ||
+    !("biography" in req.body) ||
+    !("skills" in req.body) ||
+    !("interests" in req.body)
   ) {
     return res.json({
       success: false,
@@ -559,6 +564,9 @@ app.post("/register-full-user", async (req, res) => {
         linkInstagram: req.body["links"]["Instagram"],
         linkTiktok: req.body["links"]["Tiktok"],
         photo: req.body["photo"],
+        biography: req.body["biography"],
+        skills: req.body["skills"],
+        interests: req.body["interests"],
       })
       .set(req.body["phoneNumber"], newId)
       .exec();
@@ -573,6 +581,33 @@ app.post("/register-full-user", async (req, res) => {
     return res.json({
       success: false,
       message: "there was an error while creating user in database",
+    });
+  }
+});
+
+// given a userId, returns a full profile
+app.post("/get-profile", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (!("userId" in req.body)) {
+    return res.json({ success: false, message: "Invalid fields!" });
+  }
+
+  try {
+    const profile = await redisClient.hGetAll(
+      redisKeys.user(req.body["userId"])
+    );
+
+    return res.json({
+      success: true,
+      message: "successfully retrieved user profile",
+      userProfile: profile,
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.json({
+      success: false,
+      message: "there was an error while getting the users profile",
     });
   }
 });

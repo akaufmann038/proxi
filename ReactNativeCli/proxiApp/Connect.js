@@ -6,7 +6,15 @@ import {View, TouchableOpacity, Touchable} from 'react-native';
 import {makePostRequest, registerFullUserHttp} from './utils.js';
 
 export const Connect = ({route, navigation}) => {
-  const {phoneNumber, fullName, jobTitle, company, location} = route.params;
+  const {
+    phoneNumber,
+    fullName,
+    jobTitle,
+    company,
+    location,
+    skills,
+    interests,
+  } = route.params;
   const [email, setEmail] = useState('');
   const [sharePhone, setSharePhone] = useState(false);
   const [links, setLinks] = useState({
@@ -23,6 +31,22 @@ export const Connect = ({route, navigation}) => {
   const handleOnConfirm = async () => {
     // send api request to register user
     try {
+      let finalSkills = [];
+      let finalInterests = [];
+
+      for (const skill of Object.keys(skills)) {
+        if (skills[skill]['active']) {
+          finalSkills.push(skill);
+        }
+      }
+      for (const interest of Object.keys(interests)) {
+        if (interests[interest]['active']) {
+          finalInterests.push(interest);
+        }
+      }
+      console.log(String(finalSkills));
+      console.log(String(finalInterests));
+
       // TODO: uncomment this for production and add photo
       /*
       const res = await makePostRequest(registerFullUserHttp, {
@@ -34,6 +58,9 @@ export const Connect = ({route, navigation}) => {
         email: email,
         sharePhone: sharePhone,
         links: links,
+        biography: "",
+        skills: finalSkills,
+        interests: finalInterests
       });
 
       const message = await res.json();

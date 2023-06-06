@@ -6,6 +6,7 @@ export const registerUserHttp = 'http://localhost:3000/register-event';
 export const getConnectionsAllHttp =
   'http://localhost:3000/get-connections-all';
 export const queryHashDataHttp = 'http://localhost:3000/query-hash-data';
+export const getProfileHttp = 'http://localhost:3000/get-profile';
 
 // id's of recommended skills and interests
 export const recommendedSkills = [1, 2, 3, 4, 5];

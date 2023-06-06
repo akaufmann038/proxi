@@ -115,11 +115,22 @@ export const Connections = ({route, navigation}) => {
                 color: 'white',
                 fontWeight: '500',
               }}>
-              +{Object.keys(pendingConnections).length}
+              +
+              {pendingConnections ? (
+                Object.keys(pendingConnections).length
+              ) : (
+                <></>
+              )}
             </Text>
           </View>
           <ViewRequestsText>
-            View all {Object.keys(pendingConnections).length} requests
+            View all{' '}
+            {pendingConnections ? (
+              Object.keys(pendingConnections).length
+            ) : (
+              <></>
+            )}{' '}
+            requests
           </ViewRequestsText>
           <Image
             style={{marginLeft: 20}}
@@ -136,11 +147,14 @@ export const Connections = ({route, navigation}) => {
           {connectionData ? (
             Object.keys(connections).map(connectionUserId => (
               <Connection
+                navigation={navigation}
                 name={connectionData['user,' + connectionUserId][1]}
                 event={
                   connectionData['event,' + connections[connectionUserId]][0]
                 }
                 photo={connectionData['user,' + connectionUserId][0]}
+                userId={connectionUserId}
+                key={connectionUserId}
               />
             ))
           ) : (
@@ -152,9 +166,14 @@ export const Connections = ({route, navigation}) => {
   );
 };
 
-const Connection = ({name, event, photo}) => {
+const Connection = ({navigation, name, event, photo, userId}) => {
   return (
-    <ConnectionContainer>
+    <ConnectionContainer
+      onPress={() =>
+        navigation.navigate('ShowProfile', {
+          userId: userId,
+        })
+      }>
       <View
         style={{
           flexDirection: 'row',
