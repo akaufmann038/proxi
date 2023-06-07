@@ -29,6 +29,57 @@ import {Profile} from './ShowProfile.js';
 import {BackButton} from './SignupComponents.js';
 
 export const ShowProfile = ({route, navigation}) => {
+  const links = {
+    linkResume: {
+      color: '#0072B1',
+      title: 'Linkedin',
+      iconSource: require('./assets/linkedin.png'),
+      textColor: 'white',
+    },
+    linkInstagram: {
+      color: 'rgba(186,120,237,1)',
+      title: 'Instagram',
+      iconSource: require('./assets/instagram.png'),
+      textColor: 'white',
+    },
+    linkLinkedin: {
+      color: '#0072B1',
+      title: 'Linkedin',
+      iconSource: require('./assets/linkedin.png'),
+      textColor: 'white',
+    },
+    linkGithub: {
+      color: 'black',
+      title: 'GitHub',
+      iconSource: require('./assets/github.png'),
+      textColor: 'white',
+    },
+    linkDropbox: {
+      color: '#0060FF',
+      title: 'DropBox',
+      iconSource: require('./assets/dropbox.png'),
+      textColor: 'white',
+    },
+    linkMedium: {
+      color: 'black',
+      title: 'Medium',
+      iconSource: require('./assets/medium.png'),
+      textColor: 'white',
+    },
+    linkFacebook: {
+      color: '#385C8E',
+      title: 'Facebook',
+      iconSource: require('./assets/facebook.png'),
+      textColor: 'white',
+    },
+    linkTiktok: {
+      color: 'grey',
+      title: 'Tiktok',
+      iconSource: require('./assets/tiktok.png'),
+      textColor: 'white',
+    },
+  };
+
   const {userId} = route.params;
   const [userProfile, setUserProfile] = useState(null);
   const [phoneModalVisible, setPhoneVisible] = useState(false);
@@ -89,128 +140,146 @@ export const ShowProfile = ({route, navigation}) => {
               </DataContainer>
             </ModalView>
           </Modal>
-          <View
-            style={{
-              marginTop: 50,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <BackButton label="back" onPress={() => navigation.goBack()} />
-            <View style={{flexDirection: 'row', gap: 25}}>
-              <PhoneContainer onPress={() => setPhoneVisible(true)}>
-                <Image source={require('./assets/phone.png')} />
-              </PhoneContainer>
-              <EmailContainer onPress={() => setEmailVisible(true)}>
-                <Image source={require('./assets/email.png')} />
-              </EmailContainer>
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              gap: -5,
-            }}>
-            <ProfileImageContainer>
-              <Image
-                source={{
-                  uri: `data:image/png;base64,${userProfile['photo']}`,
-                }}
-                style={{height: 90, width: 90}}
-              />
-            </ProfileImageContainer>
-            <View style={{flexDirection: 'column', justifyContent: 'flex-end'}}>
-              <Text style={{color: '#828282', fontSize: 25, fontWeight: 800}}>
-                {userProfile['fullName']}
-              </Text>
-              <View
-                style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                <Image source={require('./assets/jobTitle.png')} />
-                <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                  {userProfile['jobTitle']}
-                </Text>
-              </View>
-              <View
-                style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                <Image source={require('./assets/jobTitle.png')} />
-                <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                  {userProfile['company']}
-                </Text>
+          <ScrollView>
+            <View
+              style={{
+                marginTop: 50,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <BackButton label="back" onPress={() => navigation.goBack()} />
+              <View style={{flexDirection: 'row', gap: 25}}>
+                <PhoneContainer onPress={() => setPhoneVisible(true)}>
+                  <Image source={require('./assets/phone.png')} />
+                </PhoneContainer>
+                <EmailContainer onPress={() => setEmailVisible(true)}>
+                  <Image source={require('./assets/email.png')} />
+                </EmailContainer>
               </View>
             </View>
-          </View>
-          <Text
-            style={{
-              marginTop: 40,
-              color: '#828282',
-              fontSize: 25,
-              fontWeight: 700,
-              marginBottom: 5,
-            }}>
-            Biography
-          </Text>
-          <Text style={{color: '#828282', fontWeight: 500}}>
-            {userProfile['biography']}
-          </Text>
-          <Text
-            style={{
-              color: '#828282',
-              fontSize: 25,
-              fontWeight: 700,
-              marginTop: 30,
-            }}>
-            {userProfile['fullName'].split(' ')[0]}'s Skills
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: 10,
-              flexWrap: 'wrap',
-              marginTop: 10,
-            }}>
-            {userProfile['skills'].split(',').map(skill => (
-              <Skill name={skill} />
-            ))}
-          </View>
-          <Text
-            style={{
-              color: '#828282',
-              fontSize: 25,
-              fontWeight: 700,
-              marginTop: 30,
-            }}>
-            {userProfile['fullName'].split(' ')[0]}'s Interests
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: 10,
-              flexWrap: 'wrap',
-              marginTop: 10,
-            }}>
-            {userProfile['interests'].split(',').map(interest => (
-              <Skill name={interest} />
-            ))}
-          </View>
-          <Text
-            style={{
-              color: '#828282',
-              fontSize: 20,
-              fontWeight: 400,
-              marginTop: 30,
-            }}>
-            More Information
-          </Text>
-          <View>
-            {/* only show the ones that the user has a link to */}
-            <ViewAccount
-              color="#A59DFF"
-              title="Resume"
-              iconSource={require('./assets/resume.png')}
-              textColor="white"
-              link="hello"
-            />
-          </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                gap: -5,
+              }}>
+              <ProfileImageContainer>
+                <Image
+                  source={{
+                    uri: `data:image/png;base64,${userProfile['photo']}`,
+                  }}
+                  style={{height: 90, width: 90}}
+                />
+              </ProfileImageContainer>
+              <View
+                style={{flexDirection: 'column', justifyContent: 'flex-end'}}>
+                <Text style={{color: '#828282', fontSize: 25, fontWeight: 800}}>
+                  {userProfile['fullName']}
+                </Text>
+                <View
+                  style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                  <Image source={require('./assets/jobTitle.png')} />
+                  <Text
+                    style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                    {userProfile['jobTitle']}
+                  </Text>
+                </View>
+                <View
+                  style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                  <Image source={require('./assets/jobTitle.png')} />
+                  <Text
+                    style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                    {userProfile['company']}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <Text
+              style={{
+                marginTop: 40,
+                color: '#828282',
+                fontSize: 25,
+                fontWeight: 700,
+                marginBottom: 5,
+              }}>
+              Biography
+            </Text>
+            <Text style={{color: '#828282', fontWeight: 500}}>
+              {userProfile['biography']}
+            </Text>
+            <Text
+              style={{
+                color: '#828282',
+                fontSize: 25,
+                fontWeight: 700,
+                marginTop: 30,
+              }}>
+              {userProfile['fullName'].split(' ')[0]}'s Skills
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 10,
+                flexWrap: 'wrap',
+                marginTop: 10,
+              }}>
+              {userProfile['skills'].split(',').map(skill => (
+                <Skill name={skill} />
+              ))}
+            </View>
+            <Text
+              style={{
+                color: '#828282',
+                fontSize: 25,
+                fontWeight: 700,
+                marginTop: 30,
+              }}>
+              {userProfile['fullName'].split(' ')[0]}'s Interests
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 10,
+                flexWrap: 'wrap',
+                marginTop: 10,
+              }}>
+              {userProfile['interests'].split(',').map(interest => (
+                <Skill name={interest} />
+              ))}
+            </View>
+            <Text
+              style={{
+                color: '#828282',
+                fontSize: 20,
+                fontWeight: 400,
+                marginTop: 30,
+              }}>
+              More Information
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: 10,
+                marginTop: 10,
+              }}>
+              {Object.keys(links).map(link => {
+                if (userProfile[link] == '') {
+                  return <></>;
+                }
+
+                return (
+                  <ViewAccount
+                    color={links[link]['color']}
+                    title={links[link]['title']}
+                    iconSource={links[link]['iconSource']}
+                    textColor={links[link]['textColor']}
+                    link={userProfile[link]}
+                  />
+                );
+              })}
+            </View>
+          </ScrollView>
         </MarginContainer>
       ) : (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
