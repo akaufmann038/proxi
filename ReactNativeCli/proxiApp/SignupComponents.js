@@ -396,14 +396,16 @@ export const Skill = ({skillName, skillData, setSkillData}) => {
     `,
   );
 
+  const AnimatedImage = Animated.createAnimatedComponent(Image);
+
   const AnimatedText = Animated.createAnimatedComponent(
     styled.Text`
-      padding-left: 10px;
+      padding-left: 3px;
       padding-right: 10px;
       padding-top: 5px;
       padding-bottom: 5px;
       color: #786cff;
-      font-size: 16px;
+      font-size: 14px;
     `,
   );
 
@@ -453,9 +455,15 @@ export const Skill = ({skillName, skillData, setSkillData}) => {
     <AnimatedTouchable
       onPress={handleAnimation}
       style={{backgroundColor: buttonColorInterpolation}}>
-      <AnimatedText style={{color: textColorInterpolation}}>
-        {active ? '✔' : '+'} {skillName}
-      </AnimatedText>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <AnimatedImage
+          source={active ? require('./assets/checkmark.png') : require('./assets/plus.png')}
+          style={{width: 20, height: 20, marginLeft: 5}}
+        />
+        <AnimatedText style={{color: textColorInterpolation}}>
+          {skillName}
+        </AnimatedText>
+      </View>
     </AnimatedTouchable>
   );
 };
