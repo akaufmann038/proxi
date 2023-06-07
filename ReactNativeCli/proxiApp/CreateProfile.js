@@ -95,10 +95,14 @@ export const CreateProfile = ({route, navigation}) => {
           recommendedElements={recommendedInterests}
         />
         <CreateProfileLabel>Create Profile</CreateProfileLabel>
-        <UploadImage />
-        <UserFullName>{fullName}</UserFullName>
-        <UserMajor>{jobTitle}</UserMajor>
-        <CompanyLabel>Company</CompanyLabel>
+        <ProfileRowContainer>
+          <UploadImage />
+          <InfoContainer>
+            <UserFullName>{fullName}</UserFullName>
+            <UserMajor>{jobTitle}</UserMajor>
+          </InfoContainer>
+        </ProfileRowContainer>
+        <LocationLabel>Company</LocationLabel>
         <InputBoxes>
           <UniversityInput
             placeholder="Northeastern University"
@@ -229,22 +233,39 @@ const UploadImage = setImage64 => {
       )}
       <UploadBtnContainer>
         <UploadBtn onPress={addImage}>
-          <Text>{image ? 'Edit' : 'Upload'} Image</Text>
+          <UploadText
+            >{image ? 'Edit' : 'Upload'} Image</UploadText>
         </UploadBtn>
       </UploadBtnContainer>
     </ImageContainer>
   );
 };
 const ViewMoreContainer = styled.TouchableOpacity`
-  margin-top: -10px;
+  margin-bottom: 10px;
 `;
 const ViewMoreLine = styled.Image``;
 const ViewMore = styled.Text``;
+const UploadText = styled.Text`
+  font-size: 10px;
+`;
 const SkillsContainer = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 10px;
 `;
+
+const ProfileRowContainer = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+`;
+
+const InfoContainer = styled.View`
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+`;
+
 const UniversityInput = styled.TextInput``;
 const JobInput = styled.TextInput``;
 const InputBoxes = styled.View`
@@ -252,6 +273,8 @@ const InputBoxes = styled.View`
   height: 50px;
   flex-direction: column;
   justify-content: center;
+  margin-bottom: 10px;
+  margin-top: -10px;
   padding: 14px;
   border-width: 1px;
   border-radius: 5px;
@@ -261,14 +284,12 @@ const InputBoxes = styled.View`
 `;
 const LocationLabel = styled.Text`
   align-self: flex-start;
-  margin-bottom: -10px;
   color: #786cff;
   font-weight: 600;
   font-size: 20px;
 `;
 const CompanyLabel = styled.Text`
   align-self: flex-start;
-  margin-bottom: -10px;
   color: #786cff;
   font-weight: 600;
   font-size: 20px;
@@ -277,7 +298,6 @@ const UserMajor = styled.Text`
   align-self: center;
   color: #828282;
   font-size: 13px;
-  margin-top: -10px;
 `;
 const UserFullName = styled.Text`
   align-self: center;
@@ -286,7 +306,6 @@ const UserFullName = styled.Text`
   margin-top: 10px;
 `;
 const UploadBtn = styled.TouchableOpacity`
-  display: flex;
   align-items: center;
   justify-content: center;
 `;
@@ -311,7 +330,7 @@ const ImageContainer = styled.View`
   margin-top: 12px;
 `;
 const CreateProfileLabel = styled.Text`
-  align-self: center;
+  align-self: flex-start;
   color: #786cff;
   font-size: 32px;
   font-weight: 700;
