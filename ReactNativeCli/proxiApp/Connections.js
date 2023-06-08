@@ -8,6 +8,7 @@ import {
   Button,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import {
   getFeedHttp,
@@ -15,153 +16,144 @@ import {
   dates,
   getConnectionsAllHttp,
   queryHashDataHttp,
+  getConnectionsDataHttp,
 } from './utils.js';
 import {
   EventContext,
   RegisteredContext,
-  ConnectionsContext,
-  PendingConnectionsContext,
+  PendingConnectionsCount,
+  ConnectionsData,
 } from './App.tsx';
 import {Profile} from './Profile.js';
 
 export const Connections = ({route, navigation}) => {
   const phoneNumber = '(111) 111-1111';
-  const {connections, setConnections} = useContext(ConnectionsContext);
-  const {pendingConnections, setPendingConnections} = useContext(
-    PendingConnectionsContext,
-  );
-  const [connectionData, setConnectionData] = useState(null); // { user,{id}: [value, value...] }
+  const {connectionsData, setConnectionsData} = useContext(ConnectionsData);
+  const {pendingCount, setPendingCount} = useContext(PendingConnectionsCount);
 
+  // Connections.js
+  // number of pending connections (context)
+  // connections data (state)
+  // - photo
+  // - fullName
+  // - event name
+  // - userId
+
+  // PendingConnections.js
+  // pendingConnections data (state)
+  // - photo
+  // - fullName
+  // - jobTitle
+  // - event name
+  // - userId
+  // acceptConnection() -> server returns number of pending connections (front end shows the change)
+  // recommendedConnections data (state)
+  // - photo
+  // - fullName
+  // - jobTitle
+
+  // PartialProfile.js
+  // - profile data (state)
   useEffect(() => {
-    const getConnections = async () => {
-      // get all connections and connection requests for this user
+    const getConnectionsData = async () => {
       try {
-        const res = await makePostRequest(getConnectionsAllHttp, {
+        const res = await makePostRequest(getConnectionsDataHttp, {
           phoneNumber: phoneNumber,
         });
 
         const resData = await res.json();
 
-        let hashData = {};
-        for (const key of Object.keys(resData.connectionRequests)) {
-          hashData['user,' + key] = ['photo', 'fullName'];
-          hashData['event,' + resData.connectionRequests[key]] = ['name'];
-        }
-
-        for (const key of Object.keys(resData.connections)) {
-          hashData['user,' + key] = ['photo', 'fullName'];
-          hashData['event,' + resData.connections[key]] = ['name'];
-        }
-
-        const res2 = await makePostRequest(queryHashDataHttp, {
-          // TODO: get profile picture, name
-          hashData: hashData,
-        });
-
-        const userData = await res2.json();
-
-        return [resData, userData];
+        return resData;
       } catch (err) {
         console.log(err);
       }
     };
 
-    getConnections().then(res => {
-      setConnections(res[0].connections);
-      setPendingConnections(res[0].connectionRequests);
-      setConnectionData(res[1].hashData);
+    getConnectionsData().then(res => {
+      setConnectionsData(res.result['connectionsData']);
+      setPendingCount(res.result['pendingConnectionCount']);
     });
-
-    console.log('welcome to connections page');
   }, []);
 
   return (
     <MaxWidth>
-      <MarginContainer>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 70,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <ConnectionsHeader>Connections</ConnectionsHeader>
-          <TouchableOpacity
+      {connectionsData != null && pendingCount != null ? (
+        <MarginContainer>
+          <View
             style={{
-              backgroundColor: 'white',
-              borderRadius: 7,
-              shadowRadius: 10,
-              shadowOpacity: 0.2,
+              flexDirection: 'row',
+              marginTop: 70,
+              alignItems: 'center',
+              justifyContent: 'space-between',
             }}>
-            <SearchImage source={require('./assets/search.png')} />
-          </TouchableOpacity>
-        </View>
-        <PendingConnectionsHeader>Pending Connections</PendingConnectionsHeader>
-        <PendingConnectionsBox>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              style={{marginRight: -30, zIndex: 2}}
-              source={require('./assets/purple_circle.png')}
-            />
-            <Image
-              style={{marginRight: -30, zIndex: 1}}
-              source={require('./assets/red_circle.png')}
-            />
-            <Image source={require('./assets/grey_circle.png')} />
-            <Text
+            <ConnectionsHeader>Connections</ConnectionsHeader>
+            <TouchableOpacity
               style={{
-                marginLeft: -47,
-                zIndex: 3,
-                color: 'white',
-                fontWeight: '500',
+                backgroundColor: 'white',
+                borderRadius: 7,
+                shadowRadius: 10,
+                shadowOpacity: 0.2,
               }}>
-              +
-              {pendingConnections ? (
-                Object.keys(pendingConnections).length
-              ) : (
-                <></>
-              )}
-            </Text>
+              <SearchImage source={require('./assets/search.png')} />
+            </TouchableOpacity>
           </View>
-          <ViewRequestsText>
-            View all{' '}
-            {pendingConnections ? (
-              Object.keys(pendingConnections).length
-            ) : (
-              <></>
-            )}{' '}
-            requests
-          </ViewRequestsText>
-          <Image
-            style={{marginLeft: 20}}
-            source={require('./assets/right_line.png')}
-          />
-        </PendingConnectionsBox>
-        <YourConnections>Your Connections</YourConnections>
-        <ScrollView
-          style={{height: '20%', width: '100%'}}
-          contentContainerStyle={{
-            justifyContent: 'center',
-            alignItems: 'flex-start',
-          }}>
-          {connectionData ? (
-            Object.keys(connections).map(connectionUserId => (
+          <PendingConnectionsHeader>
+            Pending Connections
+          </PendingConnectionsHeader>
+          <PendingConnectionsBox
+            onPress={() => navigation.navigate('PendingConnections')}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                style={{marginRight: -30, zIndex: 2}}
+                source={require('./assets/purple_circle.png')}
+              />
+              <Image
+                style={{marginRight: -30, zIndex: 1}}
+                source={require('./assets/red_circle.png')}
+              />
+              <Image source={require('./assets/grey_circle.png')} />
+              <Text
+                style={{
+                  marginLeft: -47,
+                  zIndex: 3,
+                  color: 'white',
+                  fontWeight: '500',
+                }}>
+                +{pendingCount}
+              </Text>
+            </View>
+            <ViewRequestsText>
+              View all {pendingCount} requests
+            </ViewRequestsText>
+            <Image
+              style={{marginLeft: 20}}
+              source={require('./assets/right_line.png')}
+            />
+          </PendingConnectionsBox>
+          <YourConnections>Your Connections</YourConnections>
+          <ScrollView
+            style={{width: '100%'}}
+            contentContainerStyle={{
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+            }}>
+            {connectionsData.map(connection => (
               <Connection
                 navigation={navigation}
-                name={connectionData['user,' + connectionUserId][1]}
-                event={
-                  connectionData['event,' + connections[connectionUserId]][0]
-                }
-                photo={connectionData['user,' + connectionUserId][0]}
-                userId={connectionUserId}
-                key={connectionUserId}
+                name={connection.fullName}
+                event={connection.eventName}
+                photo={connection.photo}
+                userId={connection.connUserId}
+                key={connection.connUserId}
               />
-            ))
-          ) : (
-            <></>
-          )}
-        </ScrollView>
-      </MarginContainer>
+            ))}
+          </ScrollView>
+        </MarginContainer>
+      ) : (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <ActivityIndicator color="#786cff" />
+        </View>
+      )}
     </MaxWidth>
   );
 };

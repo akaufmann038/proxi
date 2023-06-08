@@ -7,6 +7,11 @@ export const getConnectionsAllHttp =
   'http://localhost:3000/get-connections-all';
 export const queryHashDataHttp = 'http://localhost:3000/query-hash-data';
 export const getProfileHttp = 'http://localhost:3000/get-profile';
+export const getConnectionsDataHttp = 'http://localhost:3000/connections-page';
+export const getPendingConnectionsDataHttp =
+  'http://localhost:3000/pending-connections-page';
+export const rejectRequestHttp = 'http://localhost:3000/reject-request';
+export const acceptRequestHttp = 'http://localhost:3000/accept-request';
 
 // id's of recommended skills and interests
 export const recommendedSkills = [1, 2, 3, 4, 5];

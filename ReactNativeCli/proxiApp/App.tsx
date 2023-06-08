@@ -14,27 +14,29 @@ import {TabBar} from './SignupComponents.js';
 import {Events} from './Events.js';
 import {Profile} from './Profile.js';
 import {ShowProfile} from './ShowProfile.js';
+import {PendingConnections} from './PendingConnections.js';
 
 export const EventContext = createContext({});
 export const RegisteredContext = createContext({});
-export const ConnectionsContext = createContext({});
-export const PendingConnectionsContext = createContext({});
+export const PendingConnectionsCount = createContext({});
+export const ConnectionsData = createContext({});
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   const [events, setEvents] = useState(null);
   const [registered, setRegistered] = useState(null);
-  const [connections, setConnections] = useState(null);
-  const [pendingConnections, setPendingConnections] = useState(null);
+  const [pendingCount, setPendingCount] = useState(null);
+  const [connectionsData, setConnectionsData] = useState(null);
 
   return (
     <NavigationContainer>
       <EventContext.Provider value={{events, setEvents}}>
         <RegisteredContext.Provider value={{registered, setRegistered}}>
-          <ConnectionsContext.Provider value={{connections, setConnections}}>
-            <PendingConnectionsContext.Provider
-              value={{pendingConnections, setPendingConnections}}>
+          <PendingConnectionsCount.Provider
+            value={{pendingCount, setPendingCount}}>
+            <ConnectionsData.Provider
+              value={{connectionsData, setConnectionsData}}>
               <Stack.Navigator
                 screenOptions={{headerShown: false}}
                 initialRouteName="BottomNavigator">
@@ -53,9 +55,13 @@ export default function App() {
                 />
                 <Stack.Screen name="Profile" component={Profile} />
                 <Stack.Screen name="ShowProfile" component={ShowProfile} />
+                <Stack.Screen
+                  name="PendingConnections"
+                  component={PendingConnections}
+                />
               </Stack.Navigator>
-            </PendingConnectionsContext.Provider>
-          </ConnectionsContext.Provider>
+            </ConnectionsData.Provider>
+          </PendingConnectionsCount.Provider>
         </RegisteredContext.Provider>
       </EventContext.Provider>
     </NavigationContainer>

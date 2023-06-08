@@ -140,60 +140,57 @@ export const ShowProfile = ({route, navigation}) => {
               </DataContainer>
             </ModalView>
           </Modal>
-          <ScrollView>
-            <View
-              style={{
-                marginTop: 50,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <BackButton label="back" onPress={() => navigation.goBack()} />
-              <View style={{flexDirection: 'row', gap: 25}}>
-                <PhoneContainer onPress={() => setPhoneVisible(true)}>
-                  <Image source={require('./assets/phone.png')} />
-                </PhoneContainer>
-                <EmailContainer onPress={() => setEmailVisible(true)}>
-                  <Image source={require('./assets/email.png')} />
-                </EmailContainer>
-              </View>
+          <View
+            style={{
+              marginTop: 50,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <BackButton label="back" onPress={() => navigation.goBack()} />
+            <View style={{flexDirection: 'row', gap: 25}}>
+              <PhoneContainer onPress={() => setPhoneVisible(true)}>
+                <Image source={require('./assets/phone.png')} />
+              </PhoneContainer>
+              <EmailContainer onPress={() => setEmailVisible(true)}>
+                <Image source={require('./assets/email.png')} />
+              </EmailContainer>
             </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                gap: -5,
-              }}>
-              <ProfileImageContainer>
-                <Image
-                  source={{
-                    uri: `data:image/png;base64,${userProfile['photo']}`,
-                  }}
-                  style={{height: 90, width: 90}}
-                />
-              </ProfileImageContainer>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              gap: -5,
+            }}>
+            <ProfileImageContainer>
+              <Image
+                source={{
+                  uri: `data:image/png;base64,${userProfile['photo']}`,
+                }}
+                style={{height: 90, width: 90}}
+              />
+            </ProfileImageContainer>
+            <View style={{flexDirection: 'column', justifyContent: 'flex-end'}}>
+              <Text style={{color: '#828282', fontSize: 25, fontWeight: 800}}>
+                {userProfile['fullName']}
+              </Text>
               <View
-                style={{flexDirection: 'column', justifyContent: 'flex-end'}}>
-                <Text style={{color: '#828282', fontSize: 25, fontWeight: 800}}>
-                  {userProfile['fullName']}
+                style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                <Image source={require('./assets/jobTitle.png')} />
+                <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                  {userProfile['jobTitle']}
                 </Text>
-                <View
-                  style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                  <Image source={require('./assets/jobTitle.png')} />
-                  <Text
-                    style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                    {userProfile['jobTitle']}
-                  </Text>
-                </View>
-                <View
-                  style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                  <Image source={require('./assets/jobTitle.png')} />
-                  <Text
-                    style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                    {userProfile['company']}
-                  </Text>
-                </View>
+              </View>
+              <View
+                style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                <Image source={require('./assets/jobTitle.png')} />
+                <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                  {userProfile['company']}
+                </Text>
               </View>
             </View>
+          </View>
+          <ScrollView>
             <Text
               style={{
                 marginTop: 40,

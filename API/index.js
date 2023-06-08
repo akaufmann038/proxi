@@ -81,34 +81,22 @@ app.post("/query-hash-data", async (req, res) => {
 
       hashData[key] = [];
 
-      // iterate through every property
-      for (const property of req.body["hashData"][key]) {
-        let resData;
+      let resData;
+      // if phone number
+      if (keyData[1].length > 5) {
+        const userId = await redisClient.get(keyData[1]);
 
-        // if phone number
-        if (keyData[1].length > 5) {
-          const userId = await redisClient.get(keyData[1]);
-
-          resData = await redisClient.hGet(
-            redisKeys[keyData[0]](userId),
-            property
-          );
-        } else {
-          resData = await redisClient.hGet(
-            redisKeys[keyData[0]](keyData[1]),
-            property
-          );
-        }
-
-        if (resData == null) {
-          return res.json({
-            success: false,
-            message: "Invalid redis property " + property,
-          });
-        }
-
-        hashData[key].push(resData);
+        resData = await redisClient.hmGet(
+          redisKeys[keyData[0]](userId),
+          req.body["hashData"][key]
+        );
+      } else {
+        resData = await redisClient.hmGet(
+          redisKeys[keyData[0]](keyData[1]),
+          req.body["hashData"][key]
+        );
       }
+      hashData[key] = resData;
     }
 
     return res.json({
@@ -122,6 +110,186 @@ app.post("/query-hash-data", async (req, res) => {
     return res.json({
       success: false,
       message: "there was an error while querying hash data from database",
+    });
+  }
+});
+
+// a user requests to connect with another user
+app.post("/connection-request", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (
+    !("phoneNumber" in req.body) ||
+    !("otherUserId" in req.body) ||
+    !("eventId" in req.body)
+  ) {
+    return res.json({ success: false, message: "Invalid fields!" });
+  }
+
+  try {
+    // get user id of given phone number
+    const userId = await redisClient.get(req.body["phoneNumber"]);
+
+    // ensure that client can't request to connect with themselves
+    if (userId == String(req.body["otherUserId"])) {
+      return res.json({
+        success: false,
+        message: "Cannot request to connect with the same user",
+      });
+    }
+
+    const release = await mutex.acquire();
+
+    // ensure that client can't request to connect with someone
+    // who they're already connected with (only need to check one case since both
+    // clients shoudl have a connection on their end)
+    const connectionExists = await redisClient.hExists(
+      redisKeys.connections(userId),
+      String(req.body["otherUserId"])
+    );
+
+    if (connectionExists == "1") {
+      return res.json({
+        success: false,
+        message:
+          "Cannot request to connect with a user who is already a connection",
+      });
+    }
+
+    // ensure that client can't request to connect with someone
+    // who they already sent a request to
+    const requestExists = await redisClient.hExists(
+      redisKeys.connectionRequests(req.body["otherUserId"]),
+      userId
+    );
+
+    if (requestExists == "1") {
+      return res.json({
+        success: false,
+        message:
+          "Cannot request to connect with a user who is already requested",
+      });
+    }
+
+    // ensure that client can't request to connect with someone
+    // who has already requested them
+    // 1 -> 2 user:2:requests = { 1: eventId }
+    // 2 -> 1
+    const alreadyRequested = await redisClient.hExists(
+      redisKeys.connectionRequests(userId),
+      String(req.body["otherUserId"])
+    );
+
+    if (alreadyRequested == "1") {
+      return res.json({
+        success: false,
+        message:
+          "Cannot request to connect with a user who already requested to connect with you",
+      });
+    }
+
+    // add object to connection requests for other user
+    await redisClient.hSet(
+      redisKeys.connectionRequests(req.body["otherUserId"]),
+      userId,
+      req.body["eventId"]
+    );
+
+    release();
+
+    return res.json({
+      success: true,
+      message: "Successfully added connection request to database",
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.json({
+      success: false,
+      message:
+        "there was an error while requesting to connect with user in database",
+    });
+  }
+});
+
+// returns all connections and connection requests for a given user
+app.post("/get-connections-all", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (!("phoneNumber" in req.body)) {
+    return res.json({ success: false, message: "Invalid fields!" });
+  }
+
+  try {
+    // get user id of given phone number
+    const userId = await redisClient.get(req.body["phoneNumber"]);
+
+    // TODO: COMBINE THESE
+    // get connection requests for that user
+    const connectionRequests = await redisClient.hGetAll(
+      redisKeys.connectionRequests(userId)
+    );
+
+    // get connections for that user
+    const connections = await redisClient.hGetAll(
+      redisKeys.connections(userId)
+    );
+
+    return res.json({
+      success: true,
+      message:
+        "Successfully retrieved connections and connection requests from database",
+      connectionRequests: connectionRequests,
+      connections: connections,
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.json({
+      success: false,
+      message:
+        "there was an error while getting connections and connection requests from database",
+    });
+  }
+});
+
+app.post("/reject-request", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (!("phoneNumber" in req.body) || !("otherUserId" in req.body)) {
+    return res.json({ success: false, message: "Invalid fields!" });
+  }
+
+  try {
+    // get user id of given phone number
+    const userId = await redisClient.get(req.body["phoneNumber"]);
+
+    // get rid of object connectionRequests
+    const deletedResult = await redisClient.hDel(
+      redisKeys.connectionRequests(userId),
+      req.body["otherUserId"]
+    );
+
+    if (deletedResult == "0") {
+      return res.json({
+        success: false,
+        message: "trying to reject request that does not exist",
+      });
+    }
+
+    const pendingConnectionCount = await redisClient.hLen(
+      redisKeys.connectionRequests(userId)
+    );
+
+    return res.json({
+      success: true,
+      message: "sucessfully rejected connection request in database",
+      result: pendingConnectionCount,
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.json({
+      success: false,
+      message:
+        "there was an error while rejecting the connection in the database",
     });
   }
 });
@@ -192,9 +360,14 @@ app.post("/accept-request", async (req, res) => {
 
     release();
 
+    const pendingConnectionCount = await redisClient.hLen(
+      redisKeys.connectionRequests(userId)
+    );
+
     return res.json({
       success: true,
       message: "Successfully accepted connection in database",
+      result: pendingConnectionCount,
     });
   } catch (err) {
     console.log(err);
@@ -207,87 +380,8 @@ app.post("/accept-request", async (req, res) => {
   }
 });
 
-// a user requests to connect with another user
-app.post("/connection-request", async (req, res) => {
-  // ensure that all fields are present and spelled correctly
-  if (
-    !("phoneNumber" in req.body) ||
-    !("otherUserId" in req.body) ||
-    !("eventId" in req.body)
-  ) {
-    return res.json({ success: false, message: "Invalid fields!" });
-  }
-
-  try {
-    // get user id of given phone number
-    const userId = await redisClient.get(req.body["phoneNumber"]);
-
-    // ensure that client can't request to connect with themselves
-    if (userId == String(req.body["otherUserId"])) {
-      return res.json({
-        success: false,
-        message: "Cannot request to connect with the same user",
-      });
-    }
-
-    const release = await mutex.acquire();
-
-    // ensure that client can't request to connect with someone
-    // who they're already connected with
-    const connectionExists = await redisClient.hExists(
-      redisKeys.connections(userId),
-      String(req.body["otherUserId"])
-    );
-
-    if (connectionExists == "1") {
-      return res.json({
-        success: false,
-        message:
-          "Cannot request to connect with a user who is already a connection",
-      });
-    }
-
-    // ensure that client can't request to connect with someone
-    // who they already sent a request to
-    const requestExists = await redisClient.hExists(
-      redisKeys.connectionRequests(req.body["otherUserId"]),
-      userId
-    );
-
-    if (requestExists == "1") {
-      return res.json({
-        success: false,
-        message:
-          "Cannot request to connect with a user who is already requested",
-      });
-    }
-
-    // add object to connection requests for other user
-    await redisClient.hSet(
-      redisKeys.connectionRequests(req.body["otherUserId"]),
-      userId,
-      req.body["eventId"]
-    );
-
-    release();
-
-    return res.json({
-      success: true,
-      message: "Successfully added connection request to database",
-    });
-  } catch (err) {
-    console.log(err);
-
-    return res.json({
-      success: false,
-      message:
-        "there was an error while requesting to connect with user in database",
-    });
-  }
-});
-
-// returns all connections and connection requests for a given user
-app.post("/get-connections-all", async (req, res) => {
+// gets all data needed for the pending connections page
+app.post("/pending-connections-page", async (req, res) => {
   // ensure that all fields are present and spelled correctly
   if (!("phoneNumber" in req.body)) {
     return res.json({ success: false, message: "Invalid fields!" });
@@ -297,23 +391,42 @@ app.post("/get-connections-all", async (req, res) => {
     // get user id of given phone number
     const userId = await redisClient.get(req.body["phoneNumber"]);
 
-    // TODO: COMBINE THESE
-    // get connection requests for that user
-    const connectionRequests = await redisClient.hGetAll(
+    // get all pending connections for this user
+    const pendingConnections = await redisClient.hGetAll(
       redisKeys.connectionRequests(userId)
     );
 
-    // get connections for that user
-    const connections = await redisClient.hGetAll(
-      redisKeys.connections(userId)
-    );
+    let result = {};
+    result["pendingConnectionsData"] = [];
+
+    for (const connUserId of Object.keys(pendingConnections)) {
+      const connEventId = pendingConnections[connUserId];
+
+      const userData = await redisClient.hmGet(redisKeys.user(connUserId), [
+        "photo",
+        "fullName",
+        "jobTitle",
+      ]);
+      const eventName = await redisClient.hGet(
+        redisKeys.event(connEventId),
+        "name"
+      );
+
+      result["pendingConnectionsData"].push({
+        photo: userData[0],
+        fullName: userData[1],
+        jobTitle: userData[2],
+        eventName: eventName,
+        eventId: connEventId,
+        connUserId: connUserId,
+      });
+    }
 
     return res.json({
       success: true,
       message:
-        "Successfully retrieved connections and connection requests from database",
-      connectionRequests: connectionRequests,
-      connections: connections,
+        "succesfully retrieved all data needed for PendingConnections page",
+      result: result,
     });
   } catch (err) {
     console.log(err);
@@ -321,7 +434,67 @@ app.post("/get-connections-all", async (req, res) => {
     return res.json({
       success: false,
       message:
-        "there was an error while getting connections and connection requests from database",
+        "there was an error while getting all the data for the PendingConnections page",
+    });
+  }
+});
+
+// gets all data needed for the connections page
+app.post("/connections-page", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (!("phoneNumber" in req.body)) {
+    return res.json({ success: false, message: "Invalid fields!" });
+  }
+
+  try {
+    // get user id of given phone number
+    const userId = await redisClient.get(req.body["phoneNumber"]);
+
+    const pendingConnectionCount = await redisClient.hLen(
+      redisKeys.connectionRequests(userId)
+    );
+
+    // get all connections for this user
+    const connections = await redisClient.hGetAll(
+      redisKeys.connections(userId)
+    );
+
+    let result = {};
+    result["pendingConnectionCount"] = pendingConnectionCount;
+    result["connectionsData"] = [];
+
+    for (const connUserId of Object.keys(connections)) {
+      const connEventId = connections[connUserId];
+
+      const userData = await redisClient.hmGet(redisKeys.user(connUserId), [
+        "photo",
+        "fullName",
+      ]);
+      const eventName = await redisClient.hGet(
+        redisKeys.event(connEventId),
+        "name"
+      );
+
+      result["connectionsData"].push({
+        photo: userData[0],
+        fullName: userData[1],
+        eventName: eventName,
+        connUserId: connUserId,
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "succesfully retrieved all data needed for Connections page",
+      result: result,
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.json({
+      success: false,
+      message:
+        "there was an error while getting the data for the Connections page",
     });
   }
 });
@@ -522,6 +695,8 @@ app.post("/register-full-user", async (req, res) => {
     });
   }
 
+  const release = await mutex.acquire();
+
   // ensure that phone number can't register twice
   const exists = await redisClient.EXISTS(req.body["phoneNumber"]);
   if (exists > 0) {
@@ -570,6 +745,8 @@ app.post("/register-full-user", async (req, res) => {
       })
       .set(req.body["phoneNumber"], newId)
       .exec();
+
+    release();
 
     return res.json({
       success: true,
