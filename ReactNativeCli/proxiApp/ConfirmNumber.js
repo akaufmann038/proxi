@@ -126,7 +126,7 @@ const ConfirmPhoneDiv = styled.View`
   height: 100%;
   flex-direction: column;
   align-items: center;
-  border-radius: 20px;
+  border-radius: 20px 20px 0px 0px;
   background-color: #ffffff;
   overflow: hidden;
 `;

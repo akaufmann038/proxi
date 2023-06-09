@@ -309,14 +309,21 @@ export const SIModal = ({
     flex-wrap: wrap;
     gap: 15px;
   `;
+
+  const ModalContainer = styled.View`
+    width: 100%;
+    height: 100%;
+    padding: 60px 30px 30px 30px;
+    background-color: rgba(0, 0, 0, 0.2);
+  `;
   const ModalView = styled.View`
-    width: 80%;
-    height: 70%;
-    margin-top: 30%;
+    width: 100%;
+    padding: 30px;
     flex-direction: column;
     align-items: flex-start;
     align-self: center;
     background-color: white;
+    border-radius: 15px;
   `;
 
   const XOutContainer = styled.TouchableOpacity`
@@ -334,44 +341,45 @@ export const SIModal = ({
   `;
   const SkillsSubheader = styled.Text`
     font-size: 12px;
-    width: 50%;
     color: #828282;
     margin-bottom: 30px;
   `;
   return (
     <Modal visible={isVisible} transparent={true} animationType={'fade'}>
-      <ModalView>
-        <XOutContainer onPress={() => setIsVisible(false)}>
-          <XOut source={require('./assets/x_out.png')} />
-        </XOutContainer>
-        <SkillsLabel>{header}</SkillsLabel>
-        <SkillsSubheader>{subheader}</SkillsSubheader>
-        <SkillsContainer>
-          {data ? (
-            Object.keys(data)
-              .filter(
-                element => !recommendedElements.includes(data[element].id),
-              )
-              .map(element => (
-                <Skill
-                  skillName={element}
-                  skillData={data}
-                  setSkillData={setData}
-                  key={data[element].id}
-                />
-              ))
-          ) : (
-            <></>
-          )}
-        </SkillsContainer>
-        <View
-          style={{
-            alignSelf: 'center',
-            marginTop: '30%',
-          }}>
-          <RedButton label="Confirm" onPress={() => setIsVisible(false)} />
-        </View>
-      </ModalView>
+      <ModalContainer>
+        <ModalView>
+          <XOutContainer onPress={() => setIsVisible(false)}>
+            <XOut source={require('./assets/x_out.png')} />
+          </XOutContainer>
+          <SkillsLabel>{header}</SkillsLabel>
+          <SkillsSubheader>{subheader}</SkillsSubheader>
+          <SkillsContainer>
+            {data ? (
+              Object.keys(data)
+                .filter(
+                  element => !recommendedElements.includes(data[element].id),
+                )
+                .map(element => (
+                  <Skill
+                    skillName={element}
+                    skillData={data}
+                    setSkillData={setData}
+                    key={data[element].id}
+                  />
+                ))
+            ) : (
+              <></>
+            )}
+          </SkillsContainer>
+          <View
+            style={{
+              alignSelf: 'center',
+              marginTop: '30%',
+            }}>
+            <RedButton label="Confirm" onPress={() => setIsVisible(false)} />
+          </View>
+        </ModalView>
+      </ModalContainer>
     </Modal>
   );
 };
@@ -396,14 +404,16 @@ export const Skill = ({skillName, skillData, setSkillData}) => {
     `,
   );
 
+  const AnimatedImage = Animated.createAnimatedComponent(Image);
+
   const AnimatedText = Animated.createAnimatedComponent(
     styled.Text`
-      padding-left: 10px;
+      padding-left: 3px;
       padding-right: 10px;
       padding-top: 5px;
       padding-bottom: 5px;
       color: #786cff;
-      font-size: 16px;
+      font-size: 14px;
     `,
   );
 
@@ -453,9 +463,15 @@ export const Skill = ({skillName, skillData, setSkillData}) => {
     <AnimatedTouchable
       onPress={handleAnimation}
       style={{backgroundColor: buttonColorInterpolation}}>
-      <AnimatedText style={{color: textColorInterpolation}}>
-        {active ? '✔' : '+'} {skillName}
-      </AnimatedText>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <AnimatedImage
+          source={active ? require('./assets/checkmark.png') : require('./assets/plus.png')}
+          style={{width: 20, height: 20, marginLeft: 5}}
+        />
+        <AnimatedText style={{color: textColorInterpolation}}>
+          {skillName}
+        </AnimatedText>
+      </View>
     </AnimatedTouchable>
   );
 };
