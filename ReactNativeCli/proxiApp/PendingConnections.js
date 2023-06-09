@@ -20,14 +20,20 @@ import {
   acceptRequestHttp,
   rejectRequestHttp,
 } from './utils.js';
-import {PendingConnectionsCount, ConnectionsData} from './App.tsx';
+import {
+  PendingConnectionsCount,
+  ConnectionsData,
+  PendingConnectionsData,
+} from './App.tsx';
 import {Profile} from './Profile.js';
 import {BackButton} from './SignupComponents.js';
 
 export const PendingConnections = ({route, navigation}) => {
   const phoneNumber = '(111) 111-1111';
   const {pendingCount, setPendingCount} = useContext(PendingConnectionsCount);
-  const [pendingConnectionsData, setPendingConnections] = useState(null);
+  const {pendingConnectionsData, setPendingConnections} = useContext(
+    PendingConnectionsData,
+  );
 
   // updates the pending connections when request is accepted or rejected
   const updatePending = userToDelete => {
@@ -37,6 +43,14 @@ export const PendingConnections = ({route, navigation}) => {
 
     setPendingConnections(updatedPending);
   };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', () => {
+      setPendingConnections(null);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     const getPendingConnectionsData = async () => {
@@ -68,7 +82,12 @@ export const PendingConnections = ({route, navigation}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <BackButton label="back" onPress={() => navigation.goBack()} />
+            <BackButton
+              label="back"
+              onPress={() => {
+                navigation.goBack();
+              }}
+            />
             <View style={{alignItems: 'flex-end'}}>
               <PendingConnectionsHeader>Pending</PendingConnectionsHeader>
               <PendingConnectionsHeader>Connections</PendingConnectionsHeader>
@@ -86,6 +105,7 @@ export const PendingConnections = ({route, navigation}) => {
                 navigation={navigation}
                 name={pendingConnection['fullName']}
                 event={pendingConnection['eventName']}
+                eventDate={pendingConnection['eventDate']}
                 profilePicture={pendingConnection['photo']}
                 userId={pendingConnection['connUserId']}
                 key={pendingConnection['connUserId']}
@@ -111,11 +131,11 @@ const PendingConnection = ({
   name,
   jobTitle,
   event,
+  eventDate,
   profilePicture,
   userId,
   eventId,
   phoneNumber,
-  updatePending,
 }) => {
   const {pendingCount, setPendingCount} = useContext(PendingConnectionsCount);
   const {connectionsData, setConnectionsData} = useContext(ConnectionsData);
@@ -182,6 +202,10 @@ const PendingConnection = ({
       onPress={() =>
         navigation.navigate('ShowPartialProfile', {
           userId: userId,
+          event: event,
+          eventDate: eventDate,
+          eventId: eventId,
+          phoneNumber: phoneNumber,
         })
       }>
       <View

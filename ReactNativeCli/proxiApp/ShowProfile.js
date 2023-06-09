@@ -92,7 +92,7 @@ export const ShowProfile = ({route, navigation}) => {
           userId: userId,
         });
 
-        const data = res.json();
+        const data = await res.json();
 
         return data;
       } catch (err) {
@@ -108,7 +108,7 @@ export const ShowProfile = ({route, navigation}) => {
   return (
     <MaxWidth
       style={{opacity: phoneModalVisible || emailModalVisible ? 0.3 : 1}}>
-      {userProfile ? (
+      {userProfile != null ? (
         <MarginContainer>
           <Modal
             visible={phoneModalVisible}
@@ -366,7 +366,7 @@ const ViewAccount = ({color, link, iconSource, textColor, title}) => {
   );
 };
 
-const Skill = ({name}) => {
+export const Skill = ({name}) => {
   const SkillContainer = styled.View`
     justify-content: center;
     align-items: flex-start;

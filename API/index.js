@@ -407,16 +407,17 @@ app.post("/pending-connections-page", async (req, res) => {
         "fullName",
         "jobTitle",
       ]);
-      const eventName = await redisClient.hGet(
-        redisKeys.event(connEventId),
-        "name"
-      );
+      const eventData = await redisClient.hmGet(redisKeys.event(connEventId), [
+        "name",
+        "date",
+      ]);
 
       result["pendingConnectionsData"].push({
         photo: userData[0],
         fullName: userData[1],
         jobTitle: userData[2],
-        eventName: eventName,
+        eventName: eventData[0],
+        eventDate: eventData[1],
         eventId: connEventId,
         connUserId: connUserId,
       });
@@ -758,6 +759,50 @@ app.post("/register-full-user", async (req, res) => {
     return res.json({
       success: false,
       message: "there was an error while creating user in database",
+    });
+  }
+});
+
+// given a userId, returns a partial profile
+app.post("/get-partial-profile", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (!("userId" in req.body)) {
+    return res.json({ success: false, message: "Invalid fields!" });
+  }
+
+  try {
+    const partialProfile = await redisClient.hmGet(
+      redisKeys.user(req.body["userId"]),
+      [
+        "photo",
+        "fullName",
+        "jobTitle",
+        "company",
+        "biography",
+        "skills",
+        "interests",
+      ]
+    );
+
+    return res.json({
+      success: true,
+      message: "successfully retrieved partial user profile",
+      partialProfile: {
+        photo: partialProfile[0],
+        fullName: partialProfile[1],
+        jobTitle: partialProfile[2],
+        company: partialProfile[3],
+        biography: partialProfile[4],
+        skills: partialProfile[5],
+        interests: partialProfile[6],
+      },
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.json({
+      success: false,
+      message: "there was an error while getting the users partial profile",
     });
   }
 });

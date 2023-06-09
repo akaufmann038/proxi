@@ -15,11 +15,14 @@ import {Events} from './Events.js';
 import {Profile} from './Profile.js';
 import {ShowProfile} from './ShowProfile.js';
 import {PendingConnections} from './PendingConnections.js';
+import {ShowPartialProfile} from './ShowPartialProfile.js';
 
 export const EventContext = createContext({});
 export const RegisteredContext = createContext({});
 export const PendingConnectionsCount = createContext({});
 export const ConnectionsData = createContext({});
+export const PendingConnectionsData = createContext({});
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
@@ -28,6 +31,7 @@ export default function App() {
   const [registered, setRegistered] = useState(null);
   const [pendingCount, setPendingCount] = useState(null);
   const [connectionsData, setConnectionsData] = useState(null);
+  const [pendingConnectionsData, setPendingConnections] = useState(null);
 
   return (
     <NavigationContainer>
@@ -37,29 +41,42 @@ export default function App() {
             value={{pendingCount, setPendingCount}}>
             <ConnectionsData.Provider
               value={{connectionsData, setConnectionsData}}>
-              <Stack.Navigator
-                screenOptions={{headerShown: false}}
-                initialRouteName="BottomNavigator">
-                <Stack.Screen name="Login" component={Login} />
-                <Stack.Screen name="ConfirmNumber" component={ConfirmNumber} />
-                <Stack.Screen
-                  name="LetsGetStarted"
-                  component={LetsGetStarted}
-                />
-                <Stack.Screen name="CreateProfile" component={CreateProfile} />
-                <Stack.Screen name="Connect" component={Connect} />
-                <Stack.Screen name="EventPage" component={EventPage} />
-                <Stack.Screen
-                  name="BottomNavigator"
-                  component={BottomNavigator}
-                />
-                <Stack.Screen name="Profile" component={Profile} />
-                <Stack.Screen name="ShowProfile" component={ShowProfile} />
-                <Stack.Screen
-                  name="PendingConnections"
-                  component={PendingConnections}
-                />
-              </Stack.Navigator>
+              <PendingConnectionsData.Provider
+                value={{pendingConnectionsData, setPendingConnections}}>
+                <Stack.Navigator
+                  screenOptions={{headerShown: false}}
+                  initialRouteName="BottomNavigator">
+                  <Stack.Screen name="Login" component={Login} />
+                  <Stack.Screen
+                    name="ConfirmNumber"
+                    component={ConfirmNumber}
+                  />
+                  <Stack.Screen
+                    name="LetsGetStarted"
+                    component={LetsGetStarted}
+                  />
+                  <Stack.Screen
+                    name="CreateProfile"
+                    component={CreateProfile}
+                  />
+                  <Stack.Screen name="Connect" component={Connect} />
+                  <Stack.Screen name="EventPage" component={EventPage} />
+                  <Stack.Screen
+                    name="BottomNavigator"
+                    component={BottomNavigator}
+                  />
+                  <Stack.Screen name="Profile" component={Profile} />
+                  <Stack.Screen name="ShowProfile" component={ShowProfile} />
+                  <Stack.Screen
+                    name="PendingConnections"
+                    component={PendingConnections}
+                  />
+                  <Stack.Screen
+                    name="ShowPartialProfile"
+                    component={ShowPartialProfile}
+                  />
+                </Stack.Navigator>
+              </PendingConnectionsData.Provider>
             </ConnectionsData.Provider>
           </PendingConnectionsCount.Provider>
         </RegisteredContext.Provider>
