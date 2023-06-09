@@ -29,6 +29,15 @@ export const PendingConnections = ({route, navigation}) => {
   const {pendingCount, setPendingCount} = useContext(PendingConnectionsCount);
   const [pendingConnectionsData, setPendingConnections] = useState(null);
 
+  // updates the pending connections when request is accepted or rejected
+  const updatePending = userToDelete => {
+    const updatedPending = pendingConnectionsData.filter(
+      element => element['connUserId'] !== userToDelete,
+    );
+
+    setPendingConnections(updatedPending);
+  };
+
   useEffect(() => {
     const getPendingConnectionsData = async () => {
       try {
@@ -83,6 +92,7 @@ export const PendingConnections = ({route, navigation}) => {
                 jobTitle={pendingConnection['jobTitle']}
                 eventId={pendingConnection['eventId']}
                 phoneNumber={phoneNumber}
+                updatePending={updatePending}
               />
             ))}
           </ScrollView>
@@ -105,6 +115,7 @@ const PendingConnection = ({
   userId,
   eventId,
   phoneNumber,
+  updatePending,
 }) => {
   const {pendingCount, setPendingCount} = useContext(PendingConnectionsCount);
   const {connectionsData, setConnectionsData} = useContext(ConnectionsData);
@@ -130,6 +141,7 @@ const PendingConnection = ({
 
       if (resData.success) {
         setPendingCount(resData.result);
+        updatePending(userId);
       }
     } catch (err) {
       console.log(err);
@@ -148,6 +160,7 @@ const PendingConnection = ({
 
       if (resData.success) {
         setPendingCount(resData.result);
+        updatePending(userId);
 
         setConnectionsData([
           ...connectionsData,
