@@ -8,6 +8,7 @@ import {
   Button,
   TouchableOpacity,
   ScrollView,
+  SafeAreaView
 } from 'react-native';
 import {getFeedHttp, makePostRequest, dates} from './utils.js';
 import {EventContext, RegisteredContext} from './App.tsx';
@@ -61,125 +62,128 @@ export const Home = ({route, navigation}) => {
   };
 
   return (
-    <MaxWidth>
-      <MarginContainer>
-        <View style={{flexDirection: 'row', marginTop: 60}}>
-          <PhoneInputWrapper>
-            <SearchImage source={require('./assets/search.png')} />
-            <PhoneNumber placeholder="Search" />
-          </PhoneInputWrapper>
-          <ProfileImageContainer>
-            <Image
-              source={require('./assets/test.png')}
-              style={{height: 50, width: 50}}
-            />
-          </ProfileImageContainer>
+    <SafeAreaView style={{backgroundColor:'#ffffff'}}>
+      <MaxWidth>
+        <View style={{zIndex: 1, backgroundColor:'#ffffff', paddingLeft: 30, paddingRight: 30}}>
+          <View style={{flexDirection: 'row', marginTop: 20}}>
+            <PhoneInputWrapper>
+              <SearchImage source={require('./assets/search.png')} />
+              <PhoneNumber placeholder="Search" />
+            </PhoneInputWrapper>
+            <ProfileImageContainer>
+              <Image
+                source={require('./assets/test.png')}
+                style={{height: 40, width: 40}}
+              />
+            </ProfileImageContainer>
+          </View>
+          <View style={{flexDirection: 'row', marginTop: 10, marginBottom: 10, gap: 10}}>
+            {registeredFilter ? (
+              <FilterButton
+                onPress={() => handleFilterPress('Registered')}
+                style={{backgroundColor: '#786cff'}}>
+                <FilterText style={{color: '#ffffff'}}>Registered</FilterText>
+              </FilterButton>
+            ) : (
+              <FilterButton
+                onPress={() => handleFilterPress('Registered')}
+                style={{backgroundColor: '#ffffff'}}>
+                <FilterText style={{color: '#786cff'}}>Registered</FilterText>
+              </FilterButton>
+            )}
+            {publicFilter ? (
+              <FilterButton
+                onPress={() => handleFilterPress('Public')}
+                style={{backgroundColor: '#786cff'}}>
+                <FilterText style={{color: '#ffffff'}}>Public</FilterText>
+              </FilterButton>
+            ) : (
+              <FilterButton
+                onPress={() => handleFilterPress('Public')}
+                style={{backgroundColor: '#ffffff'}}>
+                <FilterText style={{color: '#786cff'}}>Public</FilterText>
+              </FilterButton>
+            )}
+            {privateFilter ? (
+              <FilterButton
+                onPress={() => handleFilterPress('Private')}
+                style={{backgroundColor: '#786cff'}}>
+                <FilterText style={{color: '#ffffff'}}>Private</FilterText>
+              </FilterButton>
+            ) : (
+              <FilterButton
+                onPress={() => handleFilterPress('Private')}
+                style={{backgroundColor: '#ffffff'}}>
+                <FilterText style={{color: '#786cff'}}>Private</FilterText>
+              </FilterButton>
+            )}
+          </View>
         </View>
-        <View style={{flexDirection: 'row', marginTop: 20, gap: 10}}>
-          {registeredFilter ? (
-            <FilterButton
-              onPress={() => handleFilterPress('Registered')}
-              style={{backgroundColor: '#786cff'}}>
-              <FilterText style={{color: '#ffffff'}}>Registered</FilterText>
-            </FilterButton>
-          ) : (
-            <FilterButton
-              onPress={() => handleFilterPress('Registered')}
-              style={{backgroundColor: '#ffffff'}}>
-              <FilterText style={{color: '#786cff'}}>Registered</FilterText>
-            </FilterButton>
-          )}
-          {publicFilter ? (
-            <FilterButton
-              onPress={() => handleFilterPress('Public')}
-              style={{backgroundColor: '#786cff'}}>
-              <FilterText style={{color: '#ffffff'}}>Public</FilterText>
-            </FilterButton>
-          ) : (
-            <FilterButton
-              onPress={() => handleFilterPress('Public')}
-              style={{backgroundColor: '#ffffff'}}>
-              <FilterText style={{color: '#786cff'}}>Public</FilterText>
-            </FilterButton>
-          )}
-          {privateFilter ? (
-            <FilterButton
-              onPress={() => handleFilterPress('Private')}
-              style={{backgroundColor: '#786cff'}}>
-              <FilterText style={{color: '#ffffff'}}>Private</FilterText>
-            </FilterButton>
-          ) : (
-            <FilterButton
-              onPress={() => handleFilterPress('Private')}
-              style={{backgroundColor: '#ffffff'}}>
-              <FilterText style={{color: '#786cff'}}>Private</FilterText>
-            </FilterButton>
-          )}
-        </View>
-        <ScrollView
-          style={{height: '100%', width: '100%'}}
-          contentContainerStyle={{gap: 20}}>
-          {registeredFilter && events && registered ? (
-            <>
-              <SportsEvents>Registered</SportsEvents>
-              {events
-                .filter(event => registered.includes(event.id))
-                .map(event => (
-                  <Event
-                    eventData={event}
-                    key={event.id}
-                    navigation={navigation}
-                    phoneNumber={phoneNumber}
-                  />
-                ))}
-            </>
-          ) : (
-            <></>
-          )}
-          {publicFilter && events && registered ? (
-            <>
-              <SportsEvents>Public</SportsEvents>
-              {events
-                .filter(
-                  event =>
-                    event['public'] == 'true' && !registered.includes(event.id),
-                )
-                .map(event => (
-                  <Event
-                    eventData={event}
-                    key={event.id}
-                    navigation={navigation}
-                    phoneNumber={phoneNumber}
-                  />
-                ))}
-            </>
-          ) : (
-            <></>
-          )}
-          {privateFilter && events && registered ? (
-            <>
-              <SportsEvents>Private</SportsEvents>
-              {events
-                .filter(
-                  event =>
-                    event['public'] == 'false' &&
-                    !registered.includes(event.id),
-                )
-                .map(event => (
-                  <Event
-                    eventData={event}
-                    key={event.id}
-                    navigation={navigation}
-                    phoneNumber={phoneNumber}
-                  />
-                ))}
-            </>
-          ) : (
-            <></>
-          )}
-        </ScrollView>
-      </MarginContainer>
-    </MaxWidth>
+          <ScrollView
+            style={{height: '100%', width: '100%', paddingLeft: '7%', paddingRight: '7%'}}
+            contentContainerStyle={{gap: 20}}>
+            {registeredFilter && events && registered ? (
+              <>
+                <SportsEvents>Registered</SportsEvents>
+                {events
+                  .filter(event => registered.includes(event.id))
+                  .map(event => (
+                    <Event
+                      eventData={event}
+                      key={event.id}
+                      navigation={navigation}
+                      phoneNumber={phoneNumber}
+                    />
+                  ))}
+              </>
+            ) : (
+              <></>
+            )}
+            {publicFilter && events && registered ? (
+              <>
+                <SportsEvents>Public</SportsEvents>
+                {events
+                  .filter(
+                    event =>
+                      event['public'] == 'true' && !registered.includes(event.id),
+                  )
+                  .map(event => (
+                    <Event
+                      eventData={event}
+                      key={event.id}
+                      navigation={navigation}
+                      phoneNumber={phoneNumber}
+                    />
+                  ))}
+              </>
+            ) : (
+              <></>
+            )}
+            {privateFilter && events && registered ? (
+              <>
+                <SportsEvents>Private</SportsEvents>
+                {events
+                  .filter(
+                    event =>
+                      event['public'] == 'false' &&
+                      !registered.includes(event.id),
+                  )
+                  .map(event => (
+                    <Event
+                      eventData={event}
+                      key={event.id}
+                      navigation={navigation}
+                      phoneNumber={phoneNumber}
+                    />
+                  ))}
+              </>
+            ) : (
+              <></>
+            )}
+          </ScrollView>
+        
+      </MaxWidth>
+    </SafeAreaView>
   );
 };
 
@@ -191,9 +195,9 @@ const Event = ({eventData, navigation, phoneNumber}) => {
     <EventContainer
       style={{
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: 5},
-        shadowRadius: 2,
-        shadowOpacity: 0.36,
+        shadowOffset: {width: 0, height: 0},
+        shadowRadius: 5,
+        shadowOpacity: 0.2,
         elevation: 11,
       }}
       onPress={() =>
@@ -248,8 +252,11 @@ const DateComponent = ({day, month, year}) => {
   );
 };
 
-const HostedByText = styled.Text``;
+const HostedByText = styled.Text`
+  font-size: 12px;
+`;
 const HostNameText = styled.Text`
+  font-size: 12px;
   font-weight: bold;
 `;
 const HostedByImageContainer = styled.View`
@@ -292,7 +299,7 @@ const SportsEvents = styled.Text`
   color: #786cff;
   font-weight: 600;
   font-size: 20px;
-  margin-top: 30px;
+  margin-top: 10px;
 `;
 const FilterText = styled.Text`
   padding-left: 10px;
@@ -300,7 +307,7 @@ const FilterText = styled.Text`
   padding-top: 5px;
   padding-bottom: 5px;
   color: #786cff;
-  font-size: 16px;
+  font-size: 12px;
 `;
 const FilterButton = styled.TouchableOpacity`
   justify-content: center;
@@ -318,18 +325,18 @@ const ProfileImageContainer = styled.View`
 `;
 const ProfileImage = styled.Image``;
 const SearchImage = styled.Image`
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   margin-left: 10px;
   margin-right: 10px;
 `;
 const PhoneNumber = styled.TextInput`
   color: #828282;
-  font-size: 20px;
+  font-size: 14px;
 `;
 const PhoneInputWrapper = styled.View`
   width: 80%;
-  height: 50px;
+  height: 40px;
   flex-direction: row;
   align-items: center;
   border-width: 1px;
@@ -337,13 +344,12 @@ const PhoneInputWrapper = styled.View`
   border-color: #000000;
 `;
 const MarginContainer = styled.View`
-  width: 85%;
 `;
 const MaxWidth = styled.View`
   width: 100%;
   height: 100%;
   flex-direction: column;
   align-items: center;
-  padding-top: 30px;
   background-color: #ffffff;
+  overflow: visible;
 `;

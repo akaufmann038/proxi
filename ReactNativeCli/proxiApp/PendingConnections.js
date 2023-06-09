@@ -139,6 +139,8 @@ const PendingConnection = ({
 }) => {
   const {pendingCount, setPendingCount} = useContext(PendingConnectionsCount);
   const {connectionsData, setConnectionsData} = useContext(ConnectionsData);
+  const [rejectLoading, setRejectLoading] = useState(false);
+  const [acceptLoading, setAcceptLoading] = useState(false);
 
   const getShortTitle = longString => {
     if (longString.length > 23) {
@@ -151,6 +153,7 @@ const PendingConnection = ({
   };
 
   const handleReject = async () => {
+    setRejectLoading(true);
     try {
       const res = await makePostRequest(rejectRequestHttp, {
         phoneNumber: phoneNumber,
@@ -163,12 +166,15 @@ const PendingConnection = ({
         setPendingCount(resData.result);
         updatePending(userId);
       }
+      setRejectLoading(false);
     } catch (err) {
       console.log(err);
+      setRejectLoading(false);
     }
   };
 
   const handleAccept = async () => {
+    setAcceptLoading(true);
     try {
       const res = await makePostRequest(acceptRequestHttp, {
         phoneNumber: phoneNumber,
@@ -192,8 +198,10 @@ const PendingConnection = ({
           },
         ]);
       }
+      setAcceptLoading(false);
     } catch (err) {
       console.log(err);
+      setAcceptLoading(false);
     }
   };
 
@@ -226,12 +234,20 @@ const PendingConnection = ({
         </View>
       </View>
       <View style={{flexDirection: 'row', gap: 10}}>
-        <TouchableOpacity onPress={() => handleReject()}>
-          <Image source={require('./assets/reject.png')} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleAccept()}>
-          <Image source={require('./assets/accept.png')} />
-        </TouchableOpacity>
+        {rejectLoading ? (
+          <ActivityIndicator size={45} color="#786cff" duration={500}/>
+        ) : (
+          <TouchableOpacity onPress={() => handleReject()}>
+            <Image source={require('./assets/reject.png')} />
+          </TouchableOpacity>
+        )}
+        {acceptLoading ? (
+          <ActivityIndicator size={45} color="#786cff" duration={500}/>
+        ) : (
+          <TouchableOpacity onPress={() => handleAccept()}>
+            <Image source={require('./assets/accept.png')} />
+          </TouchableOpacity>
+        )}
       </View>
     </ConnectionContainer>
   );

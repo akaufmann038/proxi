@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  SafeAreaView
 } from 'react-native';
 import {
   getFeedHttp,
@@ -76,85 +77,89 @@ export const Connections = ({route, navigation}) => {
   }, []);
 
   return (
-    <MaxWidth>
-      {connectionsData != null && pendingCount != null ? (
-        <MarginContainer>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 70,
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <ConnectionsHeader>Connections</ConnectionsHeader>
-            <TouchableOpacity
+    <SafeAreaView style={{backgroundColor:'#ffffff'}}>
+      <MaxWidth>
+        {connectionsData != null && pendingCount != null ? (
+          <MarginContainer>
+            <View
               style={{
-                backgroundColor: 'white',
-                borderRadius: 7,
-                shadowRadius: 10,
-                shadowOpacity: 0.2,
+                flexDirection: 'row',
+                marginTop: 0,
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
-              <SearchImage source={require('./assets/search.png')} />
-            </TouchableOpacity>
-          </View>
-          <PendingConnectionsHeader>
-            Pending Connections
-          </PendingConnectionsHeader>
-          <PendingConnectionsBox
-            onPress={() => navigation.navigate('PendingConnections')}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                style={{marginRight: -30, zIndex: 2}}
-                source={require('./assets/purple_circle.png')}
-              />
-              <Image
-                style={{marginRight: -30, zIndex: 1}}
-                source={require('./assets/red_circle.png')}
-              />
-              <Image source={require('./assets/grey_circle.png')} />
-              <Text
+              <ConnectionsHeader>Connections</ConnectionsHeader>
+              <TouchableOpacity
                 style={{
-                  marginLeft: -47,
-                  zIndex: 3,
-                  color: 'white',
-                  fontWeight: '500',
+                  backgroundColor: 'white',
+                  borderRadius: 7,
+                  shadowRadius: 12,
+                  shadowOpacity: 0.12,
                 }}>
-                +{pendingCount}
-              </Text>
+                <SearchImage source={require('./assets/search.png')} />
+              </TouchableOpacity>
             </View>
-            <ViewRequestsText>
-              View all {pendingCount} requests
-            </ViewRequestsText>
-            <Image
-              style={{marginLeft: 20}}
-              source={require('./assets/right_line.png')}
-            />
-          </PendingConnectionsBox>
-          <YourConnections>Your Connections</YourConnections>
-          <ScrollView
-            style={{width: '100%'}}
-            contentContainerStyle={{
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-            }}>
-            {connectionsData.map(connection => (
-              <Connection
-                navigation={navigation}
-                name={connection.fullName}
-                event={connection.eventName}
-                photo={connection.photo}
-                userId={connection.connUserId}
-                key={connection.connUserId}
-              />
-            ))}
-          </ScrollView>
-        </MarginContainer>
-      ) : (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <ActivityIndicator color="#786cff" />
-        </View>
-      )}
-    </MaxWidth>
+                <PendingConnectionsHeader>
+                  Pending Connections
+                </PendingConnectionsHeader>
+                <PendingConnectionsBox
+                  onPress={() => navigation.navigate('PendingConnections')}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Image
+                      style={{marginRight: -30, zIndex: 2}}
+                      source={require('./assets/purple_circle.png')}
+                    />
+                    <Image
+                      style={{marginRight: -30, zIndex: 1}}
+                      source={require('./assets/red_circle.png')}
+                    />
+                    <Image source={require('./assets/grey_circle.png')} />
+                    <Text
+                      style={{
+                        marginLeft: -47,
+                        zIndex: 3,
+                        color: 'white',
+                        fontWeight: '500',
+                      }}>
+                      +{pendingCount}
+                    </Text>
+                  </View>
+                  <View style={{flexDirection: 'row', gap: 15, alignItems: 'center'}}>
+                    <ViewRequestsText>
+                      View all {pendingCount} requests
+                    </ViewRequestsText>
+                    <Image
+                      style={{marginLeft: 0}}
+                      source={require('./assets/right_line.png')}
+                    />
+                  </View>
+                </PendingConnectionsBox>
+            <YourConnections>Your Connections</YourConnections>
+            <ScrollView
+              style={{width: '100%'}}
+              contentContainerStyle={{
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+              }}>
+              {connectionsData.map(connection => (
+                <Connection
+                  navigation={navigation}
+                  name={connection.fullName}
+                  event={connection.eventName}
+                  photo={connection.photo}
+                  userId={connection.connUserId}
+                  key={connection.connUserId}
+                />
+              ))}
+            </ScrollView>
+          </MarginContainer>
+        ) : (
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <ActivityIndicator color="#786cff" />
+          </View>
+        )}
+      </MaxWidth>
+    </SafeAreaView>
   );
 };
 
@@ -221,7 +226,6 @@ const YourConnections = styled.Text`
 const ViewRequestsText = styled.Text`
   color: #786cff;
   font-size: 20px;
-  margin-left: 100px;
 `;
 const PendingConnectionsBox = styled.TouchableOpacity`
   border-radius: 5px;
@@ -229,9 +233,12 @@ const PendingConnectionsBox = styled.TouchableOpacity`
   shadow-opacity: 0.1;
   background-color: white;
   width: 100%;
+  gap: 10px;
+  padding: 0px 15px 0px 15px;
   height: 65px;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   margin-top: 5px;
 `;
 const PendingConnectionsHeader = styled.Text`
