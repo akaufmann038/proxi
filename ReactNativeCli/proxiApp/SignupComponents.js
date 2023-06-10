@@ -67,16 +67,18 @@ export const TabBar = ({state, descriptors, navigation}) => {
                 flex: 1,
                 flexDirection: 'row',
                 justifyContent: 'center',
+                alignItems: 'center',
                 padding: 15,
+                height: '100%',
               }}
               key={index}>
               {label == 'Home' ? (
-                <View style={{alignItems: 'center', gap: 5}}>
+                <View style={{alignItems: 'center'}}>
                   <View
                     style={{
                       backgroundColor: isFocused ? '#786cff' : 'white',
-                      width: 30,
-                      height: 30,
+                      width: isFocused ? 40 : 30,
+                      height: isFocused ? 40 : 30,
                       borderRadius: 4,
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -87,9 +89,10 @@ export const TabBar = ({state, descriptors, navigation}) => {
                           ? require('./assets/light_home.png')
                           : require('./assets/dark_home.png')
                       }
+                      style={{width: 20, height: 20}}
                     />
                   </View>
-                  <Text style={{color: isFocused ? 'white' : '#786cff', fontSize: 12}}>
+                  <Text style={{color: isFocused ? 'white' : '#786cff', fontSize: 12, display: isFocused ? 'none' : 'flex'}}>
                     {label}
                   </Text>
                 </View>
@@ -97,12 +100,12 @@ export const TabBar = ({state, descriptors, navigation}) => {
                 <></>
               )}
               {label == 'Connections' ? (
-                <View style={{alignItems: 'center', gap: 5}}>
+                <View style={{alignItems: 'center'}}>
                   <View
                     style={{
                       backgroundColor: isFocused ? '#786cff' : 'white',
-                      width: 30,
-                      height: 30,
+                      width: isFocused ? 40 : 30,
+                      height: isFocused ? 40 : 30,
                       borderRadius: 4,
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -113,9 +116,10 @@ export const TabBar = ({state, descriptors, navigation}) => {
                           ? require('./assets/light_connections.png')
                           : require('./assets/dark_connections.png')
                       }
+                      style={{width: 20, height: 20}}
                     />
                   </View>
-                  <Text style={{color: isFocused ? 'white' : '#786cff', fontSize: 12}}>
+                  <Text style={{color: isFocused ? 'white' : '#786cff', fontSize: 12, display: isFocused ? 'none' : 'flex'}}>
                     {label}
                   </Text>
                 </View>
@@ -123,12 +127,12 @@ export const TabBar = ({state, descriptors, navigation}) => {
                 <></>
               )}
               {label == 'Events' ? (
-                <View style={{alignItems: 'center', gap: 5}}>
+                <View style={{alignItems: 'center'}}>
                   <View
                     style={{
                       backgroundColor: isFocused ? '#786cff' : 'white',
-                      width: 30,
-                      height: 30,
+                      width: isFocused ? 40 : 30,
+                      height: isFocused ? 40 : 30,
                       borderRadius: 4,
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -139,9 +143,10 @@ export const TabBar = ({state, descriptors, navigation}) => {
                           ? require('./assets/light_events.png')
                           : require('./assets/dark_events.png')
                       }
+                      style={{width: 20, height: 20}}
                     />
                   </View>
-                  <Text style={{color: isFocused ? 'white' : '#786cff', fontSize: 12}}>
+                  <Text style={{color: isFocused ? 'white' : '#786cff', fontSize: 12, display: isFocused ? 'none' : 'flex'}}>
                     {label}
                   </Text>
                 </View>
@@ -159,7 +164,7 @@ export const TabBar = ({state, descriptors, navigation}) => {
             flexDirection: 'row',
             justifyContent: 'center',
           }}>
-          <View style={{alignItems: 'center', gap: 5}}>
+          <View style={{alignItems: 'center'}}>
             <View
               style={{
                 backgroundColor: 'white',
@@ -169,7 +174,10 @@ export const TabBar = ({state, descriptors, navigation}) => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Image source={require('./assets/light_profile.png')} />
+              <Image 
+                source={require('./assets/dark_profile.png')} 
+                style={{width: 20, height: 20}}
+               />
             </View>
             <Text style={{color: '#786cff', fontSize: 12}}>Profile</Text>
           </View>
