@@ -136,6 +136,7 @@ const PendingConnection = ({
   userId,
   eventId,
   phoneNumber,
+  updatePending,
 }) => {
   const {pendingCount, setPendingCount} = useContext(PendingConnectionsCount);
   const {connectionsData, setConnectionsData} = useContext(ConnectionsData);
@@ -235,17 +236,23 @@ const PendingConnection = ({
       </View>
       <View style={{flexDirection: 'row', gap: 10}}>
         {rejectLoading ? (
-          <ActivityIndicator size={45} color="#786cff" duration={500}/>
+          <ActivityIndicator size={45} color="#786cff" duration={500} />
         ) : (
           <TouchableOpacity onPress={() => handleReject()}>
-            <Image source={require('./assets/reject.png')} />
+            <Image
+              style={{width: 50, height: 50}}
+              source={require('./assets/reject.png')}
+            />
           </TouchableOpacity>
         )}
         {acceptLoading ? (
-          <ActivityIndicator size={45} color="#786cff" duration={500}/>
+          <ActivityIndicator size={45} color="#786cff" duration={500} />
         ) : (
           <TouchableOpacity onPress={() => handleAccept()}>
-            <Image source={require('./assets/accept.png')} />
+            <Image
+              style={{width: 50, height: 50}}
+              source={require('./assets/accept.png')}
+            />
           </TouchableOpacity>
         )}
       </View>
