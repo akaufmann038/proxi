@@ -8,7 +8,7 @@ import {
   Button,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import {getFeedHttp, makePostRequest, dates} from './utils.js';
 import {EventContext, RegisteredContext} from './App.tsx';
@@ -181,7 +181,6 @@ export const Home = ({route, navigation}) => {
               <></>
             )}
           </ScrollView>
-        
       </MaxWidth>
     </SafeAreaView>
   );

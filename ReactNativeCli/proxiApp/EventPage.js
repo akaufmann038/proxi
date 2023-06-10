@@ -116,7 +116,7 @@ export const EventPage = ({route, navigation}) => {
         <View
           style={{
             width: '100%',
-            height: 400,
+            height: 200,
             backgroundColor: 'black',
             alignItems: 'center',
             opacity: 0.8,
@@ -172,7 +172,7 @@ export const EventPage = ({route, navigation}) => {
         <OverviewHeader>Overview</OverviewHeader>
         <SummaryText>{eventData.overview}</SummaryText>
         <TagsHeader>Tags</TagsHeader>
-        <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 10}}>
+        <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 10}}>
           {tags.map((element, index) => (
             <TagComponent tagText={element} key={index} />
           ))}
@@ -180,7 +180,7 @@ export const EventPage = ({route, navigation}) => {
         {registered.includes(eventData.id) ? (
           <RedButton onPress={handleEnterEvent} label="Enter Event" />
         ) : (
-          <RedButton onPress={handleRegister} label="Register" />
+          <RedButton onPress={handleRegister} label="Register" style={{position: 'absolute', bottom: 0, left: 0}}/>
         )}
       </MarginContainer>
     </MaxWidth>
@@ -235,7 +235,7 @@ const TagText = styled.Text`
   padding-top: 5px;
   padding-bottom: 5px;
   color: #786cff;
-  font-size: 16px;
+  font-size: 12px;
 `;
 const TagContainer = styled.View`
   justify-content: center;
@@ -248,14 +248,18 @@ const TagContainer = styled.View`
 `;
 const TagsHeader = styled.Text`
   color: #786cff;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
+  margin-top: 30px;
+  margin-bottom: 10px;
 `;
 const SummaryText = styled.Text``;
 const OverviewHeader = styled.Text`
   color: #786cff;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
+  margin-top: 30px;
+  margin-bottom: 10px;
 `;
 const HostNameText = styled.Text`
   color: white;
@@ -294,6 +298,8 @@ const TitleText = styled.Text`
 `;
 const MarginContainer = styled.View`
   width: 85%;
+  height: 100%;
+  position: relative;
 `;
 const MaxWidth = styled.View`
   width: 100%;

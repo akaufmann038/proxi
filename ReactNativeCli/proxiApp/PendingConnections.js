@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  SafeAreaView
 } from 'react-native';
 import {
   getFeedHttp,
@@ -73,56 +74,57 @@ export const PendingConnections = ({route, navigation}) => {
   }, []);
 
   return (
-    <MaxWidth>
-      {pendingConnectionsData != null && pendingCount != null ? (
-        <MarginContainer>
-          <View
-            style={{
-              marginTop: 50,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <BackButton
-              label="back"
-              onPress={() => {
-                navigation.goBack();
-              }}
-            />
-            <View style={{alignItems: 'flex-end'}}>
-              <PendingConnectionsHeader>Pending</PendingConnectionsHeader>
-              <PendingConnectionsHeader>Connections</PendingConnectionsHeader>
-            </View>
-          </View>
-          <ScrollView>
+    <SafeAreaView style={{backgroundColor:'#ffffff'}}>
+      <MaxWidth>
+        {pendingConnectionsData != null && pendingCount != null ? (
+          <MarginContainer>
             <View
               style={{
-                height: 30,
-                borderBottomWidth: 0.4,
-              }}
-            />
-            {pendingConnectionsData.map(pendingConnection => (
-              <PendingConnection
-                navigation={navigation}
-                name={pendingConnection['fullName']}
-                event={pendingConnection['eventName']}
-                eventDate={pendingConnection['eventDate']}
-                profilePicture={pendingConnection['photo']}
-                userId={pendingConnection['connUserId']}
-                key={pendingConnection['connUserId']}
-                jobTitle={pendingConnection['jobTitle']}
-                eventId={pendingConnection['eventId']}
-                phoneNumber={phoneNumber}
-                updatePending={updatePending}
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <BackButton
+                label="back"
+                onPress={() => {
+                  navigation.goBack();
+                }}
               />
-            ))}
-          </ScrollView>
-        </MarginContainer>
-      ) : (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <ActivityIndicator color="#786cff" />
-        </View>
-      )}
-    </MaxWidth>
+              <View style={{alignItems: 'flex-end'}}>
+                <PendingConnectionsHeader>Pending</PendingConnectionsHeader>
+                <PendingConnectionsHeader>Connections</PendingConnectionsHeader>
+              </View>
+            </View>
+            <ScrollView>
+              <View
+                style={{
+                  height: 30,
+                  borderBottomWidth: 0.4,
+                }}
+              />
+              {pendingConnectionsData.map(pendingConnection => (
+                <PendingConnection
+                  navigation={navigation}
+                  name={pendingConnection['fullName']}
+                  event={pendingConnection['eventName']}
+                  eventDate={pendingConnection['eventDate']}
+                  profilePicture={pendingConnection['photo']}
+                  userId={pendingConnection['connUserId']}
+                  key={pendingConnection['connUserId']}
+                  jobTitle={pendingConnection['jobTitle']}
+                  eventId={pendingConnection['eventId']}
+                  phoneNumber={phoneNumber}
+                  updatePending={updatePending}
+                />
+              ))}
+            </ScrollView>
+          </MarginContainer>
+        ) : (
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <ActivityIndicator color="#786cff" />
+          </View>
+        )}
+      </MaxWidth>
+    </SafeAreaView>
   );
 };
 
@@ -225,7 +227,7 @@ const PendingConnection = ({
         <ProfileImageContainer>
           <Image
             source={{uri: `data:image/png;base64,${profilePicture}`}}
-            style={{height: 45, width: 45}}
+            style={{height: 50, width: 50}}
           />
         </ProfileImageContainer>
         <View style={{flexDirection: 'column', gap: 2, marginLeft: 10}}>
@@ -236,21 +238,21 @@ const PendingConnection = ({
       </View>
       <View style={{flexDirection: 'row', gap: 10}}>
         {rejectLoading ? (
-          <ActivityIndicator size={45} color="#786cff" duration={500} />
+          <ActivityIndicator size={40} color="#786cff" duration={500} />
         ) : (
           <TouchableOpacity onPress={() => handleReject()}>
             <Image
-              style={{width: 50, height: 50}}
+              style={{width: 40, height: 40}}
               source={require('./assets/reject.png')}
             />
           </TouchableOpacity>
         )}
         {acceptLoading ? (
-          <ActivityIndicator size={45} color="#786cff" duration={500} />
+          <ActivityIndicator size={40} color="#786cff" duration={500} />
         ) : (
           <TouchableOpacity onPress={() => handleAccept()}>
             <Image
-              style={{width: 50, height: 50}}
+              style={{width: 40, height: 40}}
               source={require('./assets/accept.png')}
             />
           </TouchableOpacity>

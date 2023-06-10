@@ -87,6 +87,8 @@ export const Connections = ({route, navigation}) => {
                 marginTop: 0,
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                paddingRight: '7%',
+                paddingLeft: '7%',
               }}>
               <ConnectionsHeader>Connections</ConnectionsHeader>
               <TouchableOpacity
@@ -95,52 +97,57 @@ export const Connections = ({route, navigation}) => {
                   borderRadius: 7,
                   shadowRadius: 12,
                   shadowOpacity: 0.12,
+                  width: 40,
+                  height: 40,
                 }}>
-                <SearchImage source={require('./assets/search.png')} />
+                <SearchImage source={require('./assets/search.png')}
+                             style={{width: 20, height: 20}} />
               </TouchableOpacity>
             </View>
-                <PendingConnectionsHeader>
-                  Pending Connections
-                </PendingConnectionsHeader>
-                <PendingConnectionsBox
-                  onPress={() => navigation.navigate('PendingConnections')}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Image
-                      style={{marginRight: -30, zIndex: 2}}
-                      source={require('./assets/purple_circle.png')}
-                    />
-                    <Image
-                      style={{marginRight: -30, zIndex: 1}}
-                      source={require('./assets/red_circle.png')}
-                    />
-                    <Image source={require('./assets/grey_circle.png')} />
-                    <Text
-                      style={{
-                        marginLeft: -47,
-                        zIndex: 3,
-                        color: 'white',
-                        fontWeight: '500',
-                      }}>
-                      +{pendingCount}
-                    </Text>
-                  </View>
-                  <View style={{flexDirection: 'row', gap: 15, alignItems: 'center'}}>
-                    <ViewRequestsText>
-                      View all {pendingCount} requests
-                    </ViewRequestsText>
-                    <Image
-                      style={{marginLeft: 0}}
-                      source={require('./assets/right_line.png')}
-                    />
-                  </View>
-                </PendingConnectionsBox>
-            <YourConnections>Your Connections</YourConnections>
             <ScrollView
-              style={{width: '100%'}}
+              style={{width: '100%', height: '100%', paddingLeft: '7%', paddingRight: '7%'}}
               contentContainerStyle={{
                 justifyContent: 'center',
                 alignItems: 'flex-start',
               }}>
+              <PendingConnectionsHeader>
+                  Pending Connections
+              </PendingConnectionsHeader>
+              <PendingConnectionsBox
+                onPress={() => navigation.navigate('PendingConnections')}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Image
+                    style={{marginRight: -30, zIndex: 2}}
+                    source={require('./assets/purple_circle.png')}
+                  />
+                  <Image
+                    style={{marginRight: -30, zIndex: 1}}
+                    source={require('./assets/red_circle.png')}
+                  />
+                  <Image source={require('./assets/grey_circle.png')} />
+                  <Text
+                    style={{
+                      marginLeft: -47,
+                      zIndex: 3,
+                      color: 'white',
+                      fontWeight: '500',
+                      fontSize: 12,
+                    }}>
+                    +{pendingCount}
+                  </Text>
+                </View>
+                <View style={{flexDirection: 'row', gap: 15, alignItems: 'center'}}>
+                  <ViewRequestsText
+                    style={{fontSize: 14}}>
+                    View all {pendingCount} requests
+                  </ViewRequestsText>
+                  <Image
+                    style={{marginLeft: 0}}
+                    source={require('./assets/right_line.png')}
+                  />
+                </View>
+              </PendingConnectionsBox>
+              <YourConnections>Your Connections</YourConnections>
               {connectionsData.map(connection => (
                 <Connection
                   navigation={navigation}
@@ -221,7 +228,7 @@ const YourConnections = styled.Text`
   color: #786cff;
   font-weight: 600;
   font-size: 20px;
-  margin-top: 40px;
+  margin-top: 20px;
 `;
 const ViewRequestsText = styled.Text`
   color: #786cff;
@@ -258,7 +265,8 @@ const ConnectionsHeader = styled.Text`
   font-size: 35px;
 `;
 const MarginContainer = styled.View`
-  width: 85%;
+  width: 100%;
+  height: 100%;
 `;
 const MaxWidth = styled.View`
   width: 100%;
