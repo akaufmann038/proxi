@@ -62,9 +62,15 @@ export const Home = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{backgroundColor:'#ffffff'}}>
+    <SafeAreaView style={{backgroundColor: '#ffffff'}}>
       <MaxWidth>
-        <View style={{zIndex: 1, backgroundColor:'#ffffff', paddingLeft: 30, paddingRight: 30}}>
+        <View
+          style={{
+            zIndex: 1,
+            backgroundColor: '#ffffff',
+            paddingLeft: 30,
+            paddingRight: 30,
+          }}>
           <View style={{flexDirection: 'row', marginTop: 20}}>
             <PhoneInputWrapper>
               <SearchImage source={require('./assets/search.png')} />
@@ -77,7 +83,13 @@ export const Home = ({route, navigation}) => {
               />
             </ProfileImageContainer>
           </View>
-          <View style={{flexDirection: 'row', marginTop: 10, marginBottom: 10, gap: 10}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 10,
+              marginBottom: 10,
+              gap: 10,
+            }}>
             {registeredFilter ? (
               <FilterButton
                 onPress={() => handleFilterPress('Registered')}
@@ -119,74 +131,79 @@ export const Home = ({route, navigation}) => {
             )}
           </View>
         </View>
-          <ScrollView
-            style={{height: '100%', width: '100%', paddingLeft: '7%', paddingRight: '7%'}}
-            contentContainerStyle={{gap: 20}}>
-            {registeredFilter && events && registered ? (
-              <>
-                <SportsEvents>Registered</SportsEvents>
-                {events
-                  .filter(event => registered.includes(event.id))
-                  .map(event => (
-                    <Event
-                      eventData={event}
-                      key={event.id}
-                      navigation={navigation}
-                      phoneNumber={phoneNumber}
-                    />
-                  ))}
-              </>
-            ) : (
-              <></>
-            )}
-            {publicFilter && events && registered ? (
-              <>
-                <SportsEvents>Public</SportsEvents>
-                {events
-                  .filter(
-                    event =>
-                      event['public'] == 'true' && !registered.includes(event.id),
-                  )
-                  .map(event => (
-                    <Event
-                      eventData={event}
-                      key={event.id}
-                      navigation={navigation}
-                      phoneNumber={phoneNumber}
-                    />
-                  ))}
-              </>
-            ) : (
-              <></>
-            )}
-            {privateFilter && events && registered ? (
-              <>
-                <SportsEvents>Private</SportsEvents>
-                {events
-                  .filter(
-                    event =>
-                      event['public'] == 'false' &&
-                      !registered.includes(event.id),
-                  )
-                  .map(event => (
-                    <Event
-                      eventData={event}
-                      key={event.id}
-                      navigation={navigation}
-                      phoneNumber={phoneNumber}
-                    />
-                  ))}
-              </>
-            ) : (
-              <></>
-            )}
-          </ScrollView>
+        <ScrollView
+          style={{
+            height: '100%',
+            width: '100%',
+            paddingLeft: '7%',
+            paddingRight: '7%',
+          }}
+          contentContainerStyle={{gap: 20}}>
+          {registeredFilter && events && registered ? (
+            <>
+              <SportsEvents>Registered</SportsEvents>
+              {events
+                .filter(event => registered.includes(event.id))
+                .map(event => (
+                  <Event
+                    eventData={event}
+                    key={event.id}
+                    navigation={navigation}
+                    phoneNumber={phoneNumber}
+                  />
+                ))}
+            </>
+          ) : (
+            <></>
+          )}
+          {publicFilter && events && registered ? (
+            <>
+              <SportsEvents>Public</SportsEvents>
+              {events
+                .filter(
+                  event =>
+                    event['public'] == 'true' && !registered.includes(event.id),
+                )
+                .map(event => (
+                  <Event
+                    eventData={event}
+                    key={event.id}
+                    navigation={navigation}
+                    phoneNumber={phoneNumber}
+                  />
+                ))}
+            </>
+          ) : (
+            <></>
+          )}
+          {privateFilter && events && registered ? (
+            <>
+              <SportsEvents>Private</SportsEvents>
+              {events
+                .filter(
+                  event =>
+                    event['public'] == 'false' &&
+                    !registered.includes(event.id),
+                )
+                .map(event => (
+                  <Event
+                    eventData={event}
+                    key={event.id}
+                    navigation={navigation}
+                    phoneNumber={phoneNumber}
+                  />
+                ))}
+            </>
+          ) : (
+            <></>
+          )}
+        </ScrollView>
       </MaxWidth>
     </SafeAreaView>
   );
 };
 
-const Event = ({eventData, navigation, phoneNumber}) => {
+export const Event = ({eventData, navigation, phoneNumber}) => {
   const date = new Date(eventData.date);
 
   // left off doing dates
@@ -342,8 +359,7 @@ const PhoneInputWrapper = styled.View`
   border-radius: 8px;
   border-color: #000000;
 `;
-const MarginContainer = styled.View`
-`;
+const MarginContainer = styled.View``;
 const MaxWidth = styled.View`
   width: 100%;
   height: 100%;

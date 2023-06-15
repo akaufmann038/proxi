@@ -63,12 +63,11 @@ const textVerification = async () => {
 
 const verify = async () => {
   try {
-    const res = await fetch("http://localhost:3000/verify-code", {
+    const res = await fetch("http://localhost:3000/generate-message", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        phoneNumber: 7812010366,
-        verificationCode: 7421,
+        profileData: "hi",
       }),
     });
     const data = await res.json();
@@ -104,5 +103,17 @@ const validatePhoneNumber = (phoneNumber) => {
   return phoneRegex.test(phoneNumber);
 };
 
-handlePhoneNumberChange("7812010366");
-console.log(validatePhoneNumber("6177759674"));
+function resolveAfter2Seconds(x) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(x);
+    }, 2000);
+  });
+}
+
+async function f1() {
+  const x = await resolveAfter2Seconds(10);
+  console.log(x); // 10
+}
+
+f1();
