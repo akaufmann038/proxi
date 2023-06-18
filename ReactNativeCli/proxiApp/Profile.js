@@ -796,12 +796,12 @@ export const Profile = ({route, navigation}) => {
             <TextInput
               style={{
                 color: '#828282',
-                fontSize: 15,
+                fontSize: 12,
                 fontWeight: '400',
                 marginLeft: 15,
                 marginRight: 15,
-                marginTop: 20,
-                marginBottom: 20,
+                marginTop: 15,
+                marginBottom: 15,
               }}
               value={biography}
               onChangeText={handleChangeBiography}
@@ -911,6 +911,7 @@ export const Profile = ({route, navigation}) => {
               flexDirection: 'row',
               flexWrap: 'wrap',
               gap: 5,
+              marginTop: 10,
             }}>
             {Object.keys(allInterests)
               .filter(element => allInterests[element].active)
@@ -927,19 +928,15 @@ export const Profile = ({route, navigation}) => {
           <TouchableOpacity
             style={{
               borderColor: '#786cff',
-              height: 40,
-              width: 50,
               borderWidth: 1,
-              alignItems: 'center',
-              justifyCenter: 'center',
+              alignSelf: 'flex-start',
               marginTop: 10,
               borderRadius: 20,
+              padding: 5,
+              flexDirection: 'row',
             }}
-            onPress={() => setInterestsModal(true)}>
-            <Image
-              source={require('./assets/plus.png')}
-              style={{height: 30, width: 30, marginTop: 2.5}}
-            />
+            onPress={() => setSkillsModal(true)}>
+            <Text style={{color: '#786cff'}}> edit interests </Text>
           </TouchableOpacity>
           <Text
             style={{

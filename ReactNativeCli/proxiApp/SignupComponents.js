@@ -443,7 +443,7 @@ export const Skill = ({
       padding-top: 5px;
       padding-bottom: 5px;
       color: #786cff;
-      font-size: 14px;
+      font-size: 12px;
     `,
   );
 
