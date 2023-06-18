@@ -10,6 +10,7 @@ import {
   TextInput,
   Touchable,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {
   makePostRequest,
@@ -20,7 +21,7 @@ import {
   links,
 } from './utils.js';
 import {UserProfile} from './App.tsx';
-import {BackButton, Skill} from './SignupComponents.js';
+import {BackButton, Skill, SquareButton} from './SignupComponents.js';
 import {ViewAccount} from './ShowProfile.js';
 
 export const Profile = ({route, navigation}) => {
@@ -440,6 +441,7 @@ export const Profile = ({route, navigation}) => {
   };
 
   return (
+    <SafeAreaView style={{backgroundColor:'#ffffff'}}>
     <MaxWidth
       style={{opacity: editModal || phoneModal || emailModal ? 0.3 : 1}}>
       {userProfileData != null &&
@@ -448,6 +450,7 @@ export const Profile = ({route, navigation}) => {
       phone != null &&
       email != null &&
       allSkills != null ? (
+        <View style={{width: '100%', alignItems: 'center'}}>
         <MarginContainer>
           <Modal visible={phoneModal} transparent={true} animationType={'none'}>
             <PEModalView>
@@ -697,304 +700,300 @@ export const Profile = ({route, navigation}) => {
             </SocialsModalView>
           </Modal>
           <View
-            style={{
-              marginTop: 50,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
+            style={{vflexDirection: 'row',vjustifyContent: 'space-between',}}>
             <BackButton label="back" onPress={() => navigation.goBack()} />
           </View>
-          <ConnectionsHeader>Your Profile</ConnectionsHeader>
-          <ScrollView>
-            <EditContainer onPress={() => setEditModal(true)}>
-              <Image
-                style={{width: 25, height: 25}}
-                source={require('./assets/edit_icon.png')}
-              />
-            </EditContainer>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                gap: -5,
-              }}>
-              <ProfileImageContainer>
-                <Image
-                  source={{
-                    uri: `data:image/png;base64,${userProfileData['photo']}`,
-                  }}
-                  style={{height: 90, width: 90}}
-                />
-              </ProfileImageContainer>
-              <View style={{flexDirection: 'column', justifyContent: 'center'}}>
-                <Text style={{color: '#828282', fontSize: 25, fontWeight: 800}}>
-                  {userProfileData['fullName']}
-                </Text>
-                <View
-                  style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                  <Image source={require('./assets/jobTitle.png')} />
-                  <Text
-                    style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                    {userProfileData['jobTitle']}
-                  </Text>
-                </View>
-                <View
-                  style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                  <Image source={require('./assets/jobTitle.png')} />
-                  <Text
-                    style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                    {userProfileData['company']}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: 30,
-              }}>
-              <PhoneEmail onPress={() => setPhoneModal(true)}>
-                <Image
-                  style={{width: 17, height: 17}}
-                  source={require('./assets/phone.png')}
-                />
-                <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                  edit phone
-                </Text>
-              </PhoneEmail>
-              <PhoneEmail onPress={() => setEmailModal(true)}>
-                <Image
-                  style={{width: 17, height: 17}}
-                  source={require('./assets/phone.png')}
-                />
-                <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                  edit email
-                </Text>
-              </PhoneEmail>
-            </View>
-            <Text
-              style={{
-                marginTop: 15,
-                color: '#828282',
-                fontSize: 25,
-                fontWeight: 700,
-              }}>
-              Biography
-            </Text>
-            <View
-              style={{
-                borderRadius: 10,
-                borderWidth: 1,
-                height: 150,
-                width: '100%',
-                marginTop: 10,
-                justifyContent: 'space-between',
-              }}>
-              <TextInput
-                style={{
-                  color: '#828282',
-                  fontSize: 15,
-                  fontWeight: '400',
-                  marginLeft: 15,
-                  marginRight: 15,
-                  marginTop: 20,
-                  marginBottom: 20,
-                }}
-                value={biography}
-                onChangeText={handleChangeBiography}
-                multiline={true}
-                editable={biographyEditable}
-              />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-end',
-                  marginLeft: 10,
-                  marginRight: 10,
-                  marginBottom: 10,
-                }}>
-                <TouchableOpacity
-                  onPress={async () => {
-                    if (biographyEditable) {
-                      if (biography != userProfileData['biography']) {
-                        setBiographyRequest(true);
-                        const res = await makePostRequest(changeUserDataHttp, {
-                          phoneNumber: phoneNumber,
-                          changingValues: {biography: biography},
-                        });
-
-                        const data = await res.json();
-
-                        if (data.success) {
-                          setUserProfile(prevState => ({
-                            ...prevState,
-                            biography: data.modifiedFields[0],
-                          }));
-                        }
-                        setBiographyRequest(false);
-                      }
-                      setBiographyEditable(false);
-                    } else {
-                      setBiographyEditable(true);
-                    }
-                  }}
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  {biographyRequest ? (
-                    <ActivityIndicator color="#786cff" />
-                  ) : (
-                    <Image
-                      style={{height: 30, width: 30}}
-                      source={
-                        biographyEditable
-                          ? require('./assets/check_mark.png')
-                          : require('./assets/edit_icon.png')
-                      }
-                    />
-                  )}
-                </TouchableOpacity>
-                <Text>{biography.split(' ').length}/45</Text>
-              </View>
-            </View>
-            <Text
-              style={{
-                marginTop: 15,
-                color: '#828282',
-                fontSize: 25,
-                fontWeight: 700,
-              }}>
-              Your Skills
-            </Text>
-            <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 5}}>
-              {Object.keys(allSkills)
-                .filter(element => allSkills[element].active)
-                .map(element => (
-                  <Skill
-                    skillName={element}
-                    skillData={allSkills}
-                    setSkillData={setSkills}
-                    key={allSkills[element].id}
-                    activated={false}
-                  />
-                ))}
-            </View>
-            <TouchableOpacity
-              style={{
-                borderColor: '#786cff',
-                height: 40,
-                width: 50,
-                borderWidth: 1,
-                alignItems: 'center',
-                justifyCenter: 'center',
-                marginTop: 10,
-                borderRadius: 20,
-              }}
-              onPress={() => setSkillsModal(true)}>
-              <Image
-                source={require('./assets/plus.png')}
-                style={{height: 30, width: 30, marginTop: 2.5}}
-              />
-            </TouchableOpacity>
-            <Text
-              style={{
-                marginTop: 15,
-                color: '#828282',
-                fontSize: 25,
-                fontWeight: 700,
-              }}>
-              Your Interests
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                gap: 5,
-              }}>
-              {Object.keys(allInterests)
-                .filter(element => allInterests[element].active)
-                .map(element => (
-                  <Skill
-                    skillName={element}
-                    skillData={allInterests}
-                    setSkillData={setInterests}
-                    key={allInterests[element].id}
-                    activated={false}
-                  />
-                ))}
-            </View>
-            <TouchableOpacity
-              style={{
-                borderColor: '#786cff',
-                height: 40,
-                width: 50,
-                borderWidth: 1,
-                alignItems: 'center',
-                justifyCenter: 'center',
-                marginTop: 10,
-                borderRadius: 20,
-              }}
-              onPress={() => setInterestsModal(true)}>
-              <Image
-                source={require('./assets/plus.png')}
-                style={{height: 30, width: 30, marginTop: 2.5}}
-              />
-            </TouchableOpacity>
-            <Text
-              style={{
-                marginTop: 15,
-                color: '#828282',
-                fontSize: 25,
-                fontWeight: 700,
-              }}>
-              Your Socials
-            </Text>
-            <View style={{flexDirection: 'row', gap: 5, flexWrap: 'wrap'}}>
-              {Object.keys(links).map(link => {
-                if (userProfileData[link] == '') {
-                  return <></>;
-                }
-
-                return (
-                  <ViewAccount
-                    color={links[link]['color']}
-                    title={links[link]['title']}
-                    iconSource={links[link]['iconSource']}
-                    textColor={links[link]['textColor']}
-                    link={userProfileData[link]}
-                  />
-                );
-              })}
-            </View>
-            <TouchableOpacity
-              style={{
-                borderColor: '#786cff',
-                height: 40,
-                width: 50,
-                borderWidth: 1,
-                alignItems: 'center',
-                justifyCenter: 'center',
-                marginTop: 10,
-                borderRadius: 20,
-              }}
-              onPress={() => setSocialsModal(true)}>
-              <Image
-                source={require('./assets/plus.png')}
-                style={{height: 30, width: 30, marginTop: 2.5}}
-              />
-            </TouchableOpacity>
-            <View style={{marginTop: 200}}></View>
-          </ScrollView>
+          <View 
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'}}>
+            <ConnectionsHeader>Your Profile</ConnectionsHeader>
+            <SquareButton imgSource={require('./assets/edit_icon.png')} onPress={() => setEditModal(true)} />
+          </View>
         </MarginContainer>
+        <ScrollView style={{paddingLeft: '7%', paddingRight: '7%', alignSelf: 'center'}}>
+          <View
+            style={{
+              marginTop: 20,
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              gap: 20,
+            }}>
+            <ProfileImageContainer>
+              <Image
+                source={{
+                  uri: `data:image/png;base64,${userProfileData['photo']}`,
+                }}
+                style={{height: 90, width: 90}}
+              />
+            </ProfileImageContainer>
+            <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
+              <Text style={{color: '#828282', fontSize: 20, fontWeight: 600}}>
+                {userProfileData['fullName']}
+              </Text>
+              <View
+                style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                <Image source={require('./assets/jobTitle.png')} />
+                <Text
+                  style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                  {userProfileData['jobTitle']}
+                </Text>
+              </View>
+              <View
+                style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                <Image source={require('./assets/jobTitle.png')} />
+                <Text
+                  style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                  {userProfileData['company']}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 30,
+            }}>
+            <PhoneEmail onPress={() => setPhoneModal(true)}>
+              <Image
+                style={{width: 17, height: 17}}
+                source={require('./assets/phone.png')}
+              />
+              <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                edit phone
+              </Text>
+            </PhoneEmail>
+            <PhoneEmail onPress={() => setEmailModal(true)}>
+              <Image
+                style={{width: 17, height: 17}}
+                source={require('./assets/phone.png')}
+              />
+              <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                edit email
+              </Text>
+            </PhoneEmail>
+          </View>
+          <Text
+            style={{
+              marginTop: 15,
+              color: '#828282',
+              fontSize: 20,
+              fontWeight: 700,
+            }}>
+            Biography
+          </Text>
+          <View
+            style={{
+              borderRadius: 10,
+              borderWidth: 1,
+              height: 150,
+              width: '100%',
+              marginTop: 10,
+              justifyContent: 'space-between',
+            }}>
+            <TextInput
+              style={{
+                color: '#828282',
+                fontSize: 15,
+                fontWeight: '400',
+                marginLeft: 15,
+                marginRight: 15,
+                marginTop: 20,
+                marginBottom: 20,
+              }}
+              value={biography}
+              onChangeText={handleChangeBiography}
+              multiline={true}
+              editable={biographyEditable}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'flex-end',
+                marginLeft: 10,
+                marginRight: 10,
+                marginBottom: 10,
+              }}>
+              <TouchableOpacity
+                onPress={async () => {
+                  if (biographyEditable) {
+                    if (biography != userProfileData['biography']) {
+                      setBiographyRequest(true);
+                      const res = await makePostRequest(changeUserDataHttp, {
+                        phoneNumber: phoneNumber,
+                        changingValues: {biography: biography},
+                      });
+
+                      const data = await res.json();
+
+                      if (data.success) {
+                        setUserProfile(prevState => ({
+                          ...prevState,
+                          biography: data.modifiedFields[0],
+                        }));
+                      }
+                      setBiographyRequest(false);
+                    }
+                    setBiographyEditable(false);
+                  } else {
+                    setBiographyEditable(true);
+                  }
+                }}
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                {biographyRequest ? (
+                  <ActivityIndicator color="#786cff" />
+                ) : (
+                  <Image
+                    style={{height: 30, width: 30}}
+                    source={
+                      biographyEditable
+                        ? require('./assets/check_mark.png')
+                        : require('./assets/edit_icon.png')
+                    }
+                  />
+                )}
+              </TouchableOpacity>
+              <Text>{biography.split(' ').length}/45</Text>
+            </View>
+          </View>
+          <Text
+            style={{
+              marginTop: 15,
+              color: '#828282',
+              fontSize: 20,
+              fontWeight: 700,
+            }}>
+            Your Skills
+          </Text>
+          <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 5, marginTop: 10}}>
+            {Object.keys(allSkills)
+              .filter(element => allSkills[element].active)
+              .map(element => (
+                <Skill
+                  skillName={element}
+                  skillData={allSkills}
+                  setSkillData={setSkills}
+                  key={allSkills[element].id}
+                  activated={false}
+                />
+            ))}
+          </View>
+          <TouchableOpacity
+            style={{
+              borderColor: '#786cff',
+              borderWidth: 1,
+              alignSelf: 'flex-start',
+              marginTop: 10,
+              borderRadius: 20,
+              padding: 5,
+              flexDirection: 'row',
+            }}
+            onPress={() => setSkillsModal(true)}>
+            <Text style={{color: '#786cff'}}> edit skills </Text>
+          </TouchableOpacity>
+          <Text
+            style={{
+              marginTop: 15,
+              color: '#828282',
+              fontSize: 20,
+              fontWeight: 700,
+            }}>
+            Your Interests
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: 5,
+            }}>
+            {Object.keys(allInterests)
+              .filter(element => allInterests[element].active)
+              .map(element => (
+                <Skill
+                  skillName={element}
+                  skillData={allInterests}
+                  setSkillData={setInterests}
+                  key={allInterests[element].id}
+                  activated={false}
+                />
+              ))}
+          </View>
+          <TouchableOpacity
+            style={{
+              borderColor: '#786cff',
+              height: 40,
+              width: 50,
+              borderWidth: 1,
+              alignItems: 'center',
+              justifyCenter: 'center',
+              marginTop: 10,
+              borderRadius: 20,
+            }}
+            onPress={() => setInterestsModal(true)}>
+            <Image
+              source={require('./assets/plus.png')}
+              style={{height: 30, width: 30, marginTop: 2.5}}
+            />
+          </TouchableOpacity>
+          <Text
+            style={{
+              marginTop: 15,
+              color: '#828282',
+              fontSize: 25,
+              fontWeight: 700,
+            }}>
+            Your Socials
+          </Text>
+          <View style={{flexDirection: 'row', gap: 5, flexWrap: 'wrap'}}>
+            {Object.keys(links).map(link => {
+              if (userProfileData[link] == '') {
+                return <></>;
+              }
+
+              return (
+                <ViewAccount
+                  color={links[link]['color']}
+                  title={links[link]['title']}
+                  iconSource={links[link]['iconSource']}
+                  textColor={links[link]['textColor']}
+                  link={userProfileData[link]}
+                />
+              );
+            })}
+          </View>
+          <TouchableOpacity
+            style={{
+              borderColor: '#786cff',
+              height: 40,
+              width: 50,
+              borderWidth: 1,
+              alignItems: 'center',
+              justifyCenter: 'center',
+              marginTop: 10,
+              borderRadius: 20,
+            }}
+            onPress={() => setSocialsModal(true)}>
+            <Image
+              source={require('./assets/plus.png')}
+              style={{height: 30, width: 30, marginTop: 2.5}}
+            />
+          </TouchableOpacity>
+          <View style={{marginTop: 200}}></View>
+        </ScrollView>
+      </View>
       ) : (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <ActivityIndicator color="#786cff" />
         </View>
       )}
     </MaxWidth>
+    </SafeAreaView>
   );
 };
 
@@ -1091,7 +1090,6 @@ const ConnectionsHeader = styled.Text`
   color: #786cff;
   font-weight: bold;
   font-size: 35px;
-  margin-top: 15px;
 `;
 const MarginContainer = styled.View`
   width: 85%;
@@ -1101,6 +1099,6 @@ const MaxWidth = styled.View`
   height: 100%;
   flex-direction: column;
   align-items: center;
-  padding-top: 30px;
+  padding-top: 10px;
   background-color: #ffffff;
 `;

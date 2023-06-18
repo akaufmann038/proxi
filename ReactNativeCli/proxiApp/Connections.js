@@ -101,7 +101,7 @@ export const Connections = ({route, navigation}) => {
                   height: 40,
                 }}>
                 <SearchImage source={require('./assets/search.png')}
-                             style={{width: 20, height: 20}} />
+                             style={{width: 20, height: 20,}} />
               </TouchableOpacity>
             </View>
             <ScrollView
