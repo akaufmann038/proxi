@@ -709,7 +709,9 @@ export const Profile = ({route, navigation}) => {
               alignItems: 'center',
               justifyContent: 'space-between'}}>
             <ConnectionsHeader>Your Profile</ConnectionsHeader>
-            <SquareButton imgSource={require('./assets/edit_icon.png')} onPress={() => setEditModal(true)} />
+            <SquareWrapper onPress={() => setEditModal(true)}>
+              <Image source={require('./assets/edit_icon.png')} style={{width: 20, height: 20}}/>
+            </SquareWrapper>
           </View>
         </MarginContainer>
         <ScrollView style={{paddingLeft: '7%', paddingRight: '7%', alignSelf: 'center'}}>
@@ -1098,4 +1100,15 @@ const MaxWidth = styled.View`
   align-items: center;
   padding-top: 10px;
   background-color: #ffffff;
+`;
+
+const SquareWrapper = styled.TouchableOpacity`
+  background-color: #ffffff;
+  border-radius: 7px;
+  shadow-radius: 12px;
+  shadow-opacity: 0.1;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
 `;
