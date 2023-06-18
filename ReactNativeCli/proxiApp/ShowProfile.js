@@ -19,6 +19,7 @@ import {
   getConnectionsAllHttp,
   queryHashDataHttp,
   getProfileHttp,
+  links,
 } from './utils.js';
 import {
   EventContext,
@@ -29,57 +30,6 @@ import {
 import {BackButton} from './SignupComponents.js';
 
 export const ShowProfile = ({route, navigation}) => {
-  const links = {
-    linkResume: {
-      color: '#0072B1',
-      title: 'Linkedin',
-      iconSource: require('./assets/linkedin.png'),
-      textColor: 'white',
-    },
-    linkInstagram: {
-      color: 'rgba(186,120,237,1)',
-      title: 'Instagram',
-      iconSource: require('./assets/instagram.png'),
-      textColor: 'white',
-    },
-    linkLinkedin: {
-      color: '#0072B1',
-      title: 'Linkedin',
-      iconSource: require('./assets/linkedin.png'),
-      textColor: 'white',
-    },
-    linkGithub: {
-      color: 'black',
-      title: 'GitHub',
-      iconSource: require('./assets/github.png'),
-      textColor: 'white',
-    },
-    linkDropbox: {
-      color: '#0060FF',
-      title: 'DropBox',
-      iconSource: require('./assets/dropbox.png'),
-      textColor: 'white',
-    },
-    linkMedium: {
-      color: 'black',
-      title: 'Medium',
-      iconSource: require('./assets/medium.png'),
-      textColor: 'white',
-    },
-    linkFacebook: {
-      color: '#385C8E',
-      title: 'Facebook',
-      iconSource: require('./assets/facebook.png'),
-      textColor: 'white',
-    },
-    linkTiktok: {
-      color: 'grey',
-      title: 'Tiktok',
-      iconSource: require('./assets/tiktok.png'),
-      textColor: 'white',
-    },
-  };
-
   const {userId} = route.params;
   const [userProfile, setUserProfile] = useState(null);
   const [phoneModalVisible, setPhoneVisible] = useState(false);
@@ -287,7 +237,7 @@ export const ShowProfile = ({route, navigation}) => {
   );
 };
 
-const ViewAccount = ({color, link, iconSource, textColor, title}) => {
+export const ViewAccount = ({color, link, iconSource, textColor, title}) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const Container = styled.TouchableOpacity`

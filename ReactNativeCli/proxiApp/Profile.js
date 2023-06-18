@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   TextInput,
   Touchable,
+  ScrollView,
 } from 'react-native';
 import {
   makePostRequest,
@@ -16,9 +17,11 @@ import {
   changeUserDataHttp,
   skills,
   interests,
+  links,
 } from './utils.js';
 import {UserProfile} from './App.tsx';
 import {BackButton, Skill} from './SignupComponents.js';
+import {ViewAccount} from './ShowProfile.js';
 
 export const Profile = ({route, navigation}) => {
   const phoneNumber = '(111) 111-1111';
@@ -40,6 +43,46 @@ export const Profile = ({route, navigation}) => {
   const [allSkills, setSkills] = useState(null);
   const [skillsModal, setSkillsModal] = useState(false);
   const [skillsRequest, setSkillsRequest] = useState(false);
+  const [allInterests, setInterests] = useState(null);
+  const [interestsModal, setInterestsModal] = useState(false);
+  const [interestsRequest, setInterestsRequest] = useState(false);
+  const [socialsModal, setSocialsModal] = useState(false);
+  const [socialsRequest, setSocialsRequest] = useState(false);
+  const [allSocials, setSocials] = useState(null);
+
+  const generateReformatSkills = locSkills => {
+    reformatSkills = {};
+    skills.forEach(element => {
+      reformatSkills[element.name] = {
+        active: locSkills.includes(element.name),
+        id: element.id,
+      };
+    });
+
+    return reformatSkills;
+  };
+
+  const generateReformatInterests = locInterests => {
+    reformatInterests = {};
+    interests.forEach(element => {
+      reformatInterests[element.name] = {
+        active: locInterests.includes(element.name),
+        id: element.id,
+      };
+    });
+
+    return reformatInterests;
+  };
+
+  const generateReformatSocials = locSocials => {
+    let reformatLinks = {};
+
+    Object.keys(links).forEach(link => {
+      reformatLinks[link] = locSocials[link];
+    });
+
+    return reformatLinks;
+  };
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -64,14 +107,9 @@ export const Profile = ({route, navigation}) => {
         setPhone(res.userProfile['phoneNumber']);
         setEmail(res.userProfile['email']);
         setBiography(res.userProfile['biography']);
-        reformatSkills = {};
-        skills.forEach(element => {
-          reformatSkills[element.name] = {
-            active: res.userProfile['skills'].includes(element.name),
-            id: element.id,
-          };
-        });
-        setSkills(reformatSkills);
+        setSkills(generateReformatSkills(res.userProfile['skills']));
+        setInterests(generateReformatInterests(res.userProfile['interests']));
+        setSocials(generateReformatSocials(res.userProfile));
       });
     } else {
       setJobTitle(userProfileData['jobTitle']);
@@ -79,14 +117,9 @@ export const Profile = ({route, navigation}) => {
       setPhone(userProfileData['phoneNumber']);
       setEmail(userProfileData['email']);
       setBiography(userProfileData['biography']);
-      reformatSkills = {};
-      skills.forEach(element => {
-        reformatSkills[element.name] = {
-          active: userProfileData['skills'].includes(element.name),
-          id: element.id,
-        };
-      });
-      setSkills(reformatSkills);
+      setSkills(generateReformatSkills(userProfileData['skills']));
+      setInterests(generateReformatInterests(userProfileData['interests']));
+      setSocials(generateReformatSocials(userProfileData));
     }
 
     // allSkills - [{skill: id, active}...]
@@ -100,11 +133,124 @@ export const Profile = ({route, navigation}) => {
     // to change phone
   };
 
-  const handleSubmitSkillsChange = async () => {
+  const handleSubmitSocialsChange = async () => {
+    setSocialsRequest(true);
+    let toChange = {};
+
+    Object.keys(links).forEach(link => {
+      if (userProfileData[link] != allSocials[link]) {
+        toChange[link] = allSocials[link];
+      }
+    });
+
+    if (Object.keys(toChange).length > 0) {
+      const res = await makePostRequest(changeUserDataHttp, {
+        phoneNumber: phoneNumber,
+        changingValues: toChange,
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        Object.keys(toChange).forEach((element, index) => {
+          if (element == 'linkResume') {
+            setUserProfile(prevState => ({
+              ...prevState,
+              linkResume: data.modifiedFields[index],
+            }));
+          } else if (element == 'linkInstagram') {
+            setUserProfile(prevState => ({
+              ...prevState,
+              linkInstagram: data.modifiedFields[index],
+            }));
+          } else if (element == 'linkLinkedin') {
+            setUserProfile(prevState => ({
+              ...prevState,
+              linkLinkedin: data.modifiedFields[index],
+            }));
+          } else if (element == 'linkGithub') {
+            setUserProfile(prevState => ({
+              ...prevState,
+              linkGithub: data.modifiedFields[index],
+            }));
+          } else if (element == 'linkDropbox') {
+            setUserProfile(prevState => ({
+              ...prevState,
+              linkDropbox: data.modifiedFields[index],
+            }));
+          } else if (element == 'linkMedium') {
+            setUserProfile(prevState => ({
+              ...prevState,
+              linkMedium: data.modifiedFields[index],
+            }));
+          } else if (element == 'linkFacebook') {
+            setUserProfile(prevState => ({
+              ...prevState,
+              linkFacebook: data.modifiedFields[index],
+            }));
+          } else if (element == 'linkTiktok') {
+            setUserProfile(prevState => ({
+              ...prevState,
+              linkTiktok: data.modifiedFields[index],
+            }));
+          }
+        });
+      }
+    }
+    setSocialsRequest(false);
+    setSocialsModal(false);
+  };
+
+  const handleSubmitInterestsChange = async () => {
+    setInterestsRequest(true);
     let isSame = true;
 
     // if any active that are not in list (user adding skill)
-    userProfileData['skills'].forEach(skill => {
+    userProfileData['interests'].split(',').forEach(skill => {
+      if (!allInterests[skill].active) {
+        isSame = false;
+      }
+    });
+
+    // if any not active that are in the list (user removes skill)
+    Object.keys(allInterests).forEach(skill => {
+      if (
+        allInterests[skill].active &&
+        !userProfileData['interests'].includes(skill)
+      ) {
+        isSame = false;
+      }
+    });
+
+    if (!isSame) {
+      const res = await makePostRequest(changeUserDataHttp, {
+        phoneNumber: phoneNumber,
+        changingValues: {
+          interests: Object.keys(allInterests)
+            .filter(skill => allInterests[skill].active)
+            .join(','),
+        },
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setUserProfile(prevState => ({
+          ...prevState,
+          interests: data.modifiedFields[0],
+        }));
+      }
+    }
+    setInterestsRequest(false);
+    setInterestsModal(false);
+  };
+
+  const handleSubmitSkillsChange = async () => {
+    setSkillsRequest(true);
+    let isSame = true;
+
+    // if any active that are not in list (user adding skill)
+    userProfileData['skills'].split(',').forEach(skill => {
       if (!allSkills[skill].active) {
         isSame = false;
       }
@@ -112,14 +258,35 @@ export const Profile = ({route, navigation}) => {
 
     // if any not active that are in the list (user removes skill)
     Object.keys(allSkills).forEach(skill => {
-      if (!userProfileData['skills'].includes(skill)) {
+      if (
+        allSkills[skill].active &&
+        !userProfileData['skills'].includes(skill)
+      ) {
         isSame = false;
       }
     });
 
     if (!isSame) {
-      // LEFT OFF HERE
+      const res = await makePostRequest(changeUserDataHttp, {
+        phoneNumber: phoneNumber,
+        changingValues: {
+          skills: Object.keys(allSkills)
+            .filter(skill => allSkills[skill].active)
+            .join(','),
+        },
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setUserProfile(prevState => ({
+          ...prevState,
+          skills: data.modifiedFields[0],
+        }));
+      }
     }
+    setSkillsRequest(false);
+    setSkillsModal(false);
   };
 
   const handleSubmitEmailChange = async () => {
@@ -153,6 +320,50 @@ export const Profile = ({route, navigation}) => {
       }
     } else {
       setEmailModal(false);
+    }
+  };
+
+  const handleChangeSocials = (social, text) => {
+    if (social == 'linkResume') {
+      setSocials(prevState => ({
+        ...prevState,
+        linkResume: text,
+      }));
+    } else if (social == 'linkInstagram') {
+      setSocials(prevState => ({
+        ...prevState,
+        linkInstagram: text,
+      }));
+    } else if (social == 'linkLinkedin') {
+      setSocials(prevState => ({
+        ...prevState,
+        linkLinkedin: text,
+      }));
+    } else if (social == 'linkGithub') {
+      setSocials(prevState => ({
+        ...prevState,
+        linkGithub: text,
+      }));
+    } else if (social == 'linkDropbox') {
+      setSocials(prevState => ({
+        ...prevState,
+        linkDropbox: text,
+      }));
+    } else if (social == 'linkMedium') {
+      setSocials(prevState => ({
+        ...prevState,
+        linkMedium: text,
+      }));
+    } else if (social == 'linkFacebook') {
+      setSocials(prevState => ({
+        ...prevState,
+        linkFacebook: text,
+      }));
+    } else if (social == 'linkTiktok') {
+      setSocials(prevState => ({
+        ...prevState,
+        linkTiktok: text,
+      }));
     }
   };
 
@@ -391,6 +602,7 @@ export const Profile = ({route, navigation}) => {
               <XOutContainer
                 onPress={() => {
                   setSkillsModal(false);
+                  setSkills(generateReformatSkills(userProfileData['skills']));
                 }}>
                 <XOut source={require('./assets/x_out.png')} />
               </XOutContainer>
@@ -400,7 +612,7 @@ export const Profile = ({route, navigation}) => {
                     skillName={element}
                     skillData={allSkills}
                     setSkillData={setSkills}
-                    key={element.id}
+                    key={allSkills[element].id}
                   />
                 ))}
               </View>
@@ -415,6 +627,75 @@ export const Profile = ({route, navigation}) => {
               </View>
             </SkillsModalView>
           </Modal>
+          <Modal
+            visible={interestsModal}
+            transparent={true}
+            animationType={'none'}>
+            <SkillsModalView>
+              <XOutContainer
+                onPress={() => {
+                  setInterestsModal(false);
+                  setInterests(
+                    generateReformatInterests(userProfileData['interests']),
+                  );
+                }}>
+                <XOut source={require('./assets/x_out.png')} />
+              </XOutContainer>
+              <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 5}}>
+                {Object.keys(allInterests).map(element => (
+                  <Skill
+                    skillName={element}
+                    skillData={allInterests}
+                    setSkillData={setInterests}
+                    key={allInterests[element].id}
+                  />
+                ))}
+              </View>
+              <View style={{alignSelf: 'center', marginTop: 20}}>
+                <RedTouchable onPress={handleSubmitInterestsChange}>
+                  {interestsRequest ? (
+                    <ActivityIndicator color="white" />
+                  ) : (
+                    <RedText>Confirm</RedText>
+                  )}
+                </RedTouchable>
+              </View>
+            </SkillsModalView>
+          </Modal>
+          <Modal
+            visible={socialsModal}
+            transparent={true}
+            animationType={'none'}>
+            <SocialsModalView>
+              <XOutContainer
+                onPress={() => {
+                  setSocialsModal(false);
+                  setSocials(generateReformatSocials(userProfileData));
+                }}>
+                <XOut source={require('./assets/x_out.png')} />
+              </XOutContainer>
+              <View style={{width: '80%', alignSelf: 'center'}}>
+                {Object.keys(allSocials).map(social => (
+                  <View style={{borderBottomWidth: 0.5}}>
+                    <Text>{social}:</Text>
+                    <TextInput
+                      value={allSocials[social]}
+                      onChangeText={text => handleChangeSocials(social, text)}
+                    />
+                  </View>
+                ))}
+              </View>
+              <View style={{alignSelf: 'center', marginTop: 20}}>
+                <RedTouchable onPress={handleSubmitSocialsChange}>
+                  {socialsRequest ? (
+                    <ActivityIndicator color="white" />
+                  ) : (
+                    <RedText>Confirm</RedText>
+                  )}
+                </RedTouchable>
+              </View>
+            </SocialsModalView>
+          </Modal>
           <View
             style={{
               marginTop: 50,
@@ -424,196 +705,289 @@ export const Profile = ({route, navigation}) => {
             <BackButton label="back" onPress={() => navigation.goBack()} />
           </View>
           <ConnectionsHeader>Your Profile</ConnectionsHeader>
-          <EditContainer onPress={() => setEditModal(true)}>
-            <Image
-              style={{width: 25, height: 25}}
-              source={require('./assets/edit_icon.png')}
-            />
-          </EditContainer>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              gap: -5,
-            }}>
-            <ProfileImageContainer>
+          <ScrollView>
+            <EditContainer onPress={() => setEditModal(true)}>
               <Image
-                source={{
-                  uri: `data:image/png;base64,${userProfileData['photo']}`,
-                }}
-                style={{height: 90, width: 90}}
+                style={{width: 25, height: 25}}
+                source={require('./assets/edit_icon.png')}
               />
-            </ProfileImageContainer>
-            <View style={{flexDirection: 'column', justifyContent: 'center'}}>
-              <Text style={{color: '#828282', fontSize: 25, fontWeight: 800}}>
-                {userProfileData['fullName']}
-              </Text>
-              <View
-                style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                <Image source={require('./assets/jobTitle.png')} />
-                <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                  {userProfileData['jobTitle']}
+            </EditContainer>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                gap: -5,
+              }}>
+              <ProfileImageContainer>
+                <Image
+                  source={{
+                    uri: `data:image/png;base64,${userProfileData['photo']}`,
+                  }}
+                  style={{height: 90, width: 90}}
+                />
+              </ProfileImageContainer>
+              <View style={{flexDirection: 'column', justifyContent: 'center'}}>
+                <Text style={{color: '#828282', fontSize: 25, fontWeight: 800}}>
+                  {userProfileData['fullName']}
                 </Text>
-              </View>
-              <View
-                style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                <Image source={require('./assets/jobTitle.png')} />
-                <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                  {userProfileData['company']}
-                </Text>
+                <View
+                  style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                  <Image source={require('./assets/jobTitle.png')} />
+                  <Text
+                    style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                    {userProfileData['jobTitle']}
+                  </Text>
+                </View>
+                <View
+                  style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                  <Image source={require('./assets/jobTitle.png')} />
+                  <Text
+                    style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                    {userProfileData['company']}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: 30,
-            }}>
-            <PhoneEmail onPress={() => setPhoneModal(true)}>
-              <Image
-                style={{width: 17, height: 17}}
-                source={require('./assets/phone.png')}
-              />
-              <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                edit phone
-              </Text>
-            </PhoneEmail>
-            <PhoneEmail onPress={() => setEmailModal(true)}>
-              <Image
-                style={{width: 17, height: 17}}
-                source={require('./assets/phone.png')}
-              />
-              <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                edit email
-              </Text>
-            </PhoneEmail>
-          </View>
-          <Text
-            style={{
-              marginTop: 15,
-              color: '#828282',
-              fontSize: 25,
-              fontWeight: 700,
-            }}>
-            Biography
-          </Text>
-          <View
-            style={{
-              borderRadius: 10,
-              borderWidth: 1,
-              height: 150,
-              width: '100%',
-              marginTop: 10,
-              justifyContent: 'space-between',
-            }}>
-            <TextInput
-              style={{
-                color: '#828282',
-                fontSize: 15,
-                fontWeight: '400',
-                marginLeft: 15,
-                marginRight: 15,
-                marginTop: 20,
-                marginBottom: 20,
-              }}
-              value={biography}
-              onChangeText={handleChangeBiography}
-              multiline={true}
-              editable={biographyEditable}
-            />
             <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                alignItems: 'flex-end',
-                marginLeft: 10,
-                marginRight: 10,
-                marginBottom: 10,
+                marginTop: 30,
               }}>
-              <TouchableOpacity
-                onPress={async () => {
-                  if (biographyEditable) {
-                    if (biography != userProfileData['biography']) {
-                      setBiographyRequest(true);
-                      const res = await makePostRequest(changeUserDataHttp, {
-                        phoneNumber: phoneNumber,
-                        changingValues: {biography: biography},
-                      });
-
-                      const data = await res.json();
-
-                      if (data.success) {
-                        setUserProfile(prevState => ({
-                          ...prevState,
-                          biography: data.modifiedFields[0],
-                        }));
-                      }
-                      setBiographyRequest(false);
-                    }
-                    setBiographyEditable(false);
-                  } else {
-                    setBiographyEditable(true);
-                  }
-                }}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                {biographyRequest ? (
-                  <ActivityIndicator color="#786cff" />
-                ) : (
-                  <Image
-                    style={{height: 30, width: 30}}
-                    source={
-                      biographyEditable
-                        ? require('./assets/check_mark.png')
-                        : require('./assets/edit_icon.png')
-                    }
-                  />
-                )}
-              </TouchableOpacity>
-              <Text>{biography.split(' ').length}/45</Text>
-            </View>
-          </View>
-          <Text
-            style={{
-              marginTop: 15,
-              color: '#828282',
-              fontSize: 25,
-              fontWeight: 700,
-            }}>
-            Your Skills
-          </Text>
-          <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 5}}>
-            {Object.keys(allSkills)
-              .filter(element => allSkills[element].active)
-              .map(element => (
-                <Skill
-                  skillName={element}
-                  skillData={allSkills}
-                  setSkillData={setSkills}
-                  key={element.id}
+              <PhoneEmail onPress={() => setPhoneModal(true)}>
+                <Image
+                  style={{width: 17, height: 17}}
+                  source={require('./assets/phone.png')}
                 />
-              ))}
-          </View>
-          <TouchableOpacity
-            style={{
-              borderColor: '#786cff',
-              height: 40,
-              width: 50,
-              borderWidth: 1,
-              alignItems: 'center',
-              justifyCenter: 'center',
-              marginTop: 10,
-              borderRadius: 20,
-            }}
-            onPress={() => setSkillsModal(true)}>
-            <Image
-              source={require('./assets/plus.png')}
-              style={{height: 30, width: 30, marginTop: 2.5}}
-            />
-          </TouchableOpacity>
+                <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                  edit phone
+                </Text>
+              </PhoneEmail>
+              <PhoneEmail onPress={() => setEmailModal(true)}>
+                <Image
+                  style={{width: 17, height: 17}}
+                  source={require('./assets/phone.png')}
+                />
+                <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                  edit email
+                </Text>
+              </PhoneEmail>
+            </View>
+            <Text
+              style={{
+                marginTop: 15,
+                color: '#828282',
+                fontSize: 25,
+                fontWeight: 700,
+              }}>
+              Biography
+            </Text>
+            <View
+              style={{
+                borderRadius: 10,
+                borderWidth: 1,
+                height: 150,
+                width: '100%',
+                marginTop: 10,
+                justifyContent: 'space-between',
+              }}>
+              <TextInput
+                style={{
+                  color: '#828282',
+                  fontSize: 15,
+                  fontWeight: '400',
+                  marginLeft: 15,
+                  marginRight: 15,
+                  marginTop: 20,
+                  marginBottom: 20,
+                }}
+                value={biography}
+                onChangeText={handleChangeBiography}
+                multiline={true}
+                editable={biographyEditable}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-end',
+                  marginLeft: 10,
+                  marginRight: 10,
+                  marginBottom: 10,
+                }}>
+                <TouchableOpacity
+                  onPress={async () => {
+                    if (biographyEditable) {
+                      if (biography != userProfileData['biography']) {
+                        setBiographyRequest(true);
+                        const res = await makePostRequest(changeUserDataHttp, {
+                          phoneNumber: phoneNumber,
+                          changingValues: {biography: biography},
+                        });
+
+                        const data = await res.json();
+
+                        if (data.success) {
+                          setUserProfile(prevState => ({
+                            ...prevState,
+                            biography: data.modifiedFields[0],
+                          }));
+                        }
+                        setBiographyRequest(false);
+                      }
+                      setBiographyEditable(false);
+                    } else {
+                      setBiographyEditable(true);
+                    }
+                  }}
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  {biographyRequest ? (
+                    <ActivityIndicator color="#786cff" />
+                  ) : (
+                    <Image
+                      style={{height: 30, width: 30}}
+                      source={
+                        biographyEditable
+                          ? require('./assets/check_mark.png')
+                          : require('./assets/edit_icon.png')
+                      }
+                    />
+                  )}
+                </TouchableOpacity>
+                <Text>{biography.split(' ').length}/45</Text>
+              </View>
+            </View>
+            <Text
+              style={{
+                marginTop: 15,
+                color: '#828282',
+                fontSize: 25,
+                fontWeight: 700,
+              }}>
+              Your Skills
+            </Text>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 5}}>
+              {Object.keys(allSkills)
+                .filter(element => allSkills[element].active)
+                .map(element => (
+                  <Skill
+                    skillName={element}
+                    skillData={allSkills}
+                    setSkillData={setSkills}
+                    key={allSkills[element].id}
+                    activated={false}
+                  />
+                ))}
+            </View>
+            <TouchableOpacity
+              style={{
+                borderColor: '#786cff',
+                height: 40,
+                width: 50,
+                borderWidth: 1,
+                alignItems: 'center',
+                justifyCenter: 'center',
+                marginTop: 10,
+                borderRadius: 20,
+              }}
+              onPress={() => setSkillsModal(true)}>
+              <Image
+                source={require('./assets/plus.png')}
+                style={{height: 30, width: 30, marginTop: 2.5}}
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                marginTop: 15,
+                color: '#828282',
+                fontSize: 25,
+                fontWeight: 700,
+              }}>
+              Your Interests
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: 5,
+              }}>
+              {Object.keys(allInterests)
+                .filter(element => allInterests[element].active)
+                .map(element => (
+                  <Skill
+                    skillName={element}
+                    skillData={allInterests}
+                    setSkillData={setInterests}
+                    key={allInterests[element].id}
+                    activated={false}
+                  />
+                ))}
+            </View>
+            <TouchableOpacity
+              style={{
+                borderColor: '#786cff',
+                height: 40,
+                width: 50,
+                borderWidth: 1,
+                alignItems: 'center',
+                justifyCenter: 'center',
+                marginTop: 10,
+                borderRadius: 20,
+              }}
+              onPress={() => setInterestsModal(true)}>
+              <Image
+                source={require('./assets/plus.png')}
+                style={{height: 30, width: 30, marginTop: 2.5}}
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                marginTop: 15,
+                color: '#828282',
+                fontSize: 25,
+                fontWeight: 700,
+              }}>
+              Your Socials
+            </Text>
+            <View style={{flexDirection: 'row', gap: 5, flexWrap: 'wrap'}}>
+              {Object.keys(links).map(link => {
+                if (userProfileData[link] == '') {
+                  return <></>;
+                }
+
+                return (
+                  <ViewAccount
+                    color={links[link]['color']}
+                    title={links[link]['title']}
+                    iconSource={links[link]['iconSource']}
+                    textColor={links[link]['textColor']}
+                    link={userProfileData[link]}
+                  />
+                );
+              })}
+            </View>
+            <TouchableOpacity
+              style={{
+                borderColor: '#786cff',
+                height: 40,
+                width: 50,
+                borderWidth: 1,
+                alignItems: 'center',
+                justifyCenter: 'center',
+                marginTop: 10,
+                borderRadius: 20,
+              }}
+              onPress={() => setSocialsModal(true)}>
+              <Image
+                source={require('./assets/plus.png')}
+                style={{height: 30, width: 30, marginTop: 2.5}}
+              />
+            </TouchableOpacity>
+            <View style={{marginTop: 200}}></View>
+          </ScrollView>
         </MarginContainer>
       ) : (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -624,6 +998,16 @@ export const Profile = ({route, navigation}) => {
   );
 };
 
+const SocialsModalView = styled.View`
+  width: 80%;
+  height: 60%;
+  margin-top: 30%;
+  background-color: white;
+  align-self: center;
+  border-radius: 10px;
+  shadow-radius: 5px;
+  shadow-opacity: 0.1;
+`;
 const SkillsModalView = styled.View`
   width: 80%;
   height: 40%;

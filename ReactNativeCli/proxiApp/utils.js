@@ -57,6 +57,57 @@ export const interests = [
   {name: 'Traveling', id: 12},
 ];
 
+export const links = {
+  linkResume: {
+    color: '#0072B1',
+    title: 'Resume',
+    iconSource: require('./assets/linkedin.png'),
+    textColor: 'white',
+  },
+  linkInstagram: {
+    color: 'rgba(186,120,237,1)',
+    title: 'Instagram',
+    iconSource: require('./assets/instagram.png'),
+    textColor: 'white',
+  },
+  linkLinkedin: {
+    color: '#0072B1',
+    title: 'Linkedin',
+    iconSource: require('./assets/linkedin.png'),
+    textColor: 'white',
+  },
+  linkGithub: {
+    color: 'black',
+    title: 'GitHub',
+    iconSource: require('./assets/github.png'),
+    textColor: 'white',
+  },
+  linkDropbox: {
+    color: '#0060FF',
+    title: 'DropBox',
+    iconSource: require('./assets/dropbox.png'),
+    textColor: 'white',
+  },
+  linkMedium: {
+    color: 'black',
+    title: 'Medium',
+    iconSource: require('./assets/medium.png'),
+    textColor: 'white',
+  },
+  linkFacebook: {
+    color: '#385C8E',
+    title: 'Facebook',
+    iconSource: require('./assets/facebook.png'),
+    textColor: 'white',
+  },
+  linkTiktok: {
+    color: 'grey',
+    title: 'Tiktok',
+    iconSource: require('./assets/tiktok.png'),
+    textColor: 'white',
+  },
+};
+
 // A method for making requests to the api
 // all the endpoints have a similar structure so you
 // can just pass in the endpoints and the body of the request

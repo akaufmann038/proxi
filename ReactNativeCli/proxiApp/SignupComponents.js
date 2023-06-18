@@ -7,7 +7,7 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import styled from 'styled-components/native';
 
@@ -17,12 +17,12 @@ export const TabBar = ({state, descriptors, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{backgroundColor:'#ffffff', }}>
+    <SafeAreaView style={{backgroundColor: '#ffffff'}}>
       <View
         style={{
           flexDirection: 'row',
           backgroundColor: 'white',
-          alignItems: 'center'
+          alignItems: 'center',
         }}>
         {state.routes.map((route, index) => {
           const {options} = descriptors[route.key];
@@ -92,7 +92,12 @@ export const TabBar = ({state, descriptors, navigation}) => {
                       style={{width: 20, height: 20}}
                     />
                   </View>
-                  <Text style={{color: isFocused ? 'white' : '#786cff', fontSize: 12, display: isFocused ? 'none' : 'flex'}}>
+                  <Text
+                    style={{
+                      color: isFocused ? 'white' : '#786cff',
+                      fontSize: 12,
+                      display: isFocused ? 'none' : 'flex',
+                    }}>
                     {label}
                   </Text>
                 </View>
@@ -119,7 +124,12 @@ export const TabBar = ({state, descriptors, navigation}) => {
                       style={{width: 20, height: 20}}
                     />
                   </View>
-                  <Text style={{color: isFocused ? 'white' : '#786cff', fontSize: 12, display: isFocused ? 'none' : 'flex'}}>
+                  <Text
+                    style={{
+                      color: isFocused ? 'white' : '#786cff',
+                      fontSize: 12,
+                      display: isFocused ? 'none' : 'flex',
+                    }}>
                     {label}
                   </Text>
                 </View>
@@ -146,7 +156,12 @@ export const TabBar = ({state, descriptors, navigation}) => {
                       style={{width: 20, height: 20}}
                     />
                   </View>
-                  <Text style={{color: isFocused ? 'white' : '#786cff', fontSize: 12, display: isFocused ? 'none' : 'flex'}}>
+                  <Text
+                    style={{
+                      color: isFocused ? 'white' : '#786cff',
+                      fontSize: 12,
+                      display: isFocused ? 'none' : 'flex',
+                    }}>
                     {label}
                   </Text>
                 </View>
@@ -174,16 +189,16 @@ export const TabBar = ({state, descriptors, navigation}) => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Image 
-                source={require('./assets/dark_profile.png')} 
+              <Image
+                source={require('./assets/dark_profile.png')}
                 style={{width: 20, height: 20}}
-               />
+              />
             </View>
             <Text style={{color: '#786cff', fontSize: 12}}>Profile</Text>
           </View>
         </TouchableOpacity>
       </View>
-      </SafeAreaView>
+    </SafeAreaView>
   );
 };
 
@@ -399,7 +414,12 @@ export const SIModal = ({
 // TODO: these button are kinda messed up, need to get a check mark that can change color
 // and need to animate the opacities of the '+' and check mark
 
-export const Skill = ({skillName, skillData, setSkillData}) => {
+export const Skill = ({
+  skillName,
+  skillData,
+  setSkillData,
+  activated = true,
+}) => {
   const [animation, setAnimation] = useState(new Animated.Value(0));
   const [active, setActive] = useState(skillData[skillName].active);
 
@@ -449,24 +469,26 @@ export const Skill = ({skillName, skillData, setSkillData}) => {
   }, []);
 
   const handleAnimation = () => {
-    if (skillData[skillName].active) {
-      Animated.timing(animation, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: false,
-      }).start();
-    } else {
-      Animated.timing(animation, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: false,
-      }).start();
-    }
-    let skills = skillData;
-    skills[skillName].active = !skillData[skillName].active;
+    if (activated) {
+      if (skillData[skillName].active) {
+        Animated.timing(animation, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+      } else {
+        Animated.timing(animation, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+      }
+      let skills = skillData;
+      skills[skillName].active = !skillData[skillName].active;
 
-    setActive(skills[skillName].active);
-    setSkillData(skills);
+      setActive(skills[skillName].active);
+      setSkillData(skills);
+    }
   };
 
   return (
@@ -475,7 +497,11 @@ export const Skill = ({skillName, skillData, setSkillData}) => {
       style={{backgroundColor: buttonColorInterpolation}}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <AnimatedImage
-          source={active ? require('./assets/checkmark.png') : require('./assets/plus.png')}
+          source={
+            active
+              ? require('./assets/checkmark.png')
+              : require('./assets/plus.png')
+          }
           style={{width: 20, height: 20, marginLeft: 5}}
         />
         <AnimatedText style={{color: textColorInterpolation}}>
