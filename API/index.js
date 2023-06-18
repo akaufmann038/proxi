@@ -807,6 +807,79 @@ app.post("/get-partial-profile", async (req, res) => {
   }
 });
 
+// given the keys and values to change, modify a user profile
+app.post("/edit-user-data", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (!("phoneNumber" in req.body) || !("changingValues" in req.body)) {
+    return res.json({ success: false, message: "Invalid fields!" });
+  }
+
+  try {
+    const userId = await redisClient.get(req.body["phoneNumber"]);
+
+    let command = [];
+
+    Object.keys(req.body["changingValues"]).forEach((element) => {
+      command.push(element);
+      command.push(req.body["changingValues"][element]);
+    });
+
+    const result = await redisClient.hSet(redisKeys.user(userId), command);
+
+    if (result == "1") {
+      return res.json({
+        success: false,
+        message: "probably trying to set invalid fields",
+      });
+    }
+
+    const modifiedFields = await redisClient.hmGet(
+      redisKeys.user(userId),
+      Object.keys(req.body["changingValues"])
+    );
+
+    return res.json({
+      success: true,
+      message: "successfully modified user profile",
+      modifiedFields: modifiedFields,
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.json({
+      success: false,
+      message: "there was an error while getting the users profile",
+    });
+  }
+});
+
+// given a phoneNumber, returns a full profile
+app.post("/get-user-profile", async (req, res) => {
+  // ensure that all fields are present and spelled correctly
+  if (!("phoneNumber" in req.body)) {
+    return res.json({ success: false, message: "Invalid fields!" });
+  }
+
+  try {
+    const userId = await redisClient.get(req.body["phoneNumber"]);
+
+    const userProfile = await redisClient.hGetAll(redisKeys.user(userId));
+
+    return res.json({
+      success: true,
+      message: "successfully retrieved user profile",
+      userProfile: userProfile,
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.json({
+      success: false,
+      message: "there was an error while getting the users profile",
+    });
+  }
+});
+
 // given a userId, returns a full profile
 app.post("/get-profile", async (req, res) => {
   // ensure that all fields are present and spelled correctly

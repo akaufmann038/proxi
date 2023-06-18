@@ -22,6 +22,7 @@ export const RegisteredContext = createContext({});
 export const PendingConnectionsCount = createContext({});
 export const ConnectionsData = createContext({});
 export const PendingConnectionsData = createContext({});
+export const UserProfile = createContext({});
 
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +33,7 @@ export default function App() {
   const [pendingCount, setPendingCount] = useState(null);
   const [connectionsData, setConnectionsData] = useState(null);
   const [pendingConnectionsData, setPendingConnections] = useState(null);
+  const [userProfileData, setUserProfile] = useState(null);
 
   return (
     <NavigationContainer>
@@ -43,39 +45,41 @@ export default function App() {
               value={{connectionsData, setConnectionsData}}>
               <PendingConnectionsData.Provider
                 value={{pendingConnectionsData, setPendingConnections}}>
-                <Stack.Navigator
-                  screenOptions={{headerShown: false}}
-                  initialRouteName="BottomNavigator">
-                  <Stack.Screen name="Login" component={Login} />
-                  <Stack.Screen
-                    name="ConfirmNumber"
-                    component={ConfirmNumber}
-                  />
-                  <Stack.Screen
-                    name="LetsGetStarted"
-                    component={LetsGetStarted}
-                  />
-                  <Stack.Screen
-                    name="CreateProfile"
-                    component={CreateProfile}
-                  />
-                  <Stack.Screen name="Connect" component={Connect} />
-                  <Stack.Screen name="EventPage" component={EventPage} />
-                  <Stack.Screen
-                    name="BottomNavigator"
-                    component={BottomNavigator}
-                  />
-                  <Stack.Screen name="Profile" component={Profile} />
-                  <Stack.Screen name="ShowProfile" component={ShowProfile} />
-                  <Stack.Screen
-                    name="PendingConnections"
-                    component={PendingConnections}
-                  />
-                  <Stack.Screen
-                    name="ShowPartialProfile"
-                    component={ShowPartialProfile}
-                  />
-                </Stack.Navigator>
+                <UserProfile.Provider value={{userProfileData, setUserProfile}}>
+                  <Stack.Navigator
+                    screenOptions={{headerShown: false}}
+                    initialRouteName="BottomNavigator">
+                    <Stack.Screen name="Login" component={Login} />
+                    <Stack.Screen
+                      name="ConfirmNumber"
+                      component={ConfirmNumber}
+                    />
+                    <Stack.Screen
+                      name="LetsGetStarted"
+                      component={LetsGetStarted}
+                    />
+                    <Stack.Screen
+                      name="CreateProfile"
+                      component={CreateProfile}
+                    />
+                    <Stack.Screen name="Connect" component={Connect} />
+                    <Stack.Screen name="EventPage" component={EventPage} />
+                    <Stack.Screen
+                      name="BottomNavigator"
+                      component={BottomNavigator}
+                    />
+                    <Stack.Screen name="Profile" component={Profile} />
+                    <Stack.Screen name="ShowProfile" component={ShowProfile} />
+                    <Stack.Screen
+                      name="PendingConnections"
+                      component={PendingConnections}
+                    />
+                    <Stack.Screen
+                      name="ShowPartialProfile"
+                      component={ShowPartialProfile}
+                    />
+                  </Stack.Navigator>
+                </UserProfile.Provider>
               </PendingConnectionsData.Provider>
             </ConnectionsData.Provider>
           </PendingConnectionsCount.Provider>

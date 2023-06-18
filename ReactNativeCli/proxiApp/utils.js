@@ -7,6 +7,7 @@ export const getConnectionsAllHttp =
   'http://localhost:3000/get-connections-all';
 export const queryHashDataHttp = 'http://localhost:3000/query-hash-data';
 export const getProfileHttp = 'http://localhost:3000/get-profile';
+export const getUserProfileHttp = 'http://localhost:3000/get-user-profile';
 export const getConnectionsDataHttp = 'http://localhost:3000/connections-page';
 export const getPendingConnectionsDataHttp =
   'http://localhost:3000/pending-connections-page';
@@ -14,6 +15,7 @@ export const rejectRequestHttp = 'http://localhost:3000/reject-request';
 export const acceptRequestHttp = 'http://localhost:3000/accept-request';
 export const getPartialProfileHttp =
   'http://localhost:3000/get-partial-profile';
+export const changeUserDataHttp = 'http://localhost:3000/edit-user-data';
 
 // id's of recommended skills and interests
 export const recommendedSkills = [1, 2, 3, 4, 5];
@@ -37,6 +39,8 @@ export const skills = [
   {name: 'React', id: 13},
   {name: 'Javascript', id: 14},
   {name: 'Adobe CC', id: 15},
+  {name: 'Node.js', id: 16},
+  {name: 'MongoDB', id: 17},
 ];
 export const interests = [
   {name: 'Lacrosse', id: 1},

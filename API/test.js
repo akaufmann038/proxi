@@ -1,7 +1,9 @@
 // just for testing async await and fetch requests
 
-const fetch = require("node-fetch");
-const fs = require("fs");
+const redis = require("redis");
+const redisClient = redis.createClient();
+redisClient.on("error", (err) => console.log("Redis Client Error", err));
+redisClient.connect();
 
 /*
 setTimeout(() => {
@@ -115,5 +117,15 @@ async function f1() {
   const x = await resolveAfter2Seconds(10);
   console.log(x); // 10
 }
+const testRedis = async () => {
+  let command = ["HSET", "user:1", "fullName", "alex"];
+  const result = await redisClient.hSet("user:1", [
+    "fullName",
+    "nick",
+    "jobTitle",
+    "i'm literally batman",
+  ]);
+  console.log(result);
+};
 
-f1();
+testRedis();

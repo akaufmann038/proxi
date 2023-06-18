@@ -10,6 +10,7 @@ import {
   ScrollView,
   Modal,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import {
   getFeedHttp,
@@ -25,7 +26,6 @@ import {
   ConnectionsContext,
   PendingConnectionsContext,
 } from './App.tsx';
-import {Profile} from './ShowProfile.js';
 import {BackButton} from './SignupComponents.js';
 
 export const ShowProfile = ({route, navigation}) => {
