@@ -26,6 +26,7 @@ import {
   ConnectionsData,
 } from './App.tsx';
 import {Profile} from './Profile.js';
+import * as Style from './Style.js';
 
 export const Connections = ({route, navigation}) => {
   const phoneNumber = '(111) 111-1111';
@@ -90,29 +91,16 @@ export const Connections = ({route, navigation}) => {
                 paddingRight: '7%',
                 paddingLeft: '7%',
               }}>
-              <ConnectionsHeader>Connections</ConnectionsHeader>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: 'white',
-                  borderRadius: 7,
-                  shadowRadius: 12,
-                  shadowOpacity: 0.12,
-                  width: 40,
-                  height: 40,
-                }}>
-                <SearchImage source={require('./assets/search.png')}
-                             style={{width: 20, height: 20,}} />
-              </TouchableOpacity>
+              <Style.H1>Connections</Style.H1>
+              <SquareWrapper>
+                <SearchImage source={require('./assets/search.png')} style={{width: 20, height: 20,}} />
+              </SquareWrapper>
             </View>
             <ScrollView
-              style={{width: '100%', height: '100%', paddingLeft: '7%', paddingRight: '7%'}}
-              contentContainerStyle={{
-                justifyContent: 'center',
-                alignItems: 'flex-start',
-              }}>
-              <PendingConnectionsHeader>
-                  Pending Connections
-              </PendingConnectionsHeader>
+              style={{width: '100%', height: '100%', paddingLeft: '7%', paddingRight: '7%', paddingTop: 20}}
+              contentContainerStyle={{justifyContent: 'center', alignItems: 'flex-start',}}>
+
+              <Style.TitleText>Pending Connections</Style.TitleText>
               <PendingConnectionsBox
                 onPress={() => navigation.navigate('PendingConnections')}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -137,17 +125,14 @@ export const Connections = ({route, navigation}) => {
                   </Text>
                 </View>
                 <View style={{flexDirection: 'row', gap: 15, alignItems: 'center'}}>
-                  <ViewRequestsText
-                    style={{fontSize: 14}}>
-                    View all {pendingCount} requests
-                  </ViewRequestsText>
+                  <Style.BodyText> View all {pendingCount} requests</Style.BodyText>
                   <Image
                     style={{marginLeft: 0}}
                     source={require('./assets/right_line.png')}
                   />
                 </View>
               </PendingConnectionsBox>
-              <YourConnections>Your Connections</YourConnections>
+              <Style.TitleText>Your Connections</Style.TitleText>
               {connectionsData.map(connection => (
                 <Connection
                   navigation={navigation}
@@ -221,8 +206,8 @@ const ConnectionContainer = styled.TouchableOpacity`
   justify-content: space-between;
   width: 100%;
   height: 70px;
-  border-bottom-width: 0.5px;
-  border-color: #000000;
+  border-bottom-width: 1.5px;
+  border-color: #EDEDED;
 `;
 const YourConnections = styled.Text`
   color: #786cff;
@@ -247,6 +232,7 @@ const PendingConnectionsBox = styled.TouchableOpacity`
   align-items: center;
   justify-content: space-between;
   margin-top: 5px;
+  margin-bottom: 20px;
 `;
 const PendingConnectionsHeader = styled.Text`
   color: #786cff;
@@ -259,11 +245,6 @@ const SearchImage = styled.Image`
   height: 25px;
   margin: 10px 10px 10px 10px;
 `;
-const ConnectionsHeader = styled.Text`
-  color: #786cff;
-  font-weight: bold;
-  font-size: 35px;
-`;
 const MarginContainer = styled.View`
   width: 100%;
   height: 100%;
@@ -275,4 +256,15 @@ const MaxWidth = styled.View`
   align-items: center;
   padding-top: 30px;
   background-color: #ffffff;
+`;
+
+const SquareWrapper = styled.TouchableOpacity`
+  background-color: #ffffff;
+  border-radius: 7px;
+  shadow-radius: 12px;
+  shadow-opacity: 0.1;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
 `;

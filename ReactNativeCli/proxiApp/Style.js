@@ -5,50 +5,57 @@ import styled from 'styled-components/native';
 import {Animated, Text, Modal, View, TextInput, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 
 // App colors
-export const colors = {
-    primary: '#786CFF',
-    primaryAccent: '#A59DFF',
-    secondary: '#FF5A5F',
-    secondaryAccent: '#FF9497',
-    white: '#FFFFFF',
-    black: '#000000',
 
-    // Other colors
-    grey: '282828'
-};
+export const primary = '#786CFF';
+export const primaryAccent = '#A59DFF';
+
+export const secondary = '#FF5A5F';
+export const secondaryAccent = '#FF9497';
+
+export const white = '#FFFFFF';
+export const black = '#000000';
+export const grey = '#282828';
 
 // Typography hierarchy
+// H1: 35px, 600
 // TitleText: 20px, 600
 // SubtitleText: 16px, 600
 // BodyText: 14px, 400
 // InputText: 11px
 
+// H1: Text component for displaying large titles.
+export const H1 = styled.Text`
+    font-size: 35px;
+    font-weight: 700;
+    color: ${({ color }) => color || primary};
+`;
+
 // TitleText: Text component for displaying titles.
 export const TitleText = styled.Text`
     font-size: 20px;
     font-weight: 600;
-    color: ${({ color }) => color || colors.black};
+    color: ${({ color }) => color || primary};
 `;
 
 // SubtitleText: Text component for displaying subtitles.
 export const SubtitleText = styled.Text`
     font-size: 16px;
     font-weight: 600;
-    color: ${({ color }) => color || colors.black};
+    color: ${({ color }) => color || primary};
 `;
 
 // BodyText: Text component for displaying body text.
 export const BodyText = styled.Text`
     font-size: 14px;
     font-weight: 400;
-    color: ${({ color }) => color || colors.black};
+    color: ${({ color }) => color || primary};
 `;
 
 // ButtonText: Text component for displaying text on buttons.
 export const ButtonText = styled.Text`
   font-size: 14px;
   font-weight: 600;
-  color: ${({ color }) => color || colors.black};
+  color: ${({ color }) => color || primary};
 `;
 
 
@@ -66,7 +73,7 @@ export const ButtonText = styled.Text`
 //   - 'medium' = 140px
 //   - 'small' = 120px
 
-export const Button = ({ onPress, label, variant, textcolor, color = colors.primary, size='large'}) => {
+export const Button = ({ onPress, label, variant, textcolor, color = primary, size='large'}) => {
     const Wrapper = variant === 'outline' ? ButtonWrapperOutline : ButtonWrapperSolid;
     const buttonSize = size === 'large' ? 190 : size === 'medium' ? 140 : 120;
     return (
@@ -111,7 +118,7 @@ const ButtonWrapperOutline = styled.TouchableOpacity`
 //   - 'medium' = 140px
 //   - 'small' = 120px
 
-export const IconButton = ({ onPress, label, icon, variant, textcolor, color = colors.primary, size='large'}) => {
+export const IconButton = ({ onPress, label, icon, variant, textcolor, color = primary, size='large'}) => {
     const Wrapper = variant === 'outline' ? IconButtonWrapperOutline : IconButtonWrapperSolid;
     const buttonSize = size === 'large' ? 190 : size === 'medium' ? 140 : 120;
     return (
@@ -200,7 +207,7 @@ export const Input = ({ placeholder, value, onChangeText, secureTextEntry, keybo
     <InputWrapper>
         <InputField
             placeholder={placeholder}
-            placeholderTextColor={colors.gray}
+            placeholderTextColor={grey}
             value={value}
             onChangeText={onChangeText}
             secureTextEntry={secureTextEntry}
@@ -215,7 +222,7 @@ const InputWrapper = styled.View`
     border-radius: 5px;
     border-width: 1px;
     border-style: solid;
-    border-color: ${colors.gray};
+    border-color: ${grey};
     justify-content: center;
     padding: 0 20px;
 `;
@@ -224,7 +231,7 @@ const InputField = styled.TextInput`
     width: 100%;
     height: 100%;
     font-size: 16px;
-    color: ${colors.black};
+    color: ${black};
 `;
 
 
