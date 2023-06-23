@@ -443,7 +443,7 @@ export const Skill = ({
       padding-top: 5px;
       padding-bottom: 5px;
       color: #786cff;
-      font-size: 14px;
+      font-size: 12px;
     `,
   );
 
@@ -624,4 +624,22 @@ const LineImage = styled.Image`
   width: 27px;
   height: 40px;
   object-fit: fill;
+`;
+
+
+export const SquareButton = ({ imgSource, imgWidth = 20, imgHeight = 20 }) => (
+  <SquareWrapper>
+      <Image source={imgSource} style={{width: imgWidth, height: imgHeight}} />
+  </SquareWrapper>
+);
+
+const SquareWrapper = styled.TouchableOpacity`
+  background-color: #ffffff;
+  border-radius: 7px;
+  shadow-radius: 12px;
+  shadow-opacity: 0.1;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
 `;
