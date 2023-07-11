@@ -1,21 +1,22 @@
-export const getCodeHttp = 'http://localhost:3000/get-code';
-export const verifyCodeHttp = 'http://localhost:3000/verify-code';
-export const registerFullUserHttp = 'http://localhost:3000/register-full-user';
-export const getFeedHttp = 'http://localhost:3000/get-feed';
-export const registerUserHttp = 'http://localhost:3000/register-event';
+const baseUrl = "https://proxiwebserver.onrender.com"
+export const getCodeHttp = `${baseUrl}/get-code`;
+export const verifyCodeHttp = `${baseUrl}/verify-code`;
+export const registerFullUserHttp = `${baseUrl}/register-full-user`;
+export const getFeedHttp = `${baseUrl}/get-feed`;
+export const registerUserHttp = `${baseUrl}/register-event`;
 export const getConnectionsAllHttp =
-  'http://localhost:3000/get-connections-all';
-export const queryHashDataHttp = 'http://localhost:3000/query-hash-data';
-export const getProfileHttp = 'http://localhost:3000/get-profile';
-export const getUserProfileHttp = 'http://localhost:3000/get-user-profile';
-export const getConnectionsDataHttp = 'http://localhost:3000/connections-page';
+  `${baseUrl}/get-connections-all`;
+export const queryHashDataHttp = `${baseUrl}/query-hash-data`;
+export const getProfileHttp = `${baseUrl}/get-profile`;
+export const getUserProfileHttp = `${baseUrl}/get-user-profile`;
+export const getConnectionsDataHttp = `${baseUrl}/connections-page`;
 export const getPendingConnectionsDataHttp =
-  'http://localhost:3000/pending-connections-page';
-export const rejectRequestHttp = 'http://localhost:3000/reject-request';
-export const acceptRequestHttp = 'http://localhost:3000/accept-request';
+  `${baseUrl}/pending-connections-page`;
+export const rejectRequestHttp = `${baseUrl}/reject-request`;
+export const acceptRequestHttp = `${baseUrl}/accept-request`;
 export const getPartialProfileHttp =
-  'http://localhost:3000/get-partial-profile';
-export const changeUserDataHttp = 'http://localhost:3000/edit-user-data';
+  `${baseUrl}/get-partial-profile`;
+export const changeUserDataHttp = `${baseUrl}/edit-user-data`;
 
 // id's of recommended skills and interests
 export const recommendedSkills = [1, 2, 3, 4, 5];
