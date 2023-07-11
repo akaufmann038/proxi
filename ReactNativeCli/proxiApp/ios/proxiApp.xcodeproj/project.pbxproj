@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* proxiAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* proxiAppTests.m */; };
-		0C80B921A6F3F58F76C31292 /* libPods-proxiApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-proxiApp.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		6B8051442A5C7671006153F3 /* ProximityDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8051432A5C7671006153F3 /* ProximityDetection.swift */; };
+		6B8051462A5C7865006153F3 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8051452A5C7865006153F3 /* CoreBluetooth.framework */; };
+		6B8051482A5CB1F0006153F3 /* ProximityDetection.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8051472A5CB1F0006153F3 /* ProximityDetection.m */; };
 		7699B88040F8A987B510C191 /* libPods-proxiApp-proxiAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-proxiApp-proxiAppTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -41,6 +43,10 @@
 		5709B34CF0A7D63546082F79 /* Pods-proxiApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-proxiApp.release.xcconfig"; path = "Target Support Files/Pods-proxiApp/Pods-proxiApp.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-proxiApp-proxiAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-proxiApp-proxiAppTests.debug.xcconfig"; path = "Target Support Files/Pods-proxiApp-proxiAppTests/Pods-proxiApp-proxiAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-proxiApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-proxiApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B8051422A5C7671006153F3 /* proxiApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "proxiApp-Bridging-Header.h"; sourceTree = "<group>"; };
+		6B8051432A5C7671006153F3 /* ProximityDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProximityDetection.swift; sourceTree = "<group>"; };
+		6B8051452A5C7865006153F3 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		6B8051472A5CB1F0006153F3 /* ProximityDetection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProximityDetection.m; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = proxiApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-proxiApp-proxiAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-proxiApp-proxiAppTests.release.xcconfig"; path = "Target Support Files/Pods-proxiApp-proxiAppTests/Pods-proxiApp-proxiAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -59,7 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-proxiApp.a in Frameworks */,
+				6B8051462A5C7865006153F3 /* CoreBluetooth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +98,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				6B8051432A5C7671006153F3 /* ProximityDetection.swift */,
+				6B8051422A5C7671006153F3 /* proxiApp-Bridging-Header.h */,
+				6B8051472A5CB1F0006153F3 /* ProximityDetection.m */,
 			);
 			name = proxiApp;
 			sourceTree = "<group>";
@@ -99,6 +108,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6B8051452A5C7865006153F3 /* CoreBluetooth.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5DCACB8F33CDC322A6C60F78 /* libPods-proxiApp.a */,
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-proxiApp-proxiAppTests.a */,
@@ -190,6 +200,8 @@
 			dependencies = (
 			);
 			name = proxiApp;
+			packageProductDependencies = (
+			);
 			productName = proxiApp;
 			productReference = 13B07F961A680F5B00A75B9A /* proxiApp.app */;
 			productType = "com.apple.product-type.application";
@@ -207,7 +219,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1430;
 					};
 				};
 			};
@@ -220,6 +232,9 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
+			packageReferences = (
+				6BF40B452A5919CA0077E5BE /* XCRemoteSwiftPackageReference "nearby" */,
+			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -413,7 +428,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				6B8051442A5C7671006153F3 /* ProximityDetection.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				6B8051482A5CB1F0006153F3 /* ProximityDetection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,6 +449,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-proxiApp-proxiAppTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -459,6 +477,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-proxiApp-proxiAppTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = proxiAppTests/Info.plist;
@@ -486,6 +505,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J59UJG2K7Z;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = proxiApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -500,6 +520,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = proxiApp;
+				SWIFT_OBJC_BRIDGING_HEADER = "proxiApp-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -513,6 +534,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J59UJG2K7Z;
 				INFOPLIST_FILE = proxiApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -526,6 +548,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = proxiApp;
+				SWIFT_OBJC_BRIDGING_HEADER = "proxiApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -699,6 +722,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6BF40B452A5919CA0077E5BE /* XCRemoteSwiftPackageReference "nearby" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/nearby";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

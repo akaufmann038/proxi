@@ -3,11 +3,16 @@ const express = require("express");
 const redis = require("redis");
 var Mutex = require("async-mutex").Mutex;
 const app = express();
+require("dotenv").config();
 const port = 3000;
 
 const mutex = new Mutex();
 
 // connecting to redis client
+//const redisClient = redis.createClient({
+//  url: process.env.REDIS_URL,
+//});
+console.log(process.env.REDIS_URL);
 const redisClient = redis.createClient();
 redisClient.on("error", (err) => console.log("Redis Client Error", err));
 redisClient.connect();
@@ -17,8 +22,8 @@ redisClient.connect();
 const activeCodes = {};
 
 const client = new twilio(
-  "AC6351333961310ff8225939d91d9a2f0f",
-  "17c45a9c1d62b334e68dde80ff45a42d"
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
 );
 
 app.use(express.json({ limit: "50mb" }));
