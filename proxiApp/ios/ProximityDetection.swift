@@ -27,12 +27,13 @@ class ProximityDetection : NSObject {
   var connectionDistance : Int!
   
   override init() {
+    print("initializer1")
     super.init()
   }
   
   @objc
-  init(thisUUID : String, recommendedUUIDs : [String], connectionDistance: Int) {
-    super.init()
+  func initializeProxi(_ thisUUID : String, recommendedUUIDs : [String], connectionDistance: Int) {
+    print("initializer2")
     self.cbCentralManager = CBCentralManager(delegate: self, queue: nil)
     self.cbPeripheralManager = CBPeripheralManager(delegate: self, queue: nil)
     
@@ -47,8 +48,23 @@ class ProximityDetection : NSObject {
   
   // expose this to js, this gets the list of connected peripherals with specified uuid's
   @objc
-  func getCurrentConnections() -> [CBPeripheral] {
-    return self.cbCentralManager.retrieveConnectedPeripherals(withServices: recommendedUUIDs)
+  func getCurrentConnections(_ callback:RCTResponseSenderBlock) -> [CBPeripheral] {
+    var connected = self.cbCentralManager.retrieveConnectedPeripherals(withServices: recommendedUUIDs)
+    // to return a list of UUID's as strings
+    var result: [String] = []
+    
+    for res in connected {
+      result.append(res.identifier.uuidString)
+    }
+    
+    callback([result])
+    return connected
+  }
+  
+  @objc
+  func testMethod(_ callback:RCTResponseSenderBlock) {
+    
+    
   }
   
   @objc
@@ -57,8 +73,12 @@ class ProximityDetection : NSObject {
   }
   
   @objc
-  func isScanning() -> Bool {
-    return self.cbCentralManager.isScanning
+  func isScanning(_ callback:RCTResponseSenderBlock) -> Bool {
+    print("isScanning")
+    //var result = String(self.cbCentralManager.isScanning)
+    callback([1111])
+    
+    return true
   }
   
   @objc
@@ -70,12 +90,18 @@ class ProximityDetection : NSObject {
   func startScan() {
     self.cbCentralManager.scanForPeripherals(withServices: recommendedUUIDs, options: nil)
   }
+  
+  @objc
+  static func requiresMainQueueSetup() -> Bool {
+    return true
+  }
 }
 
 extension ProximityDetection : CBCentralManagerDelegate {
   // central powers on and starts scanning for recommended UUID's
   func centralManagerDidUpdateState(_ central: CBCentralManager) {
     if central.state == .poweredOn {
+      //central.scanForPeripherals(withServices: nil, options: nil)
       central.scanForPeripherals(withServices: recommendedUUIDs, options: nil)
       print("Scanning...")
     }

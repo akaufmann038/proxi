@@ -16,6 +16,7 @@ import {LocationComponent, DateComponent} from './Home.js';
 import {dates, makePostRequest, registerUserHttp} from './utils.js';
 import {RedButton} from './SignupComponents.js';
 import {EventContext, RegisteredContext} from './App.tsx';
+import { NativeModules } from 'react-native';
 
 export const EventPage = ({route, navigation}) => {
   const {eventId, phoneNumber} = route.params;
@@ -30,7 +31,20 @@ export const EventPage = ({route, navigation}) => {
   const date = new Date(eventData.date);
   const tags = eventData.tags.split(',');
 
-  const handleEnterEvent = () => {};
+  const handleEnterEvent = () => {
+    // TODO: just for testing
+    const tempRecommendedPhoneNumbers = ["(222) 222-2222", "(333) 333-3333", "(444) 444-4444"]
+    const tempRecommendedUUIDs = tempRecommendedPhoneNumbers.map(element => GenerateUUID(element))
+    
+    NativeModules.ProximityDetection.initializeProxi(GenerateUUID(phoneNumber), 
+    recommendedUUIDs = tempRecommendedUUIDs, 
+    connectionDistance = -75)
+
+    navigation.navigate('EventScreen', {
+      eventId: eventId,
+      phoneNumber: phoneNumber,
+    })
+  };
 
   const handleRegister = async () => {
     if (eventData['public'] == 'true') {
@@ -194,6 +208,23 @@ const TagComponent = ({tagText}) => {
     </TagContainer>
   );
 };
+
+// converts an integer user_id into a UUID
+const GenerateUUID = (phoneNumber) => {
+  const cleanedPhoneNumber = phoneNumber.replace(/\D/g, ''); // Remove non-digit characters
+  const byteString = cleanedPhoneNumber.padStart(32, '0');
+
+  const sections = [
+    byteString.substr(0, 8),
+    byteString.substr(8, 4),
+    byteString.substr(12, 4),
+    byteString.substr(16, 4),
+    byteString.substr(20, 12)
+  ];
+
+  const uuidString = sections.join('-');
+  return uuidString;
+}
 
 const InputBoxes = styled.View`
   width: 90%;

@@ -16,6 +16,7 @@ import {Profile} from './Profile.js';
 import {ShowProfile} from './ShowProfile.js';
 import {PendingConnections} from './PendingConnections.js';
 import {ShowPartialProfile} from './ShowPartialProfile.js';
+import {EventScreen} from "./EventScreen.js"
 
 export const EventContext = createContext({});
 export const RegisteredContext = createContext({});
@@ -78,6 +79,7 @@ export default function App() {
                       name="ShowPartialProfile"
                       component={ShowPartialProfile}
                     />
+                    <Stack.Screen name="EventScreen" component={EventScreen}/>
                   </Stack.Navigator>
                 </UserProfile.Provider>
               </PendingConnectionsData.Provider>
