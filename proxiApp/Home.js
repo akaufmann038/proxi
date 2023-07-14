@@ -14,7 +14,8 @@ import {getFeedHttp, makePostRequest, dates} from './utils.js';
 import {EventContext, RegisteredContext} from './App.tsx';
 
 export const Home = ({route, navigation}) => {
-  const phoneNumber = '(111) 111-1111';
+  const phoneNumber = '(111) 111-1111'; // change this to change accounts - change back to 111
+  //const phoneNumber = '(222) 222-2222'
   // TODO: uncomment for production
   //const {phoneNumber} = route.params;
   const [registeredFilter, setRegisteredFilter] = useState(true);

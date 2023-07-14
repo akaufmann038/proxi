@@ -11,6 +11,7 @@
 @interface RCT_EXTERN_MODULE(ProximityDetection, NSObject)
 
 RCT_EXTERN_METHOD(initializeProxi:(NSString *)thisUUID recommendedUUIDs:(NSArray<NSString *> *)recommendedUUIDs connectionDistance:(NSInteger)connectionDistance)
+RCT_EXTERN_METHOD(retrievePeripherals:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(getCurrentConnections:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(testMethod:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(getConnections)

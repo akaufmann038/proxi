@@ -13,18 +13,25 @@ class ProximityDetection : NSObject {
   var cbCentralManager: CBCentralManager!
   var cbPeripheralManager: CBPeripheralManager!
   
+  // LEFT OFF HERE: try to get the peripherals without connecting because
+  // the connections would disconnect randomly and then wouldn't automatically
+  // connect again
+  
   // represents cbuuid of this device
   var serviceUUID : CBUUID!
+  //var serviceUUID = CBUUID(string: "00000000-0000-0000-0000-002222222222")
   // represents cbuuid's of recommended devices
   var recommendedUUIDs : [CBUUID] = []
+  //var recommendedUUIDs = [CBUUID(string: "00000000-0000-0000-0000-001111111111")]
   
-  // represents peripherals that are successfully connected
-  var connectedPeripherals: [CBPeripheral] = []
   // a temp storage in memory for a peripheral that is about to be connected to
-  var toConnectPeripheral: CBPeripheral!
+  var peripherals: [CBPeripheral] = []
   
   // represents minimum distance to connect to device
   var connectionDistance : Int!
+  
+  // holds system assigned uuid -> proxi uuid
+  var discoveredPeripherals = Dictionary<String, String>()
   
   override init() {
     print("initializer1")
@@ -57,19 +64,27 @@ class ProximityDetection : NSObject {
       result.append(res.identifier.uuidString)
     }
     
+    print(result)
     callback([result])
     return connected
   }
   
   @objc
-  func testMethod(_ callback:RCTResponseSenderBlock) {
+  func retrievePeripherals(_ callback:RCTResponseSenderBlock) {
+    var uuids: [UUID] = []
     
+    for uuidKey in discoveredPeripherals.keys {
+      if let currUUID = UUID(uuidString: uuidKey) {
+        uuids.append(currUUID)
+      }
+    }
     
-  }
-  
-  @objc
-  func getConnections() -> [CBPeripheral] {
-    return connectedPeripherals
+    var result = self.cbCentralManager.retrievePeripherals(withIdentifiers: uuids)
+    
+    //print(result[0].readRSSI())
+    print(result)
+    
+    callback([result])
   }
   
   @objc
@@ -79,16 +94,6 @@ class ProximityDetection : NSObject {
     callback([1111])
     
     return true
-  }
-  
-  @objc
-  func stopScan() {
-    self.cbCentralManager.stopScan()
-  }
-  
-  @objc
-  func startScan() {
-    self.cbCentralManager.scanForPeripherals(withServices: recommendedUUIDs, options: nil)
   }
   
   @objc
@@ -104,6 +109,8 @@ extension ProximityDetection : CBCentralManagerDelegate {
       //central.scanForPeripherals(withServices: nil, options: nil)
       central.scanForPeripherals(withServices: recommendedUUIDs, options: nil)
       print("Scanning...")
+      print(serviceUUID)
+      print(recommendedUUIDs)
     }
   }
   
@@ -111,24 +118,35 @@ extension ProximityDetection : CBCentralManagerDelegate {
   func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                       advertisementData: [String : Any], rssi RSSI: NSNumber) {
     print(peripheral.name)
+    print(peripheral.identifier.uuidString)
+    if let foundServiceUUIDs = advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID] {
+      discoveredPeripherals[peripheral.identifier.uuidString] = foundServiceUUIDs[0].uuidString
+      print("added to peripherals")
+    }
+    
+    // add peripheral to temp memory
+    peripherals.append(peripheral)
+    
+    // connect to peripheral
+    central.connect(peripheral, options: nil)
+    
     if RSSI.intValue >= connectionDistance {
+      /*
       // if peripheral is not already in memory
       if !connectedPeripherals.contains(peripheral) {
         // add peripheral to temp memory
-        toConnectPeripheral = peripheral
+        peripherals.append(peripheral)
         
         // connect to peripheral
         central.connect(peripheral, options: nil)
       }
+       */
     }
   }
   
   // fires when central connects to peripheral
   func centralManager(_ central: CBCentralManager, didConnect: CBPeripheral) {
     print("connected")
-    
-    // add connected peripheral to memory
-    connectedPeripherals.append(didConnect)
   }
   
   // fires when central fails to connect to peripheral
@@ -138,10 +156,7 @@ extension ProximityDetection : CBCentralManagerDelegate {
   
   // fires when central disconnects from peripheral
   func centralManager(_ central: CBCentralManager, didDisconnectPeripheral: CBPeripheral, error: Error?) {
-    print("disconnected to peripheral")
-    
-    // remove peripheral from memory
-    connectedPeripherals = connectedPeripherals.filter { $0 != didDisconnectPeripheral }
+    print("disconnected")
   }
 }
 
@@ -159,6 +174,17 @@ extension ProximityDetection : CBPeripheralManagerDelegate {
       peripheral.add(service)
       let advertisementData = [CBAdvertisementDataLocalNameKey: "Alexs Phone", CBAdvertisementDataServiceUUIDsKey: [serviceUUID]] as [String : Any]
       peripheral.startAdvertising(advertisementData)
+    }
+  }
+  
+  func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
+    if let error = error {
+      // Handle error
+      print("Error reading RSSI: \(error.localizedDescription)")
+    } else {
+      // RSSI value obtained successfully
+      let rssiValue = RSSI.intValue
+      print("RSSI: \(rssiValue)")
     }
   }
 }

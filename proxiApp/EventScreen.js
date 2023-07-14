@@ -16,18 +16,34 @@ import {LocationComponent, DateComponent} from './Home.js';
 import {dates, makePostRequest, registerUserHttp} from './utils.js';
 import {RedButton} from './SignupComponents.js';
 import {EventContext, RegisteredContext} from './App.tsx';
+import { NativeModules } from 'react-native';
 
 export const EventScreen = ({route, navigation}) => {
     const {eventId, phoneNumber} = route.params;
+    const [connections, setConnections] = useState()
 
     // next, listen for events within swift module, listen for a connection
     // and a disconnection, and that should all you need
 
+    const handleButtonPress = () => {
+        /*
+        NativeModules.ProximityDetection.getCurrentConnections(result => {
+            setConnections(result)
+        })
+        */
+       NativeModules.ProximityDetection.retrievePeripherals(result => {
+        setConnections(result)
+       })
+    }
+
     return (<MaxWidth>
         <View style={{marginTop: 50, display: 'flex', flexDirection: "row"}}>
-            <Text>Hello</Text>
-            <Text>Hello</Text>
-            <Text>Hello</Text>
+            <RedButton onPress={handleButtonPress} label="Show" />
+            {connections ? connections.map((item, index) => (
+                <Text key={index}>
+                    {item}is an item
+                </Text>
+            )) : <></>}
         </View>
     </MaxWidth>)
 }
