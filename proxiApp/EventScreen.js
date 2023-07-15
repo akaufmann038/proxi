@@ -55,3 +55,9 @@ const MaxWidth = styled.View`
   align-items: center;
   background-color: #ffffff;
 `;
+
+const MarginContainer = styled.View`
+  width: 85%;
+  height: 100%;
+  position: relative;
+`;

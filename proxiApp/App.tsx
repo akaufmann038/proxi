@@ -16,7 +16,10 @@ import {Profile} from './Profile.js';
 import {ShowProfile} from './ShowProfile.js';
 import {PendingConnections} from './PendingConnections.js';
 import {ShowPartialProfile} from './ShowPartialProfile.js';
-import {EventScreen} from "./EventScreen.js"
+import {EventScreen} from './EventScreen.js';
+import {ConfirmEvent} from './ConfirmEvent.js';
+import {ConfirmProfile} from './ConfirmProfile.js';
+import {ConfirmFilters} from './ConfirmFilters.js';
 
 export const EventContext = createContext({});
 export const RegisteredContext = createContext({});
@@ -79,7 +82,19 @@ export default function App() {
                       name="ShowPartialProfile"
                       component={ShowPartialProfile}
                     />
-                    <Stack.Screen name="EventScreen" component={EventScreen}/>
+                    <Stack.Screen name="EventScreen" component={EventScreen} />
+                    <Stack.Screen
+                      name="ConfirmEvent"
+                      component={ConfirmEvent}
+                    />
+                    <Stack.Screen
+                      name="ConfirmProfile"
+                      component={ConfirmProfile}
+                    />
+                    <Stack.Screen
+                      name="ConfirmFilters"
+                      component={ConfirmFilters}
+                    />
                   </Stack.Navigator>
                 </UserProfile.Provider>
               </PendingConnectionsData.Provider>

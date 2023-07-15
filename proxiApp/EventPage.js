@@ -32,15 +32,16 @@ export const EventPage = ({route, navigation}) => {
   const tags = eventData.tags.split(',');
 
   const handleEnterEvent = () => {
-    // TODO: just for testing
+    /*
     const tempRecommendedPhoneNumbers = ["(222) 222-2222", "(333) 333-3333", "(444) 444-4444"]
     const tempRecommendedUUIDs = tempRecommendedPhoneNumbers.map(element => GenerateUUID(element))
     
     NativeModules.ProximityDetection.initializeProxi(GenerateUUID(phoneNumber),
     recommendedUUIDs = tempRecommendedUUIDs,
     connectionDistance = -75)
+    */
 
-    navigation.navigate('EventScreen', {
+    navigation.navigate('ConfirmEvent', {
       eventId: eventId,
       phoneNumber: phoneNumber,
     })
@@ -184,7 +185,6 @@ export const EventPage = ({route, navigation}) => {
       </BackgroundImageContainer>
       <MarginContainer>
         <OverviewHeader>Overview</OverviewHeader>
-        <RedButton onPress={handleEnterEvent} label="Enter Event" />
         <SummaryText>{eventData.overview}</SummaryText>
         <TagsHeader>Tags</TagsHeader>
         <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 10}}>
