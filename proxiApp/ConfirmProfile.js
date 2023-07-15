@@ -125,6 +125,7 @@ export const ConfirmProfile = ({route, navigation}) => {
       setBiography(userProfileData['biography']);
       setSkills(generateReformatSkills(userProfileData['skills']));
       setInterests(generateReformatInterests(userProfileData['interests']));
+      // TODO: is this a bug?
       setSocials(generateReformatSocials(userProfileData));
     }
 
@@ -998,7 +999,7 @@ export const ConfirmProfile = ({route, navigation}) => {
                   padding: 5,
                   flexDirection: 'row',
                 }}
-                onPress={() => setSkillsModal(true)}>
+                onPress={() => setInterestsModal(true)}>
                 <Text style={{color: '#786cff'}}> edit interests </Text>
               </TouchableOpacity>
               <Text
@@ -1063,6 +1064,7 @@ export const ConfirmProfile = ({route, navigation}) => {
                   navigation.navigate('ConfirmFilters', {
                     phoneNumber: phoneNumber,
                     eventId: eventId,
+                    filters: userProfileData['filters'],
                   })
                 }
               />

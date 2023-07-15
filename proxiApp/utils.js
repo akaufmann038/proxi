@@ -1,22 +1,20 @@
-const baseUrl = "https://proxiwebserver.onrender.com"
+const baseUrl = 'https://proxiwebserver.onrender.com';
 export const getCodeHttp = `${baseUrl}/get-code`;
 export const verifyCodeHttp = `${baseUrl}/verify-code`;
 export const registerFullUserHttp = `${baseUrl}/register-full-user`;
 export const getFeedHttp = `${baseUrl}/get-feed`;
 export const registerUserHttp = `${baseUrl}/register-event`;
-export const getConnectionsAllHttp =
-  `${baseUrl}/get-connections-all`;
+export const getConnectionsAllHttp = `${baseUrl}/get-connections-all`;
 export const queryHashDataHttp = `${baseUrl}/query-hash-data`;
 export const getProfileHttp = `${baseUrl}/get-profile`;
 export const getUserProfileHttp = `${baseUrl}/get-user-profile`;
 export const getConnectionsDataHttp = `${baseUrl}/connections-page`;
-export const getPendingConnectionsDataHttp =
-  `${baseUrl}/pending-connections-page`;
+export const getPendingConnectionsDataHttp = `${baseUrl}/pending-connections-page`;
 export const rejectRequestHttp = `${baseUrl}/reject-request`;
 export const acceptRequestHttp = `${baseUrl}/accept-request`;
-export const getPartialProfileHttp =
-  `${baseUrl}/get-partial-profile`;
+export const getPartialProfileHttp = `${baseUrl}/get-partial-profile`;
 export const changeUserDataHttp = `${baseUrl}/edit-user-data`;
+export const getAllFiltersHttp = `${baseUrl}/get-all-filters`;
 
 // id's of recommended skills and interests
 export const recommendedSkills = [1, 2, 3, 4, 5];
@@ -117,6 +115,14 @@ export const makePostRequest = async (endpoint, body) => {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(body),
+  });
+
+  return res;
+};
+
+export const makeGetRequest = async endpoint => {
+  const res = await fetch(endpoint, {
+    method: 'GET',
   });
 
   return res;

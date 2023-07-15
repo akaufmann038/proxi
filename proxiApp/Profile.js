@@ -441,557 +441,610 @@ export const Profile = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{backgroundColor:'#ffffff'}}>
-    <MaxWidth
-      style={{opacity: editModal || phoneModal || emailModal ? 0.3 : 1}}>
-      {userProfileData != null &&
-      jobTitle != null &&
-      company != null &&
-      phone != null &&
-      email != null &&
-      allSkills != null ? (
-        <View style={{width: '100%', alignItems: 'center'}}>
-        <MarginContainer>
-          <Modal visible={phoneModal} transparent={true} animationType={'none'}>
-            <PEModalView>
-              <XOutContainer
-                onPress={() => {
-                  setPhoneModal(false);
-                  setPhone(userProfileData['phoneNumber']);
-                }}>
-                <XOut source={require('./assets/x_out.png')} />
-              </XOutContainer>
-              <View
-                style={{
-                  borderWidth: 0.4,
-                  borderColor: 'black',
-                  borderRadius: 10,
-                  alignItems: 'flex-start',
-                  width: '80%',
-                  alignSelf: 'center',
-                  marginTop: 10,
-                }}>
-                <TextInput
-                  style={{
-                    fontSize: 20,
-                    marginTop: 10,
-                    marginBottom: 10,
-                    marginLeft: 20,
-                  }}
-                  value={phone}
-                  onChangeText={handleChangePhone}
-                />
-              </View>
-              <View style={{alignSelf: 'center', marginTop: 20}}>
-                <RedTouchable onPress={handleSubmitPhoneChange}>
-                  {phoneRequest ? (
-                    <ActivityIndicator color="white" />
-                  ) : (
-                    <RedText>Confirm</RedText>
-                  )}
-                </RedTouchable>
-              </View>
-            </PEModalView>
-          </Modal>
-          <Modal visible={emailModal} transparent={true} animationType={'none'}>
-            <PEModalView>
-              <XOutContainer
-                onPress={() => {
-                  setEmailModal(false);
-                  setEmail(userProfileData['email']);
-                }}>
-                <XOut source={require('./assets/x_out.png')} />
-              </XOutContainer>
-              <View
-                style={{
-                  borderWidth: 0.4,
-                  borderColor: 'black',
-                  borderRadius: 10,
-                  alignItems: 'flex-start',
-                  width: '80%',
-                  alignSelf: 'center',
-                  marginTop: 10,
-                }}>
-                <TextInput
-                  style={{
-                    fontSize: 20,
-                    marginTop: 10,
-                    marginBottom: 10,
-                    marginLeft: 20,
-                  }}
-                  value={email}
-                  onChangeText={handleChangeEmail}
-                />
-              </View>
-              <View style={{alignSelf: 'center', marginTop: 20}}>
-                <RedTouchable onPress={handleSubmitEmailChange}>
-                  {emailRequest ? (
-                    <ActivityIndicator color="white" />
-                  ) : (
-                    <RedText>Confirm</RedText>
-                  )}
-                </RedTouchable>
-              </View>
-            </PEModalView>
-          </Modal>
-          <Modal visible={editModal} transparent={true} animationType={'none'}>
-            <ModalView>
-              <XOutContainer
-                onPress={() => {
-                  setEditModal(false);
-                  setJobTitle(userProfileData['jobTitle']);
-                  setCompany(userProfileData['company']);
-                }}>
-                <XOut source={require('./assets/x_out.png')} />
-              </XOutContainer>
-              <View
-                style={{
-                  borderWidth: 0.4,
-                  borderColor: 'black',
-                  borderRadius: 10,
-                  alignItems: 'flex-start',
-                  width: '80%',
-                  alignSelf: 'center',
-                  marginTop: 10,
-                }}>
-                <TextInput
-                  style={{
-                    fontSize: 20,
-                    marginTop: 10,
-                    marginBottom: 10,
-                    marginLeft: 20,
-                  }}
-                  value={jobTitle}
-                  onChangeText={handleEditJobTitle}
-                />
-              </View>
-              <View
-                style={{
-                  borderWidth: 0.4,
-                  borderColor: 'black',
-                  borderRadius: 10,
-                  alignItems: 'flex-start',
-                  width: '80%',
-                  alignSelf: 'center',
-                  marginTop: 10,
-                }}>
-                <TextInput
-                  style={{
-                    fontSize: 20,
-                    marginTop: 10,
-                    marginBottom: 10,
-                    marginLeft: 20,
-                  }}
-                  value={company}
-                  onChangeText={handleEditCompany}
-                />
-              </View>
-              <View style={{alignSelf: 'center', marginTop: 20}}>
-                <RedTouchable onPress={handleChangeTitles}>
-                  {profileRequest ? (
-                    <ActivityIndicator color="white" />
-                  ) : (
-                    <RedText>Confirm</RedText>
-                  )}
-                </RedTouchable>
-              </View>
-            </ModalView>
-          </Modal>
-          <Modal
-            visible={skillsModal}
-            transparent={true}
-            animationType={'none'}>
-            <SkillsModalView>
-              <XOutContainer
-                onPress={() => {
-                  setSkillsModal(false);
-                  setSkills(generateReformatSkills(userProfileData['skills']));
-                }}>
-                <XOut source={require('./assets/x_out.png')} />
-              </XOutContainer>
-              <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 5}}>
-                {Object.keys(allSkills).map(element => (
-                  <Skill
-                    skillName={element}
-                    skillData={allSkills}
-                    setSkillData={setSkills}
-                    key={allSkills[element].id}
-                  />
-                ))}
-              </View>
-              <View style={{alignSelf: 'center', marginTop: 20}}>
-                <RedTouchable onPress={handleSubmitSkillsChange}>
-                  {skillsRequest ? (
-                    <ActivityIndicator color="white" />
-                  ) : (
-                    <RedText>Confirm</RedText>
-                  )}
-                </RedTouchable>
-              </View>
-            </SkillsModalView>
-          </Modal>
-          <Modal
-            visible={interestsModal}
-            transparent={true}
-            animationType={'none'}>
-            <SkillsModalView>
-              <XOutContainer
-                onPress={() => {
-                  setInterestsModal(false);
-                  setInterests(
-                    generateReformatInterests(userProfileData['interests']),
-                  );
-                }}>
-                <XOut source={require('./assets/x_out.png')} />
-              </XOutContainer>
-              <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 5}}>
-                {Object.keys(allInterests).map(element => (
-                  <Skill
-                    skillName={element}
-                    skillData={allInterests}
-                    setSkillData={setInterests}
-                    key={allInterests[element].id}
-                  />
-                ))}
-              </View>
-              <View style={{alignSelf: 'center', marginTop: 20}}>
-                <RedTouchable onPress={handleSubmitInterestsChange}>
-                  {interestsRequest ? (
-                    <ActivityIndicator color="white" />
-                  ) : (
-                    <RedText>Confirm</RedText>
-                  )}
-                </RedTouchable>
-              </View>
-            </SkillsModalView>
-          </Modal>
-          <Modal
-            visible={socialsModal}
-            transparent={true}
-            animationType={'none'}>
-            <SocialsModalView>
-              <XOutContainer
-                onPress={() => {
-                  setSocialsModal(false);
-                  setSocials(generateReformatSocials(userProfileData));
-                }}>
-                <XOut source={require('./assets/x_out.png')} />
-              </XOutContainer>
-              <View style={{width: '80%', alignSelf: 'center'}}>
-                {Object.keys(allSocials).map(social => (
-                  <View style={{borderBottomWidth: 0.5}}>
-                    <Text>{social}:</Text>
+    <SafeAreaView style={{backgroundColor: '#ffffff'}}>
+      <MaxWidth
+        style={{opacity: editModal || phoneModal || emailModal ? 0.3 : 1}}>
+        {userProfileData != null &&
+        jobTitle != null &&
+        company != null &&
+        phone != null &&
+        email != null &&
+        allSkills != null ? (
+          <View style={{width: '100%', alignItems: 'center'}}>
+            <MarginContainer>
+              <Modal
+                visible={phoneModal}
+                transparent={true}
+                animationType={'none'}>
+                <PEModalView>
+                  <XOutContainer
+                    onPress={() => {
+                      setPhoneModal(false);
+                      setPhone(userProfileData['phoneNumber']);
+                    }}>
+                    <XOut source={require('./assets/x_out.png')} />
+                  </XOutContainer>
+                  <View
+                    style={{
+                      borderWidth: 0.4,
+                      borderColor: 'black',
+                      borderRadius: 10,
+                      alignItems: 'flex-start',
+                      width: '80%',
+                      alignSelf: 'center',
+                      marginTop: 10,
+                    }}>
                     <TextInput
-                      value={allSocials[social]}
-                      onChangeText={text => handleChangeSocials(social, text)}
+                      style={{
+                        fontSize: 20,
+                        marginTop: 10,
+                        marginBottom: 10,
+                        marginLeft: 20,
+                      }}
+                      value={phone}
+                      onChangeText={handleChangePhone}
                     />
                   </View>
-                ))}
-              </View>
-              <View style={{alignSelf: 'center', marginTop: 20}}>
-                <RedTouchable onPress={handleSubmitSocialsChange}>
-                  {socialsRequest ? (
-                    <ActivityIndicator color="white" />
-                  ) : (
-                    <RedText>Confirm</RedText>
-                  )}
-                </RedTouchable>
-              </View>
-            </SocialsModalView>
-          </Modal>
-          <View
-            style={{vflexDirection: 'row',vjustifyContent: 'space-between',}}>
-            <BackButton label="back" onPress={() => navigation.goBack()} />
-          </View>
-          <View 
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between'}}>
-            <ConnectionsHeader>Your Profile</ConnectionsHeader>
-            <SquareWrapper onPress={() => setEditModal(true)}>
-              <Image source={require('./assets/edit_icon.png')} style={{width: 20, height: 20}}/>
-            </SquareWrapper>
-          </View>
-        </MarginContainer>
-        <ScrollView style={{paddingLeft: '7%', paddingRight: '7%', alignSelf: 'center'}}>
-          <View
-            style={{
-              marginTop: 20,
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              gap: 20,
-            }}>
-            <ProfileImageContainer>
-              <Image
-                source={{
-                  uri: `data:image/png;base64,${userProfileData['photo']}`,
-                }}
-                style={{height: 90, width: 90}}
-              />
-            </ProfileImageContainer>
-            <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
-              <Text style={{color: '#828282', fontSize: 20, fontWeight: 600}}>
-                {userProfileData['fullName']}
-              </Text>
+                  <View style={{alignSelf: 'center', marginTop: 20}}>
+                    <RedTouchable onPress={handleSubmitPhoneChange}>
+                      {phoneRequest ? (
+                        <ActivityIndicator color="white" />
+                      ) : (
+                        <RedText>Confirm</RedText>
+                      )}
+                    </RedTouchable>
+                  </View>
+                </PEModalView>
+              </Modal>
+              <Modal
+                visible={emailModal}
+                transparent={true}
+                animationType={'none'}>
+                <PEModalView>
+                  <XOutContainer
+                    onPress={() => {
+                      setEmailModal(false);
+                      setEmail(userProfileData['email']);
+                    }}>
+                    <XOut source={require('./assets/x_out.png')} />
+                  </XOutContainer>
+                  <View
+                    style={{
+                      borderWidth: 0.4,
+                      borderColor: 'black',
+                      borderRadius: 10,
+                      alignItems: 'flex-start',
+                      width: '80%',
+                      alignSelf: 'center',
+                      marginTop: 10,
+                    }}>
+                    <TextInput
+                      style={{
+                        fontSize: 20,
+                        marginTop: 10,
+                        marginBottom: 10,
+                        marginLeft: 20,
+                      }}
+                      value={email}
+                      onChangeText={handleChangeEmail}
+                    />
+                  </View>
+                  <View style={{alignSelf: 'center', marginTop: 20}}>
+                    <RedTouchable onPress={handleSubmitEmailChange}>
+                      {emailRequest ? (
+                        <ActivityIndicator color="white" />
+                      ) : (
+                        <RedText>Confirm</RedText>
+                      )}
+                    </RedTouchable>
+                  </View>
+                </PEModalView>
+              </Modal>
+              <Modal
+                visible={editModal}
+                transparent={true}
+                animationType={'none'}>
+                <ModalView>
+                  <XOutContainer
+                    onPress={() => {
+                      setEditModal(false);
+                      setJobTitle(userProfileData['jobTitle']);
+                      setCompany(userProfileData['company']);
+                    }}>
+                    <XOut source={require('./assets/x_out.png')} />
+                  </XOutContainer>
+                  <View
+                    style={{
+                      borderWidth: 0.4,
+                      borderColor: 'black',
+                      borderRadius: 10,
+                      alignItems: 'flex-start',
+                      width: '80%',
+                      alignSelf: 'center',
+                      marginTop: 10,
+                    }}>
+                    <TextInput
+                      style={{
+                        fontSize: 20,
+                        marginTop: 10,
+                        marginBottom: 10,
+                        marginLeft: 20,
+                      }}
+                      value={jobTitle}
+                      onChangeText={handleEditJobTitle}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      borderWidth: 0.4,
+                      borderColor: 'black',
+                      borderRadius: 10,
+                      alignItems: 'flex-start',
+                      width: '80%',
+                      alignSelf: 'center',
+                      marginTop: 10,
+                    }}>
+                    <TextInput
+                      style={{
+                        fontSize: 20,
+                        marginTop: 10,
+                        marginBottom: 10,
+                        marginLeft: 20,
+                      }}
+                      value={company}
+                      onChangeText={handleEditCompany}
+                    />
+                  </View>
+                  <View style={{alignSelf: 'center', marginTop: 20}}>
+                    <RedTouchable onPress={handleChangeTitles}>
+                      {profileRequest ? (
+                        <ActivityIndicator color="white" />
+                      ) : (
+                        <RedText>Confirm</RedText>
+                      )}
+                    </RedTouchable>
+                  </View>
+                </ModalView>
+              </Modal>
+              <Modal
+                visible={skillsModal}
+                transparent={true}
+                animationType={'none'}>
+                <SkillsModalView>
+                  <XOutContainer
+                    onPress={() => {
+                      setSkillsModal(false);
+                      setSkills(
+                        generateReformatSkills(userProfileData['skills']),
+                      );
+                    }}>
+                    <XOut source={require('./assets/x_out.png')} />
+                  </XOutContainer>
+                  <View
+                    style={{flexDirection: 'row', flexWrap: 'wrap', gap: 5}}>
+                    {Object.keys(allSkills).map(element => (
+                      <Skill
+                        skillName={element}
+                        skillData={allSkills}
+                        setSkillData={setSkills}
+                        key={allSkills[element].id}
+                      />
+                    ))}
+                  </View>
+                  <View style={{alignSelf: 'center', marginTop: 20}}>
+                    <RedTouchable onPress={handleSubmitSkillsChange}>
+                      {skillsRequest ? (
+                        <ActivityIndicator color="white" />
+                      ) : (
+                        <RedText>Confirm</RedText>
+                      )}
+                    </RedTouchable>
+                  </View>
+                </SkillsModalView>
+              </Modal>
+              <Modal
+                visible={interestsModal}
+                transparent={true}
+                animationType={'none'}>
+                <SkillsModalView>
+                  <XOutContainer
+                    onPress={() => {
+                      setInterestsModal(false);
+                      setInterests(
+                        generateReformatInterests(userProfileData['interests']),
+                      );
+                    }}>
+                    <XOut source={require('./assets/x_out.png')} />
+                  </XOutContainer>
+                  <View
+                    style={{flexDirection: 'row', flexWrap: 'wrap', gap: 5}}>
+                    {Object.keys(allInterests).map(element => (
+                      <Skill
+                        skillName={element}
+                        skillData={allInterests}
+                        setSkillData={setInterests}
+                        key={allInterests[element].id}
+                      />
+                    ))}
+                  </View>
+                  <View style={{alignSelf: 'center', marginTop: 20}}>
+                    <RedTouchable onPress={handleSubmitInterestsChange}>
+                      {interestsRequest ? (
+                        <ActivityIndicator color="white" />
+                      ) : (
+                        <RedText>Confirm</RedText>
+                      )}
+                    </RedTouchable>
+                  </View>
+                </SkillsModalView>
+              </Modal>
+              <Modal
+                visible={socialsModal}
+                transparent={true}
+                animationType={'none'}>
+                <SocialsModalView>
+                  <XOutContainer
+                    onPress={() => {
+                      setSocialsModal(false);
+                      setSocials(generateReformatSocials(userProfileData));
+                    }}>
+                    <XOut source={require('./assets/x_out.png')} />
+                  </XOutContainer>
+                  <View style={{width: '80%', alignSelf: 'center'}}>
+                    {Object.keys(allSocials).map(social => (
+                      <View style={{borderBottomWidth: 0.5}}>
+                        <Text>{social}:</Text>
+                        <TextInput
+                          value={allSocials[social]}
+                          onChangeText={text =>
+                            handleChangeSocials(social, text)
+                          }
+                        />
+                      </View>
+                    ))}
+                  </View>
+                  <View style={{alignSelf: 'center', marginTop: 20}}>
+                    <RedTouchable onPress={handleSubmitSocialsChange}>
+                      {socialsRequest ? (
+                        <ActivityIndicator color="white" />
+                      ) : (
+                        <RedText>Confirm</RedText>
+                      )}
+                    </RedTouchable>
+                  </View>
+                </SocialsModalView>
+              </Modal>
               <View
-                style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                <Image source={require('./assets/jobTitle.png')} />
-                <Text
-                  style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                  {userProfileData['jobTitle']}
-                </Text>
-              </View>
-              <View
-                style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                <Image source={require('./assets/jobTitle.png')} />
-                <Text
-                  style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                  {userProfileData['company']}
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: 30,
-            }}>
-            <PhoneEmail onPress={() => setPhoneModal(true)}>
-              <Image
-                style={{width: 17, height: 17}}
-                source={require('./assets/phone.png')}
-              />
-              <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                edit phone
-              </Text>
-            </PhoneEmail>
-            <PhoneEmail onPress={() => setEmailModal(true)}>
-              <Image
-                style={{width: 17, height: 17}}
-                source={require('./assets/phone.png')}
-              />
-              <Text style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
-                edit email
-              </Text>
-            </PhoneEmail>
-          </View>
-          <Text
-            style={{
-              marginTop: 15,
-              color: '#828282',
-              fontSize: 20,
-              fontWeight: 700,
-            }}>
-            Biography
-          </Text>
-          <View
-            style={{
-              borderRadius: 10,
-              borderWidth: 1,
-              height: 150,
-              width: '100%',
-              marginTop: 10,
-              justifyContent: 'space-between',
-            }}>
-            <TextInput
-              style={{
-                color: '#828282',
-                fontSize: 12,
-                fontWeight: '400',
-                marginLeft: 15,
-                marginRight: 15,
-                marginTop: 15,
-                marginBottom: 15,
-              }}
-              value={biography}
-              onChangeText={handleChangeBiography}
-              multiline={true}
-              editable={biographyEditable}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'flex-end',
-                marginLeft: 10,
-                marginRight: 10,
-                marginBottom: 10,
-              }}>
-              <TouchableOpacity
-                onPress={async () => {
-                  if (biographyEditable) {
-                    if (biography != userProfileData['biography']) {
-                      setBiographyRequest(true);
-                      const res = await makePostRequest(changeUserDataHttp, {
-                        phoneNumber: phoneNumber,
-                        changingValues: {biography: biography},
-                      });
-
-                      const data = await res.json();
-
-                      if (data.success) {
-                        setUserProfile(prevState => ({
-                          ...prevState,
-                          biography: data.modifiedFields[0],
-                        }));
-                      }
-                      setBiographyRequest(false);
-                    }
-                    setBiographyEditable(false);
-                  } else {
-                    setBiographyEditable(true);
-                  }
-                }}
                 style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  vflexDirection: 'row',
+                  vjustifyContent: 'space-between',
                 }}>
-                {biographyRequest ? (
-                  <ActivityIndicator color="#786cff" />
-                ) : (
+                <BackButton label="back" onPress={() => navigation.goBack()} />
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <ConnectionsHeader>Your Profile</ConnectionsHeader>
+                <SquareWrapper onPress={() => setEditModal(true)}>
                   <Image
-                    style={{height: 30, width: 30}}
-                    source={
-                      biographyEditable
-                        ? require('./assets/check_mark.png')
-                        : require('./assets/edit_icon.png')
-                    }
+                    source={require('./assets/edit_icon.png')}
+                    style={{width: 20, height: 20}}
                   />
-                )}
-              </TouchableOpacity>
-              <Text>{biography.split(' ').length}/45</Text>
-            </View>
-          </View>
-          <Text
-            style={{
-              marginTop: 15,
-              color: '#828282',
-              fontSize: 20,
-              fontWeight: 700,
-            }}>
-            Your Skills
-          </Text>
-          <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 5, marginTop: 10}}>
-            {Object.keys(allSkills)
-              .filter(element => allSkills[element].active)
-              .map(element => (
-                <Skill
-                  skillName={element}
-                  skillData={allSkills}
-                  setSkillData={setSkills}
-                  key={allSkills[element].id}
-                  activated={false}
+                </SquareWrapper>
+              </View>
+            </MarginContainer>
+            <ScrollView
+              style={{
+                paddingLeft: '7%',
+                paddingRight: '7%',
+                alignSelf: 'center',
+              }}>
+              <View
+                style={{
+                  marginTop: 20,
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  gap: 20,
+                }}>
+                <ProfileImageContainer>
+                  <Image
+                    source={{
+                      uri: `data:image/png;base64,${userProfileData['photo']}`,
+                    }}
+                    style={{height: 90, width: 90}}
+                  />
+                </ProfileImageContainer>
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'flex-start',
+                  }}>
+                  <Text
+                    style={{color: '#828282', fontSize: 20, fontWeight: 600}}>
+                    {userProfileData['fullName']}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 5,
+                    }}>
+                    <Image source={require('./assets/jobTitle.png')} />
+                    <Text
+                      style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                      {userProfileData['jobTitle']}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 5,
+                    }}>
+                    <Image source={require('./assets/jobTitle.png')} />
+                    <Text
+                      style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                      {userProfileData['company']}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: 30,
+                }}>
+                <PhoneEmail onPress={() => setPhoneModal(true)}>
+                  <Image
+                    style={{width: 17, height: 17}}
+                    source={require('./assets/phone.png')}
+                  />
+                  <Text
+                    style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                    edit phone
+                  </Text>
+                </PhoneEmail>
+                <PhoneEmail onPress={() => setEmailModal(true)}>
+                  <Image
+                    style={{width: 17, height: 17}}
+                    source={require('./assets/phone.png')}
+                  />
+                  <Text
+                    style={{color: '#828282', fontSize: 15, fontWeight: 400}}>
+                    edit email
+                  </Text>
+                </PhoneEmail>
+              </View>
+              <Text
+                style={{
+                  marginTop: 15,
+                  color: '#828282',
+                  fontSize: 20,
+                  fontWeight: 700,
+                }}>
+                Biography
+              </Text>
+              <View
+                style={{
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  height: 150,
+                  width: '100%',
+                  marginTop: 10,
+                  justifyContent: 'space-between',
+                }}>
+                <TextInput
+                  style={{
+                    color: '#828282',
+                    fontSize: 12,
+                    fontWeight: '400',
+                    marginLeft: 15,
+                    marginRight: 15,
+                    marginTop: 15,
+                    marginBottom: 15,
+                  }}
+                  value={biography}
+                  onChangeText={handleChangeBiography}
+                  multiline={true}
+                  editable={biographyEditable}
                 />
-            ))}
-          </View>
-          <TouchableOpacity
-            style={{
-              borderColor: '#786cff',
-              borderWidth: 1,
-              alignSelf: 'flex-start',
-              marginTop: 10,
-              borderRadius: 20,
-              padding: 5,
-              flexDirection: 'row',
-            }}
-            onPress={() => setSkillsModal(true)}>
-            <Text style={{color: '#786cff'}}> edit skills </Text>
-          </TouchableOpacity>
-          <Text
-            style={{
-              marginTop: 15,
-              color: '#828282',
-              fontSize: 20,
-              fontWeight: 700,
-            }}>
-            Your Interests
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              gap: 5,
-              marginTop: 10,
-            }}>
-            {Object.keys(allInterests)
-              .filter(element => allInterests[element].active)
-              .map(element => (
-                <Skill
-                  skillName={element}
-                  skillData={allInterests}
-                  setSkillData={setInterests}
-                  key={allInterests[element].id}
-                  activated={false}
-                />
-              ))}
-          </View>
-          <TouchableOpacity
-            style={{
-              borderColor: '#786cff',
-              borderWidth: 1,
-              alignSelf: 'flex-start',
-              marginTop: 10,
-              borderRadius: 20,
-              padding: 5,
-              flexDirection: 'row',
-            }}
-            onPress={() => setSkillsModal(true)}>
-            <Text style={{color: '#786cff'}}> edit interests </Text>
-          </TouchableOpacity>
-          <Text
-            style={{
-              marginTop: 15,
-              color: '#828282',
-              fontSize: 25,
-              fontWeight: 700,
-            }}>
-            Your Socials
-          </Text>
-          <View style={{flexDirection: 'row', gap: 5, flexWrap: 'wrap'}}>
-            {Object.keys(links).map(link => {
-              if (userProfileData[link] == '') {
-                return <></>;
-              }
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-end',
+                    marginLeft: 10,
+                    marginRight: 10,
+                    marginBottom: 10,
+                  }}>
+                  <TouchableOpacity
+                    onPress={async () => {
+                      if (biographyEditable) {
+                        if (biography != userProfileData['biography']) {
+                          setBiographyRequest(true);
+                          const res = await makePostRequest(
+                            changeUserDataHttp,
+                            {
+                              phoneNumber: phoneNumber,
+                              changingValues: {biography: biography},
+                            },
+                          );
 
-              return (
-                <ViewAccount
-                  color={links[link]['color']}
-                  title={links[link]['title']}
-                  iconSource={links[link]['iconSource']}
-                  textColor={links[link]['textColor']}
-                  link={userProfileData[link]}
+                          const data = await res.json();
+
+                          if (data.success) {
+                            setUserProfile(prevState => ({
+                              ...prevState,
+                              biography: data.modifiedFields[0],
+                            }));
+                          }
+                          setBiographyRequest(false);
+                        }
+                        setBiographyEditable(false);
+                      } else {
+                        setBiographyEditable(true);
+                      }
+                    }}
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    {biographyRequest ? (
+                      <ActivityIndicator color="#786cff" />
+                    ) : (
+                      <Image
+                        style={{height: 30, width: 30}}
+                        source={
+                          biographyEditable
+                            ? require('./assets/check_mark.png')
+                            : require('./assets/edit_icon.png')
+                        }
+                      />
+                    )}
+                  </TouchableOpacity>
+                  <Text>{biography.split(' ').length}/45</Text>
+                </View>
+              </View>
+              <Text
+                style={{
+                  marginTop: 15,
+                  color: '#828282',
+                  fontSize: 20,
+                  fontWeight: 700,
+                }}>
+                Your Skills
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  gap: 5,
+                  marginTop: 10,
+                }}>
+                {Object.keys(allSkills)
+                  .filter(element => allSkills[element].active)
+                  .map(element => (
+                    <Skill
+                      skillName={element}
+                      skillData={allSkills}
+                      setSkillData={setSkills}
+                      key={allSkills[element].id}
+                      activated={false}
+                    />
+                  ))}
+              </View>
+              <TouchableOpacity
+                style={{
+                  borderColor: '#786cff',
+                  borderWidth: 1,
+                  alignSelf: 'flex-start',
+                  marginTop: 10,
+                  borderRadius: 20,
+                  padding: 5,
+                  flexDirection: 'row',
+                }}
+                onPress={() => setSkillsModal(true)}>
+                <Text style={{color: '#786cff'}}> edit skills </Text>
+              </TouchableOpacity>
+              <Text
+                style={{
+                  marginTop: 15,
+                  color: '#828282',
+                  fontSize: 20,
+                  fontWeight: 700,
+                }}>
+                Your Interests
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  gap: 5,
+                  marginTop: 10,
+                }}>
+                {Object.keys(allInterests)
+                  .filter(element => allInterests[element].active)
+                  .map(element => (
+                    <Skill
+                      skillName={element}
+                      skillData={allInterests}
+                      setSkillData={setInterests}
+                      key={allInterests[element].id}
+                      activated={false}
+                    />
+                  ))}
+              </View>
+              <TouchableOpacity
+                style={{
+                  borderColor: '#786cff',
+                  borderWidth: 1,
+                  alignSelf: 'flex-start',
+                  marginTop: 10,
+                  borderRadius: 20,
+                  padding: 5,
+                  flexDirection: 'row',
+                }}
+                onPress={() => setInterestsModal(true)}>
+                <Text style={{color: '#786cff'}}> edit interests </Text>
+              </TouchableOpacity>
+              <Text
+                style={{
+                  marginTop: 15,
+                  color: '#828282',
+                  fontSize: 25,
+                  fontWeight: 700,
+                }}>
+                Your Socials
+              </Text>
+              <View style={{flexDirection: 'row', gap: 5, flexWrap: 'wrap'}}>
+                {Object.keys(links).map(link => {
+                  if (userProfileData[link] == '') {
+                    return <></>;
+                  }
+
+                  return (
+                    <ViewAccount
+                      color={links[link]['color']}
+                      title={links[link]['title']}
+                      iconSource={links[link]['iconSource']}
+                      textColor={links[link]['textColor']}
+                      link={userProfileData[link]}
+                    />
+                  );
+                })}
+              </View>
+              <TouchableOpacity
+                style={{
+                  borderColor: '#786cff',
+                  height: 40,
+                  width: 50,
+                  borderWidth: 1,
+                  alignItems: 'center',
+                  justifyCenter: 'center',
+                  marginTop: 10,
+                  borderRadius: 20,
+                }}
+                onPress={() => setSocialsModal(true)}>
+                <Image
+                  source={require('./assets/plus.png')}
+                  style={{height: 30, width: 30, marginTop: 2.5}}
                 />
-              );
-            })}
+              </TouchableOpacity>
+              <View style={{marginTop: 200}}></View>
+            </ScrollView>
           </View>
-          <TouchableOpacity
-            style={{
-              borderColor: '#786cff',
-              height: 40,
-              width: 50,
-              borderWidth: 1,
-              alignItems: 'center',
-              justifyCenter: 'center',
-              marginTop: 10,
-              borderRadius: 20,
-            }}
-            onPress={() => setSocialsModal(true)}>
-            <Image
-              source={require('./assets/plus.png')}
-              style={{height: 30, width: 30, marginTop: 2.5}}
-            />
-          </TouchableOpacity>
-          <View style={{marginTop: 200}}></View>
-        </ScrollView>
-      </View>
-      ) : (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <ActivityIndicator color="#786cff" />
-        </View>
-      )}
-    </MaxWidth>
+        ) : (
+          <View
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <ActivityIndicator color="#786cff" />
+          </View>
+        )}
+      </MaxWidth>
     </SafeAreaView>
   );
 };

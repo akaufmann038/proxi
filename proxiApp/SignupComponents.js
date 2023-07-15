@@ -512,6 +512,108 @@ export const Skill = ({
   );
 };
 
+export const Filter = ({
+  filterName,
+  skillName,
+  skillData,
+  setSkillData,
+  activated = true,
+}) => {
+  const [animation, setAnimation] = useState(new Animated.Value(0));
+  const [active, setActive] = useState(skillData[filterName][skillName].active);
+
+  const AnimatedTouchable = Animated.createAnimatedComponent(
+    styled.TouchableOpacity`
+      justify-content: center;
+      align-items: flex-start;
+      border-width: 1px;
+      border-radius: 15px;
+      border-style: solid;
+      border-color: #786cff;
+    `,
+  );
+
+  const AnimatedImage = Animated.createAnimatedComponent(Image);
+
+  const AnimatedText = Animated.createAnimatedComponent(
+    styled.Text`
+      padding-left: 3px;
+      padding-right: 10px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      color: #786cff;
+      font-size: 12px;
+    `,
+  );
+
+  const buttonColorInterpolation = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['#ffffff', '#786cff'],
+  });
+
+  const textColorInterpolation = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['#786cff', '#ffffff'],
+  });
+
+  // on mount, if active, do animation
+  useEffect(() => {
+    if (skillData[skillName].active) {
+      Animated.timing(animation, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, []);
+
+  const handleAnimation = () => {
+    if (activated) {
+      if (skillData[skillName].active) {
+        Animated.timing(animation, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+      } else {
+        Animated.timing(animation, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+      }
+      //let skills = skillData;
+      //skills[skillName].active = !skillData[skillName].active;
+
+      let skills = skillData;
+      skills[filterName][skillName].active = !skillData[skillName].active;
+
+      setActive(skills[filterName][skillName].active);
+      setSkillData(skills);
+    }
+  };
+
+  return (
+    <AnimatedTouchable
+      onPress={handleAnimation}
+      style={{backgroundColor: buttonColorInterpolation}}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <AnimatedImage
+          source={
+            active
+              ? require('./assets/checkmark.png')
+              : require('./assets/plus.png')
+          }
+          style={{width: 20, height: 20, marginLeft: 5}}
+        />
+        <AnimatedText style={{color: textColorInterpolation}}>
+          {skillName}
+        </AnimatedText>
+      </View>
+    </AnimatedTouchable>
+  );
+};
+
 // AnimatedButton: Button component that animates its color based on 'active' prop.
 // Props:
 // - onPress: Function to handle button press.
@@ -626,10 +728,9 @@ const LineImage = styled.Image`
   object-fit: fill;
 `;
 
-
-export const SquareButton = ({ imgSource, imgWidth = 20, imgHeight = 20 }) => (
+export const SquareButton = ({imgSource, imgWidth = 20, imgHeight = 20}) => (
   <SquareWrapper>
-      <Image source={imgSource} style={{width: imgWidth, height: imgHeight}} />
+    <Image source={imgSource} style={{width: imgWidth, height: imgHeight}} />
   </SquareWrapper>
 );
 
